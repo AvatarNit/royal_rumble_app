@@ -6,4 +6,5 @@ export default function Navbar() {
       <Link href="/">Home</Link> | <Link href="/about">About</Link>
     </nav>
   );
+  // hi
 }

@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <nav style={{ textAlign: "center", padding: "10px" }}>
-          <Link href="/">Home</Link> | <Link href="/about">About</Link>
+          <Link href="/">Home</Link> | <Link href="/general/about">About</Link>
         </nav>
         {children}
       </body>

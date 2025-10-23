@@ -3,8 +3,10 @@
 import React from "react";
 export default function MentorButtons({
   children,
+  link = "#",
 }: {
   children: React.ReactNode;
+  link?: string;
 }) {
   const buttonStyle = {
     backgroundColor: "#01539c",
@@ -35,6 +37,11 @@ export default function MentorButtons({
       onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) =>
         buttonUnhover(e)
       }
+      onClick={() => {
+        if (link) {
+          window.location.href = link;
+        }
+      }}
     >
       {children}
     </button>

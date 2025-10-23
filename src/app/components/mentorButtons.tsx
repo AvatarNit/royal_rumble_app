@@ -1,6 +1,11 @@
+"use client";
 
-import React from 'react';
-export default function MentorButtons({ children }: { children: React.ReactNode }) {
+import React from "react";
+export default function MentorButtons({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const buttonStyle = {
     backgroundColor: "#01539c",
     color: "white",
@@ -27,7 +32,9 @@ export default function MentorButtons({ children }: { children: React.ReactNode 
     <button
       style={buttonStyle}
       onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => buttonHover(e)}
-      onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => buttonUnhover(e)}
+      onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) =>
+        buttonUnhover(e)
+      }
     >
       {children}
     </button>

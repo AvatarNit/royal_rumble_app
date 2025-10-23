@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-export default function redButtons({
+export default function RedButtons({
   children,
   link = "#",
 }: {

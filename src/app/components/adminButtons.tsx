@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-export default function Buttons({
+export default function AdminButtons({
   children,
   link = "#",
 }: {

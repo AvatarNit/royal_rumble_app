@@ -24,6 +24,7 @@ export default function GeneralButtons({
     position: "relative" as const,
     textAlign: "center" as const,
     textDecoration: "none",
+    margin: "10px",
   };
 
   const redLineStyle = {

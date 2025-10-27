@@ -9,6 +9,9 @@ export default function LongButtons({
   link?: string;
 }) {
   const buttonStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#01539c",
     color: "white",
     fontFamily: "Poppins, sans-serif",
@@ -20,6 +23,7 @@ export default function LongButtons({
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
+    margin: "10px",
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {

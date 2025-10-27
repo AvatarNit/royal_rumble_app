@@ -2,6 +2,7 @@ import MentorButtons from "./components/mentorButtons";
 import AdminButtons from "./components/adminButtons";
 import LongButtons from "./components/longButtons";
 import RedButtons from "./components/redButtons";
+import GeneralButtons from "./components/generalButtons";
 export default function Home() {
   return (
     <main style={{ textAlign: "center", paddingTop: "50px" }}>
@@ -11,6 +12,7 @@ export default function Home() {
       <RedButtons link="/about">Click Me!</RedButtons>
       <LongButtons link="/about">Click Me!</LongButtons>
       <AdminButtons link="/about">Click Me!</AdminButtons>
+      <GeneralButtons link="/about">Click Me!</GeneralButtons>
     </main>
   );
 }

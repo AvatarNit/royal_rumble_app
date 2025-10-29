@@ -58,7 +58,7 @@ export default function EditUserDropdown({
     padding: "16px",
     marginBottom: "16px",
     height: "200px",
-    color: "#01539c",
+    color: "#8a8d8f",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",

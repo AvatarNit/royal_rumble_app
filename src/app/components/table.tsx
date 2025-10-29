@@ -30,7 +30,7 @@ export default function Table({
   };
 
   const cellStyle = {
-    bakcgroundColor: "white",
+    backgroundColor: "white",
     color: "#8a8d8f",
     textAlign: "center" as const,
     verticalAlign: "middle" as const,

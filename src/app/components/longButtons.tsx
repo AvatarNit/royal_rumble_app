@@ -12,7 +12,7 @@ export default function LongButtons({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#01539c",
+    backgroundColor: "var(--primaryBlue)",
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
@@ -27,17 +27,17 @@ export default function LongButtons({
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = "white";
-      e.currentTarget.style.color = "#01539c";
-      e.currentTarget.style.borderColor = "#01539c";
-    };
-  
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--primaryBlue)";
+    e.currentTarget.style.borderColor = "var(--primaryBlue)";
+  };
+
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = "#01539c";
+    e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
     e.currentTarget.style.color = "white";
     e.currentTarget.style.borderColor = "transparent";
   };
-  
+
   return (
     <button
       style={buttonStyle}

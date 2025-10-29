@@ -13,7 +13,7 @@ export default function DeleteButton({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#d10f41",
+    backgroundColor: "var(--primaryRed)",
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
@@ -31,12 +31,12 @@ export default function DeleteButton({
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.backgroundColor = "white";
-    e.currentTarget.style.color = "#d10f41";
-    e.currentTarget.style.borderColor = "#d10f41"; 
+    e.currentTarget.style.color = "var(--primaryRed)";
+    e.currentTarget.style.borderColor = "var(--primaryRed)";
   };
 
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = "#d10f41";
+    e.currentTarget.style.backgroundColor = "var(--primaryRed)";
     e.currentTarget.style.color = "white";
     e.currentTarget.style.borderColor = "transparent";
   };

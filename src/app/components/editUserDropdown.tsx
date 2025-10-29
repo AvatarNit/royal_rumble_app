@@ -16,10 +16,10 @@ export default function EditUserDropdown({
   const [openIndices, setOpenIndices] = useState<number[]>([]);
 
   const containerStyle = {
-    border: "5px solid #01539c",
+    border: "5px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    color: "#01539c",
+    color: "var(--primaryBlue)",
     width: "800px",
     margin: "20px auto",
     backgroundColor: "white",
@@ -27,7 +27,7 @@ export default function EditUserDropdown({
   };
 
   const headerStyle = {
-    backgroundColor: "#01539c",
+    backgroundColor: "var(--primaryBlue)",
     color: "white",
     padding: "12px 16px",
     display: "flex",
@@ -37,9 +37,9 @@ export default function EditUserDropdown({
 
   const accordionHeaderStyle = {
     backgroundColor: "white",
-    color: "#01539c",
+    color: "var(--primaryBlue)",
     fontSize: "18px",
-    borderTop: "2px solid #01539c",
+    borderTop: "2px solid var(--primaryBlue)",
     padding: "12px 16px",
     display: "flex",
     alignItems: "center",
@@ -54,11 +54,11 @@ export default function EditUserDropdown({
   };
 
   const contentBoxStyle = {
-    border: "2px solid #d10f41",
+    border: "2px solid var(--primaryRed)",
     padding: "16px",
     marginBottom: "16px",
     height: "200px",
-    color: "#8a8d8f",
+    color: "var(--textGrey)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",
@@ -110,7 +110,10 @@ export default function EditUserDropdown({
 
         return (
           <div key={index}>
-            <div style={accordionHeaderStyle} onClick={() => handleToggle(index)}>
+            <div
+              style={accordionHeaderStyle}
+              onClick={() => handleToggle(index)}
+            >
               <span>{section.title}</span>
               <i
                 style={{

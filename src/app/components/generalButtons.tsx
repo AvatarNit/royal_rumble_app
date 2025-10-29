@@ -10,11 +10,11 @@ export default function GeneralButtons({
 }) {
   const containerStyle = {
     backgroundColor: "white",
-    border: "10px solid #01539c",
+    border: "10px solid var(--primaryBlue)",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "#01539c",
+    color: "var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     fontSize: "24px",
@@ -32,14 +32,14 @@ export default function GeneralButtons({
     top: "10%",
     bottom: "10%",
     width: "10px",
-    backgroundColor: "#d10f41",
+    backgroundColor: "var(--primaryRed)",
   };
 
   const leftLineStyle = { ...redLineStyle, left: "10px" };
   const rightLineStyle = { ...redLineStyle, right: "10px" };
 
   return (
-     <button
+    <button
       style={containerStyle}
       onClick={() => {
         if (link) {

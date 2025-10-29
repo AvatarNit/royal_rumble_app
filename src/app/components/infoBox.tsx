@@ -9,13 +9,13 @@ export default function InfoBox({
   headerText: string;
   contentText: string;
 }) {
-    const containerStyle = {
+  const containerStyle = {
     width: "700px",
     margin: "20px",
   };
 
   const headerStyle = {
-    backgroundColor: "#01539c",
+    backgroundColor: "var(--primaryBlue)",
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
@@ -29,13 +29,13 @@ export default function InfoBox({
 
   const contentStyle = {
     backgroundColor: "white",
-    border: "3px solid #d10f41",
-    color: "#8a8d8f",
+    border: "3px solid var(--primaryRed)",
+    color: "var(--textGrey)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     fontSize: "16px",
     padding: "10px 20px",
-    textAlign: "left" as const, 
+    textAlign: "left" as const,
     height: "300px",
     display: "flex",
     justifyContent: "flex-start",

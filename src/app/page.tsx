@@ -5,7 +5,8 @@ import DeleteButton from "./components/deleteButton";
 import SaveButtons from "./components/saveButton";
 import GeneralButtons from "./components/generalButtons";
 import InfoBox from "./components/infoBox";
-import Table from "./components/table";
+import InfoTable from "./components/infoTable";
+import CheckBoxTable from "./components/checkBoxTable";
 import EditUserDropdown from "./components/editUserDropdown";
 import ViewDropdown from "./components/viewDropdown";
 
@@ -53,12 +54,20 @@ export default function Home() {
           },
         ]}
       />
-      <Table
+      <InfoTable
         headers={["Header 1", "Header 2", "Header 3"]}
         data={[
           ["Row 1 Col 1", "Row 1 Col 2", "Row 1 Col 3"],
           ["Row 2 Col 1", "Row 2 Col 2", "Row 2 Col 3"],
           ["Row 3 Col 1", "Row 3 Col 2", "Row 3 Col 3"],
+        ]}
+      />
+      <CheckBoxTable
+        headers={["Student Name"]}
+        data={[
+          ["Student 1 "],
+          ["Student 2"],
+          ["Student 3"],
         ]}
       />
     </main>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-export default function LongButtons({
+export default function SaveButtons({
   children,
   link = "#",
 }: {
@@ -18,26 +18,27 @@ export default function LongButtons({
     fontWeight: "bold",
     border: "5px solid transparent",
     borderRadius: "14px",
-    padding: "10px 40px",
-    width: "160px",
+    padding: "20px 20px",
+    width: "100px",
+    height: "40px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
     margin: "10px",
   };
 
-  const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = "white";
-      e.currentTarget.style.color = "#01539c";
-      e.currentTarget.style.borderColor = "#01539c";
-    };
-  
+const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "#01539c";
+    e.currentTarget.style.borderColor = "#01539c";
+  };
+
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.backgroundColor = "#01539c";
     e.currentTarget.style.color = "white";
     e.currentTarget.style.borderColor = "transparent";
   };
-  
+
   return (
     <button
       style={buttonStyle}

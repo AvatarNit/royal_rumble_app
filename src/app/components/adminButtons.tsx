@@ -16,7 +16,7 @@ export default function AdminButtons({
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    border: "none",
+    border: "5px solid transparent",
     borderRadius: "14px",
     padding: "40px 20px",
     width: "200px",
@@ -28,20 +28,22 @@ export default function AdminButtons({
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.backgroundColor = "#d10f41";
-  };
-
+      e.currentTarget.style.backgroundColor = "white";
+      e.currentTarget.style.color = "#01539c";
+      e.currentTarget.style.borderColor = "#01539c";
+    };
+  
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.backgroundColor = "#01539c";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
   };
-
+  
   return (
     <button
       style={buttonStyle}
-      onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => buttonHover(e)}
-      onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) =>
-        buttonUnhover(e)
-      }
+      onMouseEnter={buttonHover}
+      onMouseLeave={buttonUnhover}
       onClick={() => {
         if (link) {
           window.location.href = link;

@@ -30,7 +30,7 @@ export default function InfoBox({
   const contentStyle = {
     backgroundColor: "white",
     border: "3px solid #d10f41",
-    color: "#01539c",
+    color: "#8a8d8f",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     fontSize: "16px",

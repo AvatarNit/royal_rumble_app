@@ -7,6 +7,7 @@ import GeneralButtons from "./components/generalButtons";
 import InfoBox from "./components/infoBox";
 import Table from "./components/table";
 import EditUserDropdown from "./components/editUserDropdown";
+import ViewDropdown from "./components/viewDropdown";
 
 export default function Home() {
   return (
@@ -33,6 +34,22 @@ export default function Home() {
           {
             title: "Mentor 3",
             content: "edit user details here.",
+          },
+        ]}
+      />
+      <ViewDropdown
+        sections={[
+          {
+            title: "Mentor 1",
+            content: "view user details here.",
+          },
+          {
+            title: "Mentor 2",
+            content: "view user details here.",
+          },
+          {
+            title: "Mentor 3",
+            content: "view user details here.",
           },
         ]}
       />

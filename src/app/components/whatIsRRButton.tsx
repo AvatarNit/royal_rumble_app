@@ -8,6 +8,7 @@ export default function GeneralButtons({
   children: React.ReactNode;
   link?: string;
 }) {
+
   const containerStyle = {
     backgroundColor: "white",
     border: "10px solid var(--primaryBlue)",
@@ -17,10 +18,10 @@ export default function GeneralButtons({
     color: "var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "24px",
+    fontSize: "50px",
     padding: "40px 20px",
-    width: "300px",
-    height: "200px",
+    width: "500px",
+    height: "300px",
     position: "relative" as const,
     textAlign: "center" as const,
     textDecoration: "none",

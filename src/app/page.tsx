@@ -7,6 +7,7 @@ import GeneralButtons from "./components/generalButtons";
 import InfoBox from "./components/infoBox";
 import InfoTable from "./components/infoTable";
 import CheckBoxTable from "./components/checkBoxTable";
+import EditTable from "./components/editTable";
 import EditUserDropdown from "./components/editUserDropdown";
 import ViewDropdown from "./components/viewDropdown";
 
@@ -66,6 +67,14 @@ export default function Home() {
         headers={["Student Name"]}
         data={[
           ["Student 1 "],
+          ["Student 2"],
+          ["Student 3"],
+        ]}
+      />
+      <EditTable
+        headers={["Student Name"]}
+        data={[
+          ["Student 1"],
           ["Student 2"],
           ["Student 3"],
         ]}

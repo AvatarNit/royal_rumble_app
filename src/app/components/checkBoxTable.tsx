@@ -23,7 +23,6 @@ export default function CheckBoxTable({
     margin: "20px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
-    fontWeight: "bold",
   };
 
   const headerRowStyle: React.CSSProperties = {

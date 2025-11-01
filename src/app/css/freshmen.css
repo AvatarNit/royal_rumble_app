@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.freshmen-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.freshmen-title {
+  color: var(--primaryBlue);
+  font-weight: 700;
+  font-size: 4rem;
+  text-align: center;
+  margin: 0 0;
+}
+
+.freshmen-info-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.check-registration {
+  color: var(--primaryRed);
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 20px 0;
+}

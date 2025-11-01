@@ -21,7 +21,11 @@ export default function TestElementsPage() {
       <AdminButtons link="/about">Admin home button</AdminButtons>
       <SaveButtons link="/about">Save button</SaveButtons>
       <GeneralButtons link="/about">Main page button</GeneralButtons>
-      <InfoBox headerText="Subheading" contentText="This is the content of the info box." />
+      <InfoBox headerText="Question 1">
+        <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
+          Info box content goes here.
+        </div>
+      </InfoBox>
       <EditUserDropdown
         sections={[
           {

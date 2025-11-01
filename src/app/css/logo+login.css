@@ -1,0 +1,39 @@
+
+.home-logo-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 3.7rem;
+  transition: transform 0.2s ease;
+  z-index: 100;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.home-logo-button:hover .logo{
+  transform: scale(1.1);
+}
+
+.profile-icon-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 4rem;
+  color: var(--primaryBlue);
+  transition: transform 0.2s ease;
+  z-index: 100;
+}
+
+.profile-icon-button:hover {
+  transform: scale(1.2);
+}

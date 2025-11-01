@@ -2,16 +2,15 @@
 
 import React from "react";
 
-export default function InfoBox({
-  headerText,
-  contentText,
-}: {
+type InfoBoxProps = {
   headerText: string;
-  contentText: string;
-}) {
+  children: React.ReactNode;
+};
+
+export default function InfoBox({ headerText, children }: InfoBoxProps) {
   const containerStyle = {
-    width: "700px",
-    margin: "20px",
+    width: "900px",
+    margin: "30px 20px 5px",
   };
 
   const headerStyle = {
@@ -34,17 +33,18 @@ export default function InfoBox({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     fontSize: "16px",
-    padding: "10px 20px",
+    padding: "30px 20px",
     textAlign: "left" as const,
-    height: "300px",
+    height: "auto",
     display: "flex",
+    flexDirection: "column" as const,
     justifyContent: "flex-start",
   };
 
   return (
     <div style={containerStyle}>
       <div style={headerStyle}>{headerText}</div>
-      <div style={contentStyle}>{contentText}</div>
+      <div style={contentStyle}>{children}</div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import LoginButton from "./components/loginButton";
 import WhatIsRRButton from "./components/whatIsRRButton";
 import FAQButton from "./components/faqButton";
 import TicketButton from "./components/ticketButton";
@@ -7,10 +8,13 @@ import homepagePhoto2 from "./assets/homepagePhoto2.jpg";
 import homepagePhoto3 from "./assets/homepagePhoto3.jpg";
 import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function Home() {
   return (
     <main className="home-container">
+      <LoginButton />
+      
       <header className="home-header">
         <h1 className="home-title">Welcome to Royal Rumble</h1>
       </header>

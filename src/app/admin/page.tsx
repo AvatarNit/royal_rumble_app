@@ -1,19 +1,36 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LogoButton from "../components/logoButton";
+import LoginButton from "../components/loginButton";
+import AdminButtons from "../components/adminButtons";
+import "../css/admin.css";
+import "../css/logo+login.css";
 
-export default function AdminHomePage() {
+export default function AdminHomepage() {
+
   return (
-    <div>
-      <nav style={{ textAlign: "center", padding: "10px" }}>
-        <Link href="/admin/add">Add</Link> |{" "}
-        <Link href="/admin/all_groups">All Groups</Link> |{" "}
-        <Link href="/admin/attendance">Attendance</Link> |{" "}
-        <Link href="/admin/edit">Edit</Link> |{" "}
-        <Link href="/admin/search">Search</Link> |{" "}
-        <Link href="/admin/upload">Upload</Link>
-      </nav>
-      <h1>Welcome Admin!</h1>
-      <p>This is the home page for admins.</p>
-    </div>
+    <main className="admin-container">
+      <LogoButton />
+      <LoginButton />
+
+      <header className="admin-header">
+        <h1 className="admin-title">Welcome, Admin Name!</h1>
+      </header>
+
+      <section className="admin-button-box" style={{ display: "flex", flexDirection: "column",
+                                                     alignItems: "center", margin: "50px" }}>
+
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <AdminButtons link="/admin/add">Add New</AdminButtons>
+          <AdminButtons link="/admin/edit">Edit</AdminButtons>
+          <AdminButtons link="/admin/upload">Upload</AdminButtons>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "30px" }}>
+          <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
+          <AdminButtons link="/admin/search">Search</AdminButtons>
+          <AdminButtons link="/admin/attendance">Attendance</AdminButtons>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import royalRumbleLogo from "../assets/logo.png";
 import "../css/about.css";
@@ -8,9 +8,26 @@ import "../css/about.css";
 export default function LogoButton() {
 
   const router = useRouter();
+  const pathname = usePathname();
 
-  const handleLogoClick = () => {
-    router.push("/");
+    const handleLogoClick = () => {
+    if (pathname.startsWith("/freshmen")) {
+      router.push("/freshmen/home");  
+    } else if (pathname.startsWith("/mentor/group_leader")) {
+      router.push("/mentor/group_leader");
+
+    } else if (pathname.startsWith("/mentor/hallway_host")) {
+      router.push("/mentor/hallway_host");
+
+    } else if (pathname.startsWith("/mentor/utility_spirit")) {
+      router.push("/mentor/utility_spirit");
+
+    } else if (pathname.startsWith("/admin")) {
+      router.push("/admin");
+
+    } else {
+      router.push("/");
+    }
   };
 
   return (

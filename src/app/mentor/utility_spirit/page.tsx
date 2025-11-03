@@ -1,8 +1,47 @@
-export default function UtilitySpiritHomePage() {
+import type { Metadata } from "next";
+import LogoButton from "../../components/logoButton";
+import LoginButton from "../../components/loginButton";
+import InfoBox from "../../components/infoBox";
+import InfoTable from "../../components/infoTable";
+import "../../css/mentor.css";
+import "../../css/logo+login.css";
+
+export default function UtilitySpiritHomepage() {
+
   return (
-    <div>
-      <h1>Welcome Utility Spirits!</h1>
-      <p>This is the home page for utility spirits.</p>
-    </div>
+     <main className="mentor-container">
+      <LogoButton />
+      <LoginButton />
+
+      <header className="mentor-header">
+        <h1 className="mentor-title">Welcome, Mentor Name!</h1>
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "center",
+                      justifyContent: "center", margin: "20px 0px 0px" }}>
+          <h3 className="mentor-subtitle1">Job: </h3>
+          <h3 className="mentor-subtitle2"> Spirit/ Utility</h3>
+        </div>
+      </header>
+
+      <section className="mentor-info-box" style={{ display: "flex", gap: "30px", alignItems: "flex-start" }}>
+
+        <InfoBox headerText="Event Details">
+          <div style={{ color: "var(--primaryBlue)", fontWeight: "bold", fontSize: "30px", margin: "10px 0px" }}>
+            Dates:
+          </div>
+          <InfoTable
+            headers={["Event", "Date", "Time", "Description"]}
+            data={[
+              ["Training", "06/01/2023", "10:00 AM", "Training session for new mentors"],
+              ["Royal Rumble", "06/03/2023", "12:00 PM", "Annual Royal Rumble event"],
+            ]}
+          />
+        </InfoBox>
+      </section>
+      <InfoBox headerText="Additional Instruction">
+        <div style={{ margin: "10px 20px", color: "var(--primaryBlue)", fontSize: "30px", lineHeight: "1.6" }}>
+          Morning of Royal Rumble: Meet Mrs. Habig in CCA cafe for task assignment.
+        </div>
+      </InfoBox>
+    </main>
   );
 }

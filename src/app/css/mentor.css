@@ -46,3 +46,38 @@
   text-align: center;
   margin: 10px 0;
 }
+
+.info-pairs {
+  display: flex;
+  flex-wrap: wrap;       
+  gap: 30px 50px;       
+  margin-bottom: 20px;
+}
+
+
+.info-pair {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;            
+  min-width: 200px;     
+}
+
+.info-label {
+  color: var(--primaryBlue);
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.info-value {
+  color: var(--textGrey);
+  font-weight: normal;
+  font-size: 30px;
+}
+
+.freshmen-label {
+  color: var(--primaryBlue);
+  font-weight: bold;
+  font-size: 30px;
+  margin: 30px 0;
+}

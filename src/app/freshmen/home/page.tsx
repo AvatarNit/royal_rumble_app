@@ -25,12 +25,12 @@ export default function FreshmenHomepage() {
                         fontSize: "30px",
                         gap: "10px"       
           }}>
-            <div>
-              Group #:
-            </div>
-            <div style={{ color: "var(--textGrey)", fontWeight: "normal",}}>
-              1
-            </div>
+          <div>
+            Group #:
+          </div>
+          <div style={{ color: "var(--textGrey)", fontWeight: "normal",}}>
+            1
+          </div>
           </div>
           <div style={{ color: "var(--primaryBlue)", fontWeight: "bold",
                         fontSize: "30px", margin: "20px 0px" }}>

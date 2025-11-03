@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";

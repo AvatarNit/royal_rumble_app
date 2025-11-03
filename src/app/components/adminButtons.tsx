@@ -16,15 +16,16 @@ export default function AdminButtons({
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    border: "5px solid transparent",
+    fontSize: "2rem",
+    border: "10px solid transparent",
     borderRadius: "14px",
     padding: "40px 20px",
-    width: "200px",
-    height: "120px",
+    width: "240px",
+    height: "160px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    margin: "10px",
+    margin: "5px 20px"
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {

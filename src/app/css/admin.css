@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  padding: 1rem 1rem;
+}
+
+.admin-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.admin-title {
+  color: var(--primaryBlue);
+  font-weight: 700;
+  font-size: 4rem;
+  text-align: center;
+  margin: 0 0;
+}
+
+.admin-button-box {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

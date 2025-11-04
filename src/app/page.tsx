@@ -8,6 +8,7 @@ import homepagePhoto2 from "./assets/homepagePhoto2.jpg";
 import homepagePhoto3 from "./assets/homepagePhoto3.jpg";
 import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
+import "./css/logo+login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function Home() {

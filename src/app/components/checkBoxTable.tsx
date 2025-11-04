@@ -56,8 +56,8 @@ export default function CheckBoxTable({
   };
 
   const checkboxStyle: React.CSSProperties = {
-    width: "24px",
-    height: "24px",
+    width: "35px",
+    height: "35px",
     cursor: "pointer",
   };
 

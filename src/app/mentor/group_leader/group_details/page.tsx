@@ -7,7 +7,7 @@ import InfoTable from "../../../components/infoTable";
 import "../../../css/mentor.css";
 import "../../../css/logo+login.css";
 
-export default function GroupDetails() {
+export default function GroupLeaderGroupDetails() {
   return (
     <main className="mentor-container">
       <LogoButton />

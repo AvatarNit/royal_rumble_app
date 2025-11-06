@@ -20,7 +20,7 @@ export default function EditUserDropdown({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     color: "var(--primaryBlue)",
-    width: "800px",
+    width: "85%",
     margin: "20px auto",
     backgroundColor: "white",
     overflow: "hidden",
@@ -99,12 +99,10 @@ export default function EditUserDropdown({
 
   return (
     <div style={containerStyle}>
-      {/* Top blue header */}
       <div style={headerStyle}>
-        <span>Edit Mentors</span>
+        <span>Edit Admin</span>
       </div>
 
-      {/* Accordion Sections */}
       {sections.map((section, index) => {
         const isOpen = openIndices.includes(index);
 

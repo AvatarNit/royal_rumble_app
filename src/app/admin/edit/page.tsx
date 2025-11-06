@@ -1,19 +1,36 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LogoButton from "../../components/logoButton";
+import LoginButton from "../../components/loginButton";
+import AdminButtons from "../../components/adminButtons";
+import "../../css/admin.css";
+import "../../css/logo+login.css";
 
-export default function AdminEditPage() {
+export default function AdminEdit() {
+
   return (
-    <div>
-      <nav style={{ textAlign: "center", padding: "10px" }}>
-        <Link href="/admin/edit/admin">Admin</Link> |{" "}
-        <Link href="/admin/edit/all_groups">All Groups</Link> |{" "}
-        <Link href="/admin/edit/freshmen">Freshmen</Link> |{" "}
-        <Link href="/admin/edit/general_info">General Info</Link> |{" "}
-        <Link href="/admin/edit/mentor">Mentor</Link> |{" "}
-        <Link href="/admin/edit/training">Training</Link>
-      </nav>
-      <h1>Edit Page</h1>
-      <p>This is the edit page for admins.</p>
-    </div>
+    <main className="admin-container">
+      <LogoButton />
+      <LoginButton />
+
+      <header className="admin-header">
+        <h1 className="admin-title">Edit Information</h1>
+      </header>
+
+      <section className="admin-button-box" style={{ display: "flex", flexDirection: "column",
+                                                     alignItems: "center", margin: "50px" }}>
+
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+          <AdminButtons link="/admin/edit/admin">Admin</AdminButtons>
+          <AdminButtons link="/admin/edit/mentor">Mentor</AdminButtons>
+          <AdminButtons link="/admin/edit/freshmen">Freshmen</AdminButtons>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "30px" }}>
+          <AdminButtons link="/admin/edit/general-info">General Information</AdminButtons>
+          <AdminButtons link="/admin/edit/training">Events</AdminButtons>
+          <AdminButtons link="/admin/edit/all-groups">All Groups</AdminButtons>
+        </div>
+      </section>
+    </main>
   );
 }

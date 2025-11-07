@@ -26,9 +26,9 @@ export default function AdminEdit() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "30px" }}>
-          <AdminButtons link="/admin/edit/general-info">General Information</AdminButtons>
+          <AdminButtons link="/admin/edit/general_info">General Information</AdminButtons>
           <AdminButtons link="/admin/edit/training">Events</AdminButtons>
-          <AdminButtons link="/admin/edit/all-groups">All Groups</AdminButtons>
+          <AdminButtons link="/admin/edit/all_groups">All Groups</AdminButtons>
         </div>
       </section>
     </main>

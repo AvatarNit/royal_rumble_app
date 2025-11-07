@@ -5,13 +5,11 @@ import DeleteButton from "./deleteButton";
 import SaveButton from "./saveButton";
 
 export default function EditUserDropdown({
-  sections = [
-    { title: "Mentor 1", content: "edit user details here." },
-    { title: "Mentor 2", content: "example text" },
-    { title: "Mentor 3", content: "example text" },
-  ],
+  header,
+  sections = [],
 }: {
-  sections?: { title: string; content: string }[];
+  header?: string;
+  sections?: { title: string; content: React.ReactNode }[];
 }) {
   const [openIndices, setOpenIndices] = useState<number[]>([]);
 
@@ -29,16 +27,17 @@ export default function EditUserDropdown({
   const headerStyle = {
     backgroundColor: "var(--primaryBlue)",
     color: "white",
-    padding: "12px 16px",
+    padding: "20px 16px",
     display: "flex",
     alignItems: "center",
+    fontSize: "24px",
     justifyContent: "space-between",
   };
 
   const accordionHeaderStyle = {
     backgroundColor: "white",
     color: "var(--primaryBlue)",
-    fontSize: "18px",
+    fontSize: "30px",
     borderTop: "2px solid var(--primaryBlue)",
     padding: "12px 16px",
     display: "flex",
@@ -54,10 +53,10 @@ export default function EditUserDropdown({
   };
 
   const contentBoxStyle = {
-    border: "2px solid var(--primaryRed)",
+    border: "5px solid var(--primaryRed)",
     padding: "16px",
-    marginBottom: "16px",
-    height: "200px",
+    margin: "15px 50px",
+    height: "auto",
     color: "var(--textGrey)",
     backgroundColor: "white",
     display: "flex",
@@ -99,9 +98,7 @@ export default function EditUserDropdown({
 
   return (
     <div style={containerStyle}>
-      <div style={headerStyle}>
-        <span>Edit Admin</span>
-      </div>
+      {header && <div style={headerStyle}>{header}</div>}
 
       {sections.map((section, index) => {
         const isOpen = openIndices.includes(index);
@@ -124,7 +121,7 @@ export default function EditUserDropdown({
             {isOpen && (
               <div style={contentWrapperStyle}>
                 <div style={contentBoxStyle}>
-                  <p>{section.content}</p>
+                  {section.content}
                 </div>
 
                 <div style={buttonRowStyle}>

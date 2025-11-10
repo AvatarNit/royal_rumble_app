@@ -8,9 +8,10 @@ type InfoBoxProps = {
 };
 
 export default function InfoBox({ headerText, children }: InfoBoxProps) {
+
   const containerStyle = {
-    width: "900px",
-    margin: "30px 20px 5px",
+    width: "85%",
+    margin: "30px 20px",
   };
 
   const headerStyle = {
@@ -28,7 +29,7 @@ export default function InfoBox({ headerText, children }: InfoBoxProps) {
 
   const contentStyle = {
     backgroundColor: "white",
-    border: "3px solid var(--primaryRed)",
+    border: "5px solid var(--primaryRed)",
     color: "var(--textGrey)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",

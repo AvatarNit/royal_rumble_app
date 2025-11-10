@@ -30,3 +30,229 @@
   align-items: center;
   width: 100%;
 }
+
+.back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-left: 30px;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primaryBlue);
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+}
+
+
+/* upload page */
+
+.upload-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 30px;
+  border-radius: 8px;
+  color: var(--primaryBlue);
+  font-weight: 700;
+  font-size: 1.8rem;
+  width: 98%;
+}
+
+.upload-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 20px;
+  align-items: center;
+  gap: 15px;
+}
+
+.file-input-wrapper {
+  border: 3px solid var(--primaryBlue);
+  border-radius: 6px;
+  padding: 10px 15px 15px 15px;
+  text-align: left;
+}
+
+.file-input {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: var(--primaryBlue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 35px;
+}
+
+.upload-icon i {
+  font-size: 2.4rem;
+  color: var(--primaryBlue);
+}
+
+.upload-icon:hover {
+  transform: scale(1.1);
+}
+
+/* edit admin, mentor, freshmen page */
+
+.search-container {
+  width: 85%;
+  margin: 0 auto 20px auto;
+}
+
+.search-input {
+  width: 100%;
+  border: 3px solid var(--primaryBlue);
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  color: var(--primaryBlue);
+  font-weight: 600;
+}
+
+/* edit groups page (manual add) */
+
+.form-container {
+    border: 3px solid var(--primaryBlue);
+    padding: 10px 10px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.manual-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  font-family: inherit;
+  color: var(--primaryBlue);
+  font-weight: 700;
+  margin: 10px 30px;
+}
+.edit-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  width: 100%;
+  font-family: inherit;
+  color: var(--primaryBlue);
+  font-weight: 700;
+  margin: 20px 30px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;
+  font-size: 25px;
+}
+
+.form-label {
+  width: 240px;
+  text-align: left;
+}
+
+.form-input {
+  border: 4px solid var(--primaryBlue);
+  padding: 10px;
+  width: 400px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  color: var(--primaryBlue);
+  font-weight: 400;
+}
+
+.form-select {
+  border: 4px solid var(--primaryBlue);
+  border-radius: 0px;
+  padding: 10px;
+  width: 650px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  color: var(--primaryBlue);
+  font-weight: 600;
+  background-color: white;
+  margin: 20px 0px;
+}
+
+.checkbox-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 80px;
+  margin: 0px 0px 20px 0px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 30px;
+}
+
+.checkbox-input {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--primaryBlue);
+}
+
+.save-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 10px 0px;
+}
+
+/* edit groups page dropdown */
+
+.edit-group-row {
+ display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;       
+  gap: 0px 30px;       
+  margin: 10px 20px 50px 20px;
+}
+
+.edit-group-pair {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;            
+  min-width: 200px;     
+}    
+
+
+.edit-group-label {
+  width: auto;
+  text-align: left;
+  color: var(--primaryBlue);
+  font-size: 25px;
+}
+
+.edit-group-input {
+  border: 4px solid var(--primaryBlue);
+  padding: 10px;
+  min-width: 200px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  color: var(--textGrey);
+  font-weight: 400;
+}

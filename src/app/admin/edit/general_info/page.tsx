@@ -4,6 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
 import EditUserDropdown from "../../../components/editUserDropdown";
+import internalDropdown from "../../../components/internalDropdown";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 
@@ -20,7 +21,7 @@ export default function EditGeneralInfo() {
       <LoginButton />
 
       <header className="admin-header">
-        <h1 className="admin-title">Edit General Page Info</h1>
+        <h1 className="admin-title">Edit Events & Training</h1>
       </header>
 
       <button className="back-button" onClick={handleLogoClick}>
@@ -28,10 +29,10 @@ export default function EditGeneralInfo() {
       </button>
 
      <EditUserDropdown
-        header="Pages"
+        header="Current Events"
         sections={[
           {
-            title: "What is RR",
+            title: "What is RR Page",
             content: 
               <div className= "edit-user-form">
                   <label className="form-label">Subheading:</label>
@@ -143,7 +144,7 @@ export default function EditGeneralInfo() {
                           }}
                 />
                 <label className="form-label">Ticket Link:</label>
-                <input type="text" className="form-input" placeholder="GoFan Link" />
+                <input type="text" className="form-input-large" placeholder="GoFan Link" />
               </div>
           },
         ]}

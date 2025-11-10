@@ -5,44 +5,28 @@ import DeleteButton from "./deleteButton";
 import SaveButton from "./saveButton";
 
 export default function EditUserDropdown({
-  header,
   sections = [],
-  disableContentBox = false,
-  showButtons = true
 }: {
-  header?: string;
   sections?: { title: string; content: React.ReactNode }[];
-  disableContentBox?: boolean;
-  showButtons?: boolean;
 }) {
   const [openIndices, setOpenIndices] = useState<number[]>([]);
 
   const containerStyle = {
-    border: "5px solid var(--primaryBlue)",
+    border: "5px solid var(--primaryRed)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     color: "var(--primaryBlue)",
-    width: "85%",
-    margin: "20px auto",
+    width: "90%",
+    margin: "20px",
     backgroundColor: "white",
     overflow: "hidden",
-  };
-
-  const headerStyle = {
-    backgroundColor: "var(--primaryBlue)",
-    color: "white",
-    padding: "20px 16px",
-    display: "flex",
-    alignItems: "center",
-    fontSize: "24px",
-    justifyContent: "space-between",
   };
 
   const accordionHeaderStyle = {
     backgroundColor: "white",
     color: "var(--primaryBlue)",
     fontSize: "30px",
-    borderTop: "2px solid var(--primaryBlue)",
+    borderTop: "3px solid var(--primaryRed)",
     padding: "12px 16px",
     display: "flex",
     alignItems: "center",
@@ -57,9 +41,9 @@ export default function EditUserDropdown({
   };
 
   const contentBoxStyle = {
-    border: "5px solid var(--primaryRed)",
+    border: "2px solid white",
     padding: "16px",
-    margin: "15px 50px",
+    margin: "10px 20px",
     height: "auto",
     color: "var(--textGrey)",
     backgroundColor: "white",
@@ -102,7 +86,6 @@ export default function EditUserDropdown({
 
   return (
     <div style={containerStyle}>
-      {header && <div style={headerStyle}>{header}</div>}
 
       {sections.map((section, index) => {
         const isOpen = openIndices.includes(index);
@@ -124,20 +107,18 @@ export default function EditUserDropdown({
 
             {isOpen && (
               <div style={contentWrapperStyle}>
-                <div style={disableContentBox ? {} : contentBoxStyle}>
+                <div style={contentBoxStyle}>
                   {section.content}
                 </div>
 
-                {showButtons && (
-                  <div style={buttonRowStyle}>
-                    <div style={buttonContainerStyle}>
-                      <DeleteButton>Delete</DeleteButton>
-                    </div>
-                    <div style={buttonContainerStyle}>
-                      <SaveButton>Save</SaveButton>
-                    </div>
+                <div style={buttonRowStyle}>
+                  <div style={buttonContainerStyle}>
+                    <DeleteButton>Delete</DeleteButton>
                   </div>
-                )}
+                  <div style={buttonContainerStyle}>
+                    <SaveButton>Save</SaveButton>
+                  </div>
+                </div>
               </div>
             )}
           </div>

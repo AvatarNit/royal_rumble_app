@@ -222,7 +222,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 .checkbox-input {
@@ -272,4 +272,27 @@
   font-family: inherit;
   color: var(--textGrey);
   font-weight: 400;
+}
+
+/* add page */
+
+.add-form {
+  border: 5px solid var(--primaryRed);
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 25px;
+  padding: 30px 20px;
+  text-align: left;
+  height: auto;
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.add-button-align {
+  display: flex;
+  justify-content: center;
+  margin: 30px ;
+
 }

@@ -7,7 +7,7 @@ import AddButton from "../../../components/addButton";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 
-export default function AdminAddAdmin() {
+export default function AdminAddCustomGroup() {
 
   const router = useRouter();
   const handleLogoClick = () => {
@@ -20,7 +20,7 @@ export default function AdminAddAdmin() {
       <LoginButton />
 
       <header className="admin-header">
-        <h1 className="admin-title">Add New Admin</h1>
+        <h1 className="admin-title">Add New Group</h1>
       </header>
 
       <button className="back-button" onClick={handleLogoClick}>
@@ -30,15 +30,15 @@ export default function AdminAddAdmin() {
       <section className="add-form">
         <div className= "edit-user-form">
           <div className="form-row">
-            <label className="form-label">First Name:</label>
+            <label className="form-label">Group Name:</label>
+            <input type="text" className="form-input" placeholder="ex. ENL: Spaish"/>
+          </div>
+          <div className="form-row">
+            <label className="form-label">Event Order:</label>
             <input type="text" className="form-input" />
           </div>
           <div className="form-row">
-            <label className="form-label">Last Name:</label>
-            <input type="text" className="form-input" />
-          </div>
-          <div className="form-row">
-            <label className="form-label">Email:</label>
+            <label className="form-label">Route #:</label>
             <input type="text" className="form-input" />
           </div>
         </div>

@@ -16,7 +16,7 @@ export default function CheckBoxTable({
     width: "100%",
     height: "300px",
     maxWidth: "800px",
-    margin: "20px auto",
+    margin: "20px auto 40px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
   };
@@ -70,7 +70,7 @@ export default function CheckBoxTable({
               {header}
             </th>
           ))}
-          <th style={headerCellStyle}>Actions</th>
+          <th style={headerCellStyle}> </th>
         </tr>
       </thead>
 

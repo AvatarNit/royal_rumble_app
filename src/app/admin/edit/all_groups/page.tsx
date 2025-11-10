@@ -6,6 +6,7 @@ import LoginButton from "../../../components/loginButton";
 import AddButton from "../../../components/addButton";
 import InfoBox from "../../../components/infoBox";
 import EditUserDropdown from "../../../components/editUserDropdown";
+import EditTable from "../../../components/editTable"
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 
@@ -82,26 +83,127 @@ export default function AdminEditGroups() {
         header="Freshmen Groups"
         sections={[
           {
-            title: "Group 1",
+            title: "Group 1 (Mentor assigned)",
             content: 
-              <div className="info-pairs">
-                <div className="info-pair">
-                  <div className="info-label">Route #:</div>
-                  <div className="info-value">10</div>
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Route #:</label>
+                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                  </div>
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Event Order: </label>
+                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                  </div>
                 </div>
-                <div className="info-pair">
-                  <div className="info-label">Event Order:</div>
-                  <div className="info-value">Tour - LGI - GYM</div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
                 </div>
-              </div>,
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Freshman Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
           },
           {
-            title: "Group 2",
-            content: "edit user details here.",
+            title: "Group 2 (Mentor assigned)",
+            content: 
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Route #:</label>
+                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                  </div>
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Event Order: </label>
+                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                  </div>
+                </div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Freshman Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
           },
           {
-            title: "Group 3",
-            content: "edit user details here.",
+            title: "Group 3 (Mentor assigned)",
+            content: 
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Route #:</label>
+                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                  </div>
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Event Order: </label>
+                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                  </div>
+                </div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Freshman Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
           },
         ]}
       />
@@ -109,17 +211,80 @@ export default function AdminEditGroups() {
         header="Hallway Groups"
         sections={[
           {
-            title: "Hallway Group 1",
-            content: "edit user details here.",
+            title: "Hallway 1 (Mentor assigned)",
+            content: 
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Location:</label>
+                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                  </div>
+                </div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
           },
           {
-            title: "Hallway Group 2",
-            content: "edit user details here.",
+            title: "Hallway 2 (Mentor assigned)",
+            content: 
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Location:</label>
+                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                  </div>
+                </div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                 <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
           },
           {
-            title: "Hallway Group 3",
-            content: "edit user details here.",
-          },
+            title: "Hallway 3 (Mentor assigned)",
+            content: 
+              <section>
+                <div className="edit-group-row">
+                  <div className="edit-group-pair">
+                    <label className="edit-group-label">Location:</label>
+                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                  </div>
+                </div>
+
+                <label className="edit-group-label" 
+                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                 <div style={{ width: 925 }}>
+                  <EditTable
+                          headers={["Mentor Name"]}
+                          data={[
+                            ["Student 1"],
+                            ["Student 2"],
+                            ["Student 3"],
+                          ]}
+                  />
+                </div>
+              </section>
+          }
         ]}
       />
     </main>

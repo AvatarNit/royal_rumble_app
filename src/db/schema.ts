@@ -1,0 +1,104 @@
+import { pgTable, integer, text, boolean, date, primaryKey } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+
+// ---------------- group_data ----------------
+export const groupData = pgTable("group_data", {
+  groupId: integer("group_id").primaryKey(),
+  eventOrder: text("event_order"),
+  routeColor: text("route_color"),
+  startPos: integer("start_pos"),
+});
+
+// ---------------- mentor_attendance_data ----------------
+export const mentorAttendanceData = pgTable("mentor_attendance_data", {
+  mentorId: integer("mentor_id"),
+  trainingId: integer("training_id"),
+  status: text("status"),
+});
+
+// ---------------- trainings_data ----------------
+export const trainingsData = pgTable("trainings_data", {
+  trainingId: integer("training_id").primaryKey(),
+  job: text("job"),
+  date: date("date"),
+  description: text("description"),
+});
+
+// ---------------- hallway_stop_data ----------------
+export const hallwayStopData = pgTable("hallway_stop_data", {
+  hallwayStopId: integer("hallway_stop_id").primaryKey(),
+  location: text("location"),
+});
+
+// ---------------- hallway_host_data ----------------
+export const hallwayHostData = pgTable("hallway_host_data", {
+  mentorId: integer("mentor_id"),
+  hallwayStopId: integer("hallway_stop_id").references(() => hallwayStopData.hallwayStopId),
+});
+
+// ---------------- seminar_data ----------------
+export const seminarData = pgTable("seminar_data", {
+  freshmenId: integer("freshmen_id"),
+  groupId: integer("group_id").references(() => groupData.groupId),
+});
+
+// ---------------- freshmen_data ----------------
+export const freshmenData = pgTable("freshmen_data", {
+  freshmenId: integer("freshmen_id").primaryKey(),
+  fName: text("f_name"),
+  lName: text("l_name"),
+  tshirtSize: text("tshirt_size"),
+  email: text("email"),
+  primaryLanguage: text("primary_language"),
+  interests: text("interests"),
+  healthConcerns: text("health_concerns"),
+  present: boolean("present"),
+});
+
+// ---------------- group_leader_data ----------------
+export const groupLeaderData = pgTable("group_leader_data", {
+  mentorId: integer("mentor_id"),
+  groupId: integer("group_id").references(() => groupData.groupId),
+});
+
+// ---------------- mentor_data ----------------
+export const mentorData = pgTable("mentor_data", {
+  mentorId: integer("mentor_id").primaryKey(),
+  email: text("email"),
+  fName: text("f_name"),
+  lName: text("l_name"),
+  gradYear: integer("grad_year"),
+  job: text("job"),
+  pizzaType: text("pizza_type"),
+  languages: text("languages"),
+  trainingDay: text("training_day"),
+  tshirtSize: text("tshirt_size"),
+  phoneNum: integer("phone_num"),
+});
+
+// ---------------- admin_data ----------------
+export const adminData = pgTable("admin_data", {
+  adminId: integer("admin_id").primaryKey(),
+  email: text("email"),
+  fName: text("f_name"),
+  lName: text("l_name"),
+});
+
+// ---------------- Relations (optional) ----------------
+export const mentorRelations = relations(mentorData, ({ many }) => ({
+  attendance: many(mentorAttendanceData),
+  hallwayHost: many(hallwayHostData),
+  groupLeader: many(groupLeaderData),
+}));
+
+export const groupRelations = relations(groupData, ({ many }) => ({
+  leaders: many(groupLeaderData),
+  seminars: many(seminarData),
+}));
+
+export const freshmanRelations = relations(freshmenData, ({ one }) => ({
+  seminar: one(seminarData, {
+    fields: [freshmenData.freshmenId],
+    references: [seminarData.freshmenId],
+  }),
+}));

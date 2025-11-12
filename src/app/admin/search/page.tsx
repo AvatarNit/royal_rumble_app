@@ -5,6 +5,7 @@ import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import SaveButton from "../../components/saveButton";
 import InfoBox from "../../components/infoBox";
+import InfoTable from "../../components/infoTable";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 
@@ -12,13 +13,16 @@ export default function AdminSearch() {
 
   const [mentorSelected, setMentorSelected] = useState(false);
   const [languageSelected, setLanguageSelected] = useState(false);
+  const [freshmenSelected, setFreshmenSelected] = useState(false);
 
   const handleMentorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMentorSelected(e.target.checked);
   };
-
   const handleLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLanguageSelected(e.target.checked);
+  };
+  const handleFreshmenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFreshmenSelected(e.target.checked);
   };
 
   return (
@@ -30,7 +34,7 @@ export default function AdminSearch() {
         <h1 className="admin-title">Search Information</h1>
       </header>
 
-      <div className="search-container" style={{marginLeft: "16%"}}>
+      <div className="search-container" style={{marginLeft: "15%"}}>
         <div className="search-row">
           <input
             type="text"
@@ -44,12 +48,15 @@ export default function AdminSearch() {
       </div>
 
       <div style={{width:"85%"}}>
-        <div className= "form-container">
+        <div className= "form-container" style={{margin:"0px"}}>
           <form className="manual-add-form">
 
           <div className="form-row checkbox-row">
             <label className="checkbox-label">
-              <input type="checkbox" className="checkbox-input" />
+              <input type="checkbox" 
+                     className="checkbox-input"
+                     checked={freshmenSelected}
+                     onChange={handleFreshmenChange} />
               Freshmen
             </label>
 
@@ -89,10 +96,12 @@ export default function AdminSearch() {
                 />
                 Language
             </label>
-            <label className="checkbox-label">
-              <input type="checkbox" className="checkbox-input" />
-              Prep Class
-            </label>
+            {freshmenSelected && (
+              <label className="checkbox-label">
+                <input type="checkbox" className="checkbox-input" />
+                Prep Class
+              </label>
+            )}
           </div>
           {languageSelected && (
               <div className="form-row checkbox-row">
@@ -107,9 +116,20 @@ export default function AdminSearch() {
                 </label>
               </div>
             )}
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
-  </main>
+      <section className="info-box">
+        <InfoBox headerText="Filtered Info">
+          <InfoTable
+            headers={["Student Name", "Filter ex. Language"]}
+            data={[
+              ["John Doe", "English"],
+              ["Jane Smith", "Spanish"]
+            ]}
+            />
+        </InfoBox>
+      </section>
+    </main>
   );
 }

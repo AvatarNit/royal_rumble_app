@@ -3,13 +3,11 @@
 import React, { useState } from "react";
 
 export default function ViewDropdown({
-  sections = [
-    { title: "Mentor 1", content: "view user details here." },
-    { title: "Mentor 2", content: "example text" },
-    { title: "Mentor 3", content: "example text" },
-  ],
+  header,
+  sections = [],
 }: {
-  sections?: { title: string; content: string }[];
+  header?: string;
+  sections?: { title: string; content: React.ReactNode }[]; 
 }) {
   const [openIndices, setOpenIndices] = useState<number[]>([]);
 
@@ -18,7 +16,7 @@ export default function ViewDropdown({
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
     color: "var(--primaryBlue)",
-    width: "800px",
+    width: "85%",
     margin: "20px auto",
     backgroundColor: "white",
     overflow: "hidden",
@@ -27,16 +25,17 @@ export default function ViewDropdown({
   const headerStyle = {
     backgroundColor: "var(--primaryBlue)",
     color: "white",
-    padding: "12px 16px",
+    padding: "20px 16px",
     display: "flex",
     alignItems: "center",
+    fontSize: "24px",
     justifyContent: "space-between",
   };
 
   const accordionHeaderStyle = {
     backgroundColor: "white",
     color: "var(--primaryBlue)",
-    fontSize: "18px",
+    fontSize: "30px",
     borderTop: "2px solid var(--primaryBlue)",
     padding: "12px 16px",
     display: "flex",
@@ -52,10 +51,10 @@ export default function ViewDropdown({
   };
 
   const contentBoxStyle = {
-    border: "2px solid var(--primaryRed)",
+    border: "5px solid var(--primaryRed)",
     padding: "16px",
-    marginBottom: "16px",
-    height: "200px",
+    margin: "15px 50px",
+    height: "auto",
     color: "var(--textGrey)",
     backgroundColor: "white",
     display: "flex",
@@ -84,9 +83,7 @@ export default function ViewDropdown({
   return (
     <div style={containerStyle}>
       {/* Top blue header */}
-      <div style={headerStyle}>
-        <span>View Mentors</span>
-      </div>
+      {header && <div style={headerStyle}>{header}</div>}
 
       {/* Accordion Sections */}
       {sections.map((section, index) => {

@@ -13,7 +13,7 @@ export default function Table({
     borderCollapse: "collapse" as const,
     width: "100%",
     height: "300px",
-    maxWidth: "800px",
+    maxWidth: "85%",
     margin: "20px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",

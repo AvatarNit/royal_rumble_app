@@ -3,6 +3,7 @@ import { useRouter} from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
+import SaveButton from "../../../components/saveButton";
 import EditUserDropdown from "../../../components/editUserDropdown";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
@@ -28,11 +29,16 @@ export default function AdminEditFreshmen() {
       </button>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Freshmen Name/ ID..."
-          className="search-input"
-        />
+        <div className="search-row">
+          <input
+            type="text"
+            placeholder="Search Name/ ID..."
+            className="search-input"
+          />
+          <div>
+            <SaveButton>Filter</SaveButton>
+          </div>
+        </div>
       </div>
 
      <EditUserDropdown

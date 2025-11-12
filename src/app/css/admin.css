@@ -107,15 +107,27 @@
   transform: scale(1.1);
 }
 
-/* edit admin, mentor, freshmen page */
+/* search bar  */
 
 .search-container {
-  width: 85%;
-  margin: 0 auto 20px auto;
+  width: 100%;
+  margin: 20px 0px 20px 15%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
   border: 3px solid var(--primaryBlue);
   border-radius: 4px;
   padding: 10px;
@@ -163,6 +175,7 @@
   justify-content: flex-start;
   gap: 30px;
   font-size: 25px;
+  transition: all 0.2s ease-in-out;
 }
 
 .form-label {

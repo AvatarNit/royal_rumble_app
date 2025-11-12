@@ -4,6 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
 import AddButton from "../../../components/addButton";
+import SaveButton from "../../../components/saveButton";
 import InfoBox from "../../../components/infoBox";
 import EditUserDropdown from "../../../components/editUserDropdown";
 import EditTable from "../../../components/editTable"
@@ -78,6 +79,19 @@ export default function AdminEditGroups() {
           </form>
         </div>
       </InfoBox>
+
+      <div className="search-container">
+        <div className="search-row">
+          <input
+            type="text"
+            placeholder="Search Name/ ID..."
+            className="search-input"
+          />
+          <div>
+            <SaveButton>Filter</SaveButton>
+          </div>
+        </div>
+      </div>
 
      <EditUserDropdown
         header="Freshmen Groups"

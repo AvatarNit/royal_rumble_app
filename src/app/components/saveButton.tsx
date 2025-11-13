@@ -1,13 +1,14 @@
 "use client";
-
 import React from "react";
-export default function SaveButtons({
-  children,
-  link = "#",
-}: {
+
+
+interface SaveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   link?: string;
-}) {
+}
+
+export default function SaveButton({ children, link = "#", ...props }: SaveButtonProps) {
+
   const buttonStyle = {
     display: "inline-flex",
     alignItems: "center",
@@ -49,6 +50,7 @@ export default function SaveButtons({
           window.location.href = link;
         }
       }}
+      {...props}
     >
       {children}
     </button>

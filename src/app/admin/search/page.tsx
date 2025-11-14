@@ -172,16 +172,6 @@ export default function AdminSearch() {
               </label>
             </div>
 
-            {freshmenSelected && (
-              <div className="form-row checkbox-row">
-                <label className="checkbox-label">
-                  <input type="checkbox" className="checkbox-input" 
-                  checked={prepSelected} onChange={handlePrepChange} />
-                  Prep Class
-                </label>
-              </div>
-            )}
-
             {freshmenSelected && !mentorSelected && (
               <div className="form-row checkbox-row">
                 <label className="checkbox-label">

@@ -107,15 +107,27 @@
   transform: scale(1.1);
 }
 
-/* edit admin, mentor, freshmen page */
+/* search bar  */
 
 .search-container {
-  width: 85%;
-  margin: 0 auto 20px auto;
+  width: 100%;
+  margin: 60px 0px 20px 15%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
   border: 3px solid var(--primaryBlue);
   border-radius: 4px;
   padding: 10px;
@@ -123,6 +135,14 @@
   font-family: inherit;
   color: var(--textGrey);
   font-weight: 600;
+}
+
+.info-box{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* edit groups page (manual add) */
@@ -163,6 +183,7 @@
   justify-content: flex-start;
   gap: 30px;
   font-size: 25px;
+  transition: all 0.2s ease-in-out;
 }
 
 .form-label {
@@ -294,5 +315,34 @@
   display: flex;
   justify-content: center;
   margin: 30px ;
+  
+}
 
+/* View All Groups Page */
+
+.info-pairs {
+  display: flex;
+  flex-wrap: wrap;       
+  gap: 30px 50px;       
+  margin-bottom: 20px;
+}
+
+.info-pair {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;            
+  min-width: 200px;     
+}
+
+.info-label {
+  color: var(--primaryBlue);
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.info-value {
+  color: var(--textGrey);
+  font-weight: normal;
+  font-size: 30px;
 }

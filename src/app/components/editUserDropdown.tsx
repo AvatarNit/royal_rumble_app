@@ -11,7 +11,7 @@ export default function EditUserDropdown({
   showButtons = true
 }: {
   header?: string;
-  sections?: { title: string; content: React.ReactNode }[];
+  sections?: { title: string; content: React.ReactNode }[]; 
   disableContentBox?: boolean;
   showButtons?: boolean;
 }) {

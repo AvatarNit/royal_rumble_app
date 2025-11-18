@@ -3,6 +3,7 @@ import { useRouter} from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
+import SaveButton from "../../../components/saveButton";
 import EditUserDropdown from "../../../components/editUserDropdown";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
@@ -28,14 +29,19 @@ export default function AdminEditAdmin() {
       </button>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Admin Name..."
-          className="search-input"
-        />
+        <div className="search-row">
+          <input
+            type="text"
+            placeholder="Search Name/ ID..."
+            className="search-input"
+          />
+          <div>
+            <SaveButton>Filter</SaveButton>
+          </div>
+        </div>
       </div>
 
-     <EditUserDropdown
+    <EditUserDropdown
         header=" "
         sections={[
           {
@@ -59,7 +65,7 @@ export default function AdminEditAdmin() {
           {
             title: "Admin 2",
             content: 
-             <div className= "edit-user-form">
+            <div className= "edit-user-form">
                 <div className="form-row">
                   <label className="form-label">First Name:</label>
                   <input type="text" className="form-input" placeholder="Admin First Name" />
@@ -77,7 +83,7 @@ export default function AdminEditAdmin() {
           {
             title: "Admin 3",
             content: 
-             <div className= "edit-user-form">
+            <div className= "edit-user-form">
                 <div className="form-row">
                   <label className="form-label">First Name:</label>
                   <input type="text" className="form-input" placeholder="Admin First Name" />

@@ -1,95 +1,140 @@
+// src/app/api/upload/route.ts
 import { NextResponse } from "next/server";
-import * as XLSX from "xlsx";
-import { db } from "@/db";
+import { db } from "@/db"; // make sure tsconfig has "@" -> "src"
 import {
-  freshmenData,
-  seminarData,
   mentorData,
   groupData,
+  trainingsData,
+  mentorAttendanceData,
+  freshmenData,
+  seminarData,
 } from "@/db/schema";
+import * as XLSX from "xlsx";
 
-export const runtime = "nodejs";
+// Helper: normalize Excel headers to match DB column keys
+function normalizeRows(rows: any[]) {
+  return rows.map((row) => {
+    const newRow: Record<string, any> = {};
+    for (const key in row) {
+      const normalizedKey = key
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "_");
+      newRow[normalizedKey] = row[key];
+    }
+    return newRow;
+  });
+}
 
-// Map Excel headers to DB columns
-const headerMap: Record<string, Record<string, string>> = {
-  mentor_data: {
-    "Mentor ID": "mentorId",
-    Email: "email",
-    "First Name": "fName",
-    "Last Name": "lName",
-    "Graduation Year": "gradYear",
-    Job: "job",
-    Pizza: "pizzaType",
-    Languages: "languages",
-    "Training Day": "trainingDay",
-    "Shirt Size": "tshirtSize",
-    "Phone Number": "phoneNum",
-  },
-  freshmen_data: {
-    "Freshmen ID": "freshmenId",
-    "First Name": "fName",
-    "Last Name": "lName",
-    "Tshirt Size": "tshirtSize",
-    Email: "email",
-    "Primary Language": "primaryLanguage",
-    Interests: "interests",
-    "Health Concerns": "healthConcerns",
-    Present: "present",
-  },
-  seminar_data: {
-    "Freshmen ID": "freshmenId",
-    "Group ID": "groupId",
-  },
-  group_data: {
-    "Group ID": "groupId",
-    "Event Order": "eventOrder",
-    "Route Color": "routeColor",
-    "Start Pos": "startPos",
-  },
-};
+async function insertData(table: string, rows: any[]) {
+  switch (table) {
+    case "mentor_data":
+      for (const row of rows) {
+        await db.insert(mentorData).values({
+          mentorId: row["mentor_id"],
+          fName: row["first_name"],
+          lName: row["last_name"],
+          gradYear: row["graduation_year"],
+          job: row["job"],
+          pizzaType: row["pizza"],
+          languages: row["languages"],
+          trainingDay: row["training_day"],
+          tshirtSize: row["shirt_size"],
+          phoneNum: row["phone_number"],
+          email: row["email"]?.trim() || undefined, // optional
+        }).onConflictDoNothing();
+      }
+      break;
 
-const tableMap: Record<string, any> = {
-  mentor_data: mentorData,
-  freshmen_data: freshmenData,
-  seminar_data: seminarData,
-  group_data: groupData,
-};
+    case "freshmen_data":
+  for (const row of rows) {
+    await db.insert(freshmenData).values({
+      freshmenId: row["freshmen_id"],
+      fName: row["first_name"] ?? row["f_name"],
+      lName: row["last_name"] ?? row["l_name"],
+      tshirtSize: row["shirt_size"] ?? row["shirtsize"],
+      email: row["email"], // must be provided
+      primaryLanguage: row["primary_language"] || "English", // default to English
+      interests: row["interests"],
+      healthConcerns: row["health_concerns"],
+      present: null, // always null
+    });
+  }
+  break;
+
+
+    case "seminar_data":
+      for (const row of rows) {
+        await db.insert(seminarData).values({
+          freshmenId: row["freshmen_id"],
+          groupId: row["group_id"],
+        }).onConflictDoNothing();
+      }
+      break;
+
+    case "group_data":
+      for (const row of rows) {
+        await db.insert(groupData).values({
+          groupId: row["group_id"],
+          eventOrder: row["event_order"],
+          routeColor: row["route_color"],
+          startPos: row["start_pos"],
+        }).onConflictDoNothing();
+      }
+      break;
+
+    case "trainings_data":
+      for (const row of rows) {
+        await db.insert(trainingsData).values({
+          trainingId: row["training_id"],
+          job: row["job"],
+          date: row["date"],
+          description: row["description"],
+        }).onConflictDoNothing();
+      }
+      break;
+
+    case "mentor_attendance_data":
+      for (const row of rows) {
+        await db.insert(mentorAttendanceData).values({
+          mentorId: row["mentor_id"],
+          trainingId: row["training_id"],
+          status: row["status"],
+        }).onConflictDoNothing();
+      }
+      break;
+
+    default:
+      throw new Error("Unknown table: " + table);
+  }
+}
 
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const tableName = formData.get("table") as string;
+    const table = formData.get("table") as string;
 
-    if (!file) return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    if (!tableName) return NextResponse.json({ error: "No table specified" }, { status: 400 });
+    if (!file || !table) {
+      return NextResponse.json({ error: "File or table name missing" }, { status: 400 });
+    }
 
-    const table = tableMap[tableName];
-    const map = headerMap[tableName];
-
-    if (!table || !map) return NextResponse.json({ error: "Invalid table name" }, { status: 400 });
-
+    // Convert Excel to JSON
     const arrayBuffer = await file.arrayBuffer();
     const workbook = XLSX.read(arrayBuffer);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const jsonData: any[] = XLSX.utils.sheet_to_json(sheet, { defval: null });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    let rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: null });
 
-    if (jsonData.length === 0) return NextResponse.json({ error: "Excel file is empty" }, { status: 400 });
+    // Normalize headers to match DB keys
+    rows = normalizeRows(rows);
 
-    // Map Excel headers to DB columns
-    const dbRows = jsonData.map((row) => {
-      const mappedRow: any = {};
-      for (const key in row) {
-        if (map[key]) mappedRow[map[key]] = row[key];
-      }
-      return mappedRow;
-    });
+    // Insert data into DB
+    await insertData(table, rows);
 
-    await db.insert(table).values(dbRows);
-
-    return NextResponse.json({ message: `Uploaded ${dbRows.length} rows to ${tableName}` });
+    return NextResponse.json({ message: `${rows.length} rows inserted into ${table}` });
   } catch (err: any) {
-    console.error("Upload error:", err);
-    return NextResponse.json({ error: "Failed to upload file" }, { status: 500 });
+    console.error(err);
+    return NextResponse.json({ error: err.message || "Upload failed" }, { status: 500 });
   }
 }

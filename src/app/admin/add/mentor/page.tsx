@@ -11,7 +11,7 @@ export default function AdminAddMentor() {
 
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/add");
+      router.push("/admin/mentor");
   };
 
   return (

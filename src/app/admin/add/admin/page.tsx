@@ -11,7 +11,7 @@ export default function AdminAddAdmin() {
 
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/add");
+      router.push("/admin/admin");
   };
 
   return (

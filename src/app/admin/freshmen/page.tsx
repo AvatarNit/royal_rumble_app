@@ -27,6 +27,7 @@ export default function AdminFreshmen() {
   const [lastNameSelected, setLastNameSelected] = useState(false);
   const [shirtSelected, setShirtSelected] = useState(false);
   const [emailSelected, setEmailSelected] = useState(false);
+  const [languageSelected, setLanguageSelected] = useState(false);
   const [interestsSelected, setInterestsSelected] = useState(false);
   const [healthConcernsSelected, setHealthConcernsSelected] = useState(false);
   const [presentSelected, setPresentSelected] = useState(false);
@@ -38,7 +39,8 @@ export default function AdminFreshmen() {
   if (lastNameSelected) headers.push("Last Name");
   if (shirtSelected) headers.push("T-Shirt");
   if (emailSelected) headers.push("Email");
-  if (interestsSelected) headers.push("Interests");
+  if (emailSelected) headers.push("Email");
+  if (languageSelected) headers.push("Language");
   if (healthConcernsSelected) headers.push("Health Concerns");
   if (presentSelected) headers.push("Present");
 
@@ -97,22 +99,31 @@ export default function AdminFreshmen() {
                             <input 
                                 type="checkbox" 
                                 className="checkbox-input"
-                                checked={shirtSelected}
-                                onChange={(e) => setShirtSelected(e.target.checked)}
-                            />
-                            T-Shirt
-                        </label>
-                        <label className="checkbox-label">
-                            <input 
-                                type="checkbox" 
-                                className="checkbox-input"
                                 checked={emailSelected}
                                 onChange={(e) => setEmailSelected(e.target.checked)}
                             />
                             Email
                         </label>
+                        <label className="checkbox-label">
+                            <input 
+                                type="checkbox" 
+                                className="checkbox-input"
+                                checked={shirtSelected}
+                                onChange={(e) => setShirtSelected(e.target.checked)}
+                            />
+                            T-Shirt
+                        </label>
                     </div>
                     <div className="form-row checkbox-row">
+                        <label className="checkbox-label">
+                            <input 
+                                type="checkbox" 
+                                className="checkbox-input"
+                                checked={languageSelected}
+                                onChange={(e) => setLanguageSelected(e.target.checked)}
+                            />
+                            Language
+                        </label>
                         <label className="checkbox-label">
                             <input 
                                 type="checkbox" 

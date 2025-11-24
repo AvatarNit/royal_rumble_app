@@ -7,6 +7,7 @@ import InfoBox from "../../components/infoBox";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
+import { useRouter} from "next/navigation";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -93,6 +94,11 @@ export default function AdminUpload() {
     }
   };
 
+    const router = useRouter();
+    const handleLogoClick = () => {
+        router.push("/admin");
+    };
+
   return (
     <main className="admin-container">
       <LogoButton />
@@ -101,6 +107,10 @@ export default function AdminUpload() {
       <header className="admin-header">
         <h1 className="admin-title">Upload Data</h1>
       </header>
+
+      <button className="back-button" onClick={handleLogoClick}>
+        <i className="bi bi-arrow-left"></i>
+      </button>
 
       <section className="upload-section">
         <InfoBox headerText="">

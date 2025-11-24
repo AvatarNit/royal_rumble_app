@@ -1,4 +1,5 @@
 "use client";
+import { useRouter} from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
@@ -8,6 +9,11 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 
 export default function AdminViewGroups() {
+
+  const router = useRouter();
+    const handleLogoClick = () => {
+        router.push("/admin");
+    };
 
   return (
     <main className="admin-container">
@@ -20,6 +26,10 @@ export default function AdminViewGroups() {
             View All Group Information
         </h1>
       </header>
+
+      <button className="back-button" onClick={handleLogoClick}>
+        <i className="bi bi-arrow-left"></i>
+      </button>
 
      <ViewDropdown
         header="Freshmen Groups"

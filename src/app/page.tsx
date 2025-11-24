@@ -10,10 +10,10 @@ import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
 import "./css/logo+login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { getFreshmenById } from "@/actions/freshmen";
+import { getMentorById } from "@/actions/mentor";
 
 export default async function Home() {
-  const freshman = await getFreshmenById(123456);
+  const mentor = await getMentorById(271914);
   return (
     <main className="home-container">
       <LoginButton />
@@ -60,8 +60,8 @@ export default async function Home() {
       </section>
 
       <p>
-        {freshman
-          ? `Welcome, ${freshman.fName} ${freshman.lName}!`
+        {mentor
+          ? `Welcome, ${mentor.fName} ${mentor.lName}!`
           : "Welcome, guest!"}
       </p>
     </main>

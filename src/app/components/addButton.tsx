@@ -3,13 +3,12 @@
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-export default function AddButton({
-  children,
-  link = "#",
-}: {
+type AddButtonProps = {
   children: React.ReactNode;
-  link?: string;
-}) {
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
+};
+
+export default function AddButton({ children, onClick }: AddButtonProps) {
   const buttonStyle = {
     display: "inline-flex",
     alignItems: "center",
@@ -44,15 +43,11 @@ export default function AddButton({
 
   return (
     <button
-
       style={buttonStyle}
       onMouseEnter={buttonHover}
       onMouseLeave={buttonUnhover}
-      onClick={() => {
-        if (link) {
-          window.location.href = link;
-        }
-      }}
+      onClick={onClick} // now standard React prop
+      type="button"
     >
       {children}
     </button>

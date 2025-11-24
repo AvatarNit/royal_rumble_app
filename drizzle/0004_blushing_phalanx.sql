@@ -1,0 +1,1 @@
+ALTER TABLE "mentor_data" ALTER COLUMN "phone_num" SET DATA TYPE text;

@@ -38,7 +38,10 @@ export const hallwayHostData = pgTable("hallway_host_data", {
 
 // ---------------- seminar_data ----------------
 export const seminarData = pgTable("seminar_data", {
+  fullName: text("full_name"),
   freshmenId: integer("freshmen_id"),
+  teacherFullName: text("teacher_full_name"),
+  period: integer("period"),
   groupId: integer("group_id").references(() => groupData.groupId),
 });
 
@@ -73,7 +76,7 @@ export const mentorData = pgTable("mentor_data", {
   languages: text("languages"),
   trainingDay: text("training_day"),
   tshirtSize: text("tshirt_size"),
-  phoneNum: integer("phone_num"),
+  phoneNum: text("phone_num"),
 });
 
 // ---------------- admin_data ----------------

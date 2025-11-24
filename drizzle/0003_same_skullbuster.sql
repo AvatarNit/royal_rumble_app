@@ -1,0 +1,1 @@
+ALTER TABLE "seminar_data" ADD COLUMN "period" integer;

@@ -20,13 +20,19 @@ export default function AdminHomepage() {
                                                      alignItems: "center", margin: "50px" }}>
 
         <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-          <AdminButtons link="/admin/add">Add New</AdminButtons>
-          <AdminButtons link="/admin/edit">Edit</AdminButtons>
-          <AdminButtons link="/admin/upload">Upload</AdminButtons>
+          <AdminButtons link="/admin/admin">Admin</AdminButtons>
+          <AdminButtons link="/admin/mentor">Mentor</AdminButtons>
+          <AdminButtons link="/admin/freshmen">Freshmen</AdminButtons>
         </div>
 
         <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "30px" }}>
+          <AdminButtons link="/admin/add">Add New</AdminButtons>
+          <AdminButtons link="/admin/edit">Edit</AdminButtons>
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "30px" }}>
+          <AdminButtons link="/admin/upload">Upload</AdminButtons>
           <AdminButtons link="/admin/search">Search</AdminButtons>
           <AdminButtons link="/admin/attendance">Attendance</AdminButtons>
         </div>

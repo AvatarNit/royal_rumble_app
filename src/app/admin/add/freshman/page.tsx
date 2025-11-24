@@ -11,7 +11,7 @@ export default function AdminAddFreshman() {
 
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/add");
+      router.push("/admin/freshmen");
   };
 
   return (

@@ -35,7 +35,7 @@ export default function AdminAddEvent() {
         alert(
           `Training ${training_return.name} on ${training_return.date} for ${training_return.job} added successfully!`
         );
-        router.push("/admin/add");
+        router.push("/admin/add/event");
       }
     } catch (error) {
       console.error("Error adding training:", error);
@@ -150,7 +150,6 @@ export default function AdminAddEvent() {
           </div>
         </div>
       </section>
-      <p>{job}</p>
       <div className="add-button-align">
         <AddButton onClick={handleAddClick}>
           Add

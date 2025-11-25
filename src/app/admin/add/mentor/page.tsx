@@ -20,6 +20,7 @@ export default function AdminAddMentor() {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleLogoClick = () => {
+<<<<<<< HEAD
     router.push("/admin/add");
   };
 
@@ -45,6 +46,9 @@ export default function AdminAddMentor() {
       console.error(error);
       alert("Failed to add mentor.");
     }
+=======
+      router.push("/admin/mentor");
+>>>>>>> fb5a73741e47ba7b223d7ae1081fccb790252afb
   };
 
   return (

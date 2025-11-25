@@ -1,50 +1,56 @@
 "use client";
 
 import React from "react";
-import ReassignButton from "./reassignButton";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-export default function CheckBoxTable({
+export default function EditTable({
   headers,
   data,
 }: {
   headers: string[];
   data: (string | number)[][];
 }) {
-  const tableContainerStyle = {
-    borderCollapse: "collapse" as const,
+ 
+  const colCount = headers.length + 1;
+
+  const tableContainerStyle: React.CSSProperties = {
+    borderCollapse: "collapse",
     width: "100%",
     height: "300px",
-    maxWidth: "800px",
+    maxWidth: "100%",
     margin: "20px auto 40px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
+    tableLayout: "fixed",
   };
 
-  const headerCellStyle = {
+  const headerCellStyle: React.CSSProperties = {
     backgroundColor: "var(--primaryBlue)",
     color: "white",
     fontWeight: "bold",
-    textAlign: "center" as const,
-    verticalAlign: "middle" as const,
+    textAlign: "center",
+    verticalAlign: "middle",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",
   };
 
-  const cellStyle = {
+  const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
     color: "var(--textGrey)",
-    textAlign: "center" as const,
-    verticalAlign: "middle" as const,
-    padding: "12px",
+    textAlign: "center",
+    verticalAlign: "middle",
+    padding: "20px 4px",
     border: "2px solid var(--primaryBlue)",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
   };
 
-  const iconStyle = {
+  const iconStyle: React.CSSProperties = {
     fontSize: "40px",
     color: "var(--primaryBlue)",
     cursor: "pointer",
-    marginLeft: "10px",
+    margin: "0px 3px",
     transition: "color 0.3s",
   };
 
@@ -56,18 +62,29 @@ export default function CheckBoxTable({
     e.currentTarget.style.color = "var(--primaryBlue)";
   };
 
+  const dataColumns = Math.max(1, headers.length);
+
   return (
     <table style={tableContainerStyle}>
       <colgroup>
-        <col style={{ width: "70%" }} />
-        <col style={{ width: "30%" }} />
+        {Array.from({ length: colCount }).map((_, i) => (
+          <col
+            key={i}
+            style={{
+              width:
+                i === colCount - 1
+                  ? "15%"
+                  : `${85 / (colCount - 1)}%`,
+            }}
+          />
+        ))}
       </colgroup>
 
       <thead>
         <tr>
-          {headers.map((header, index) => (
-            <th key={index} style={headerCellStyle}>
-              {header}
+          {Array.from({ length: dataColumns }).map((_, i) => (
+            <th key={i} style={headerCellStyle}>
+              {headers[i] ?? ""}
             </th>
           ))}
           <th style={headerCellStyle}> </th>
@@ -77,23 +94,34 @@ export default function CheckBoxTable({
       <tbody>
         {data.map((row, rowIndex) => (
           <tr key={rowIndex}>
-            <td style={cellStyle}>{row[0]}</td>
+            {Array.from({ length: dataColumns }).map((_, ci) => (
+              <td key={ci} style={cellStyle} title={String(row[ci] ?? "")}>
+                {row[ci] ?? ""}
+              </td>
+            ))}
+
             <td style={cellStyle}>
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  gap: 12,
                 }}
               >
-                <ReassignButton />
+                <i
+                  className="bi bi-pencil"
+                  style={iconStyle}
+                  onMouseEnter={handleIconHover}
+                  onMouseLeave={handleIconUnhover}
+                />
                 <i
                   className="bi bi-trash"
                   style={iconStyle}
                   onMouseEnter={handleIconHover}
                   onMouseLeave={handleIconUnhover}
-                  onClick={() => console.log("Delete clicked for", row[0])}
-                ></i>
+                  onClick={() => console.log("Delete clicked for row", rowIndex)}
+                />
               </div>
             </td>
           </tr>

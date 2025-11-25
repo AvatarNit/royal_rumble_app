@@ -18,6 +18,7 @@ export default function AdminAddAdmin() {
   const [adminId, setAdminId] = useState("");
 
   const handleLogoClick = () => {
+<<<<<<< HEAD
     router.push("/admin/add");
   };
 
@@ -40,6 +41,9 @@ export default function AdminAddAdmin() {
     } catch (error) {
       console.error("Error adding admin:", error);
     }
+=======
+      router.push("/admin/admin");
+>>>>>>> fb5a73741e47ba7b223d7ae1081fccb790252afb
   };
 
   return (

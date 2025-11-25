@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter} from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
@@ -10,6 +11,7 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 
 export default function AdminSearch() {
+
   const [mentorSelected, setMentorSelected] = useState(false);
   const [languageSelected, setLanguageSelected] = useState(false);
   const [freshmenSelected, setFreshmenSelected] = useState(false);
@@ -128,6 +130,11 @@ export default function AdminSearch() {
     setTableData(data);
   };
 
+  const router = useRouter();
+  const handleLogoClick = () => {
+      router.push("/admin");
+  };
+
   return (
     <main className="admin-container">
       <LogoButton />
@@ -136,6 +143,10 @@ export default function AdminSearch() {
       <header className="admin-header">
         <h1 className="admin-title">Search Information</h1>
       </header>
+
+      <button className="back-button" onClick={handleLogoClick}>
+        <i className="bi bi-arrow-left"></i>
+      </button>
 
       <div className="search-container" style={{ marginLeft: "15%" }}>
         <div className="search-row">

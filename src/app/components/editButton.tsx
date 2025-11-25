@@ -2,7 +2,7 @@
 
 import React from "react";
 
-export default function ReassignButton({
+export default function EditButton({
   onClick,
 }: {
   onClick?: () => void;
@@ -18,7 +18,7 @@ export default function ReassignButton({
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "10px 16px",
-    width: "120px",
+    width: "100px",
     height: "60px",
     textAlign: "center" as const,
     cursor: "pointer",
@@ -45,7 +45,7 @@ export default function ReassignButton({
       onMouseLeave={buttonUnhover}
       onClick={onClick}
     >
-      Reassign
+      Edit
     </button>
   );
 }

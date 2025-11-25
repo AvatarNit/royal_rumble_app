@@ -113,7 +113,7 @@ export default function AdminEditGroups() {
 
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div style={{ width: 925 }}>
+                <div >
                   <EditTable
                           headers={["Mentor Name"]}
                           data={[

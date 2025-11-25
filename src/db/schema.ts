@@ -18,7 +18,8 @@ export const mentorAttendanceData = pgTable("mentor_attendance_data", {
 
 // ---------------- trainings_data ----------------
 export const trainingsData = pgTable("trainings_data", {
-  trainingId: integer("training_id").primaryKey(),
+  trainingId: integer("training_id").primaryKey().generatedAlwaysAsIdentity(),
+  name: text("name"),
   job: text("job"),
   date: date("date"),
   description: text("description"),

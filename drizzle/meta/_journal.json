@@ -36,6 +36,20 @@
       "when": 1763785997595,
       "tag": "0004_blushing_phalanx",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1763993435226,
+      "tag": "0005_watery_kat_farrell",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1764100274437,
+      "tag": "0006_black_lorna_dane",
+      "breakpoints": true
     }
   ]
 }

@@ -7,7 +7,7 @@ import InfoBox from "../../components/infoBox";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -72,7 +72,7 @@ export default function AdminUpload() {
       setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
 
       // Display number of inserted rows
-      const fullMessage = data.message || "Upload completed successfully";
+      const fullMessage = data.message || "Upload Failed";
       const truncatedMessage = fullMessage.includes("inserted")
         ? fullMessage.split("inserted")[0] + "inserted"
         : fullMessage;
@@ -94,10 +94,10 @@ export default function AdminUpload() {
     }
   };
 
-    const router = useRouter();
-    const handleLogoClick = () => {
-        router.push("/admin");
-    };
+  const router = useRouter();
+  const handleLogoClick = () => {
+    router.push("/admin");
+  };
 
   return (
     <main className="admin-container">
@@ -168,7 +168,10 @@ export default function AdminUpload() {
                   style={{
                     gridColumn: "1 / 2",
                     margin: 0,
-                    color: progress[item.table] === 100 ? "green" : "red",
+                    color:
+                      messages[item.table] === "Upload Failed"
+                        ? "red"
+                        : "green",
                     fontWeight: "bold",
                   }}
                 >

@@ -39,10 +39,12 @@ export const hallwayHostData = pgTable("hallway_host_data", {
 
 // ---------------- seminar_data ----------------
 export const seminarData = pgTable("seminar_data", {
-  fullName: text("full_name"),
+  fName: text("f_name"),
+  lName: text("l_name"),
   freshmenId: integer("freshmen_id"),
+  semester: text("semester"),
   teacherFullName: text("teacher_full_name"),
-  period: integer("period"),
+  period: text("period"),
   groupId: integer("group_id").references(() => groupData.groupId),
 });
 

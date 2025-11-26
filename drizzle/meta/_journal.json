@@ -50,6 +50,20 @@
       "when": 1764100274437,
       "tag": "0006_black_lorna_dane",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1764193103416,
+      "tag": "0007_overrated_omega_red",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1764193929695,
+      "tag": "0008_aberrant_unicorn",
+      "breakpoints": true
     }
   ]
 }

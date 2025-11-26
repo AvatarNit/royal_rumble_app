@@ -4,14 +4,12 @@ import { db } from "@/db"; // make sure tsconfig has "@" -> "src"
 import {
   mentorData,
   groupData,
-  trainingsData,
-  mentorAttendanceData,
   freshmenData,
   seminarData,
 } from "@/db/schema";
 import * as XLSX from "xlsx";
 
-// Helper: normalize Excel headers to match DB column keys
+// normalize Excel headers to match DB column keys
 function normalizeRows(rows: any[]) {
   return rows.map((row) => {
     const newRow: Record<string, any> = {};
@@ -66,8 +64,13 @@ async function insertData(table: string, rows: any[]) {
     case "seminar_data":
       for (const row of rows) {
         await db.insert(seminarData).values({
+          fName: row["f_name"] ?? row["first_name"],
+          lName: row["l_name"] ?? row["last_name"],
           freshmenId: row["freshmen_id"],
-          groupId: row["group_id"],
+          semester: row["semester"],
+          teacherFullName: row["teacher_full_name"],
+          period: row["period"],
+          groupId: null, // always null
         }).onConflictDoNothing();
       }
       break;
@@ -82,28 +85,6 @@ async function insertData(table: string, rows: any[]) {
         }).onConflictDoNothing();
       }
       break;
-
-    case "trainings_data":
-      for (const row of rows) {
-        await db.insert(trainingsData).values({
-          trainingId: row["training_id"],
-          job: row["job"],
-          date: row["date"],
-          description: row["description"],
-        }).onConflictDoNothing();
-      }
-      break;
-
-    case "mentor_attendance_data":
-      for (const row of rows) {
-        await db.insert(mentorAttendanceData).values({
-          mentorId: row["mentor_id"],
-          trainingId: row["training_id"],
-          status: row["status"],
-        }).onConflictDoNothing();
-      }
-      break;
-
     default:
       throw new Error("Unknown table: " + table);
   }

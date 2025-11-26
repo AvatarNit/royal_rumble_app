@@ -1,0 +1,1 @@
+ALTER TABLE "seminar_data" ALTER COLUMN "period" SET DATA TYPE text;

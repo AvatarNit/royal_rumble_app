@@ -48,7 +48,7 @@ export default function AdminAdmin() {
 
         <div style={{ width: "85%", display: "flex", justifyContent: "flex-end",
                     alignItems: "center", marginTop: "20px" }}>
-            <AddButton link="/admin/add/admin">
+            <AddButton onClick={() => router.push("/admin/add/admin")}>
                 Add 
                 <i className="bi bi-plus-circle" 
                     style={{ marginLeft: "30px", fontSize: "30px" }}>

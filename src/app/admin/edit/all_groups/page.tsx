@@ -15,7 +15,7 @@ export default function AdminEditGroups() {
 
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/edit");
+      router.push("/admin/all_groups");
   };
 
   const groupOptions = ["1", "2", "3", "4"]; 

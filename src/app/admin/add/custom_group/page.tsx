@@ -11,7 +11,7 @@ export default function AdminAddCustomGroup() {
 
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/add");
+      router.push("/admin/all_groups");
   };
 
   return (

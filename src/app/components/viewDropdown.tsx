@@ -80,6 +80,29 @@ export default function ViewDropdown({
     );
   };
 
+  const handleIconHover = (e: React.MouseEvent<HTMLElement>) => {
+      e.currentTarget.style.color = "var(--primaryRed)";
+  };
+  
+  const handleIconUnhover = (e: React.MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.color = "var(--primaryBlue)";
+  };
+
+  const iconStyle: React.CSSProperties = {
+      fontSize: "40px",
+      color: "var(--primaryBlue)",
+      cursor: "pointer",
+      margin: "0px 3px",
+      transition: "color 0.3s",
+  };
+  const iconContainer: React.CSSProperties = {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      gap: 12,
+      margin: "20px 60px 10px 10px"
+  };
+
   return (
     <div style={containerStyle}>
       {/* Top blue header */}
@@ -102,9 +125,25 @@ export default function ViewDropdown({
             </div>
 
             {isOpen && (
-              <div style={contentWrapperStyle}>
-                <div style={contentBoxStyle}>
-                  <p>{section.content}</p>
+              <div>
+                <div style={iconContainer}>
+                  <i
+                    className="bi bi-pencil"
+                    style={iconStyle}
+                    onMouseEnter={handleIconHover}
+                    onMouseLeave={handleIconUnhover}
+                  />
+                  <i
+                    className="bi bi-trash"
+                    style={iconStyle}
+                    onMouseEnter={handleIconHover}
+                    onMouseLeave={handleIconUnhover}
+                  />
+                </div>
+                <div style={contentWrapperStyle}>
+                  <div style={contentBoxStyle}>
+                    <p>{section.content}</p>
+                  </div>
                 </div>
               </div>
             )}

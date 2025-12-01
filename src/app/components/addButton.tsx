@@ -6,10 +6,12 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 type AddButtonProps = {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
+  style?: React.CSSProperties;
 };
 
-export default function AddButton({ children, onClick }: AddButtonProps) {
+export default function AddButton({ children, onClick, style }: AddButtonProps) {
   const buttonStyle = {
+    ...(style || {}),
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -17,7 +19,7 @@ export default function AddButton({ children, onClick }: AddButtonProps) {
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "30px",
+    fontSize: style?.fontSize || "30px",
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "20px 20px",
@@ -26,7 +28,7 @@ export default function AddButton({ children, onClick }: AddButtonProps) {
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    margin: "10px",
+    margin: "10px"
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -8,12 +8,17 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { assignSeminarGroups } from "@/actions/other";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [progress, setProgress] = useState<Record<string, number>>({});
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
+
+  const runGrouping = async () => {
+    return await assignSeminarGroups();
+  };
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -223,6 +228,16 @@ export default function AdminUpload() {
           </div>
         </InfoBox>
       </section>
+      <button
+        onClick={async () => {
+          const groupingReturn = await runGrouping();
+          alert(
+            `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`
+          );
+        }}
+      >
+        Assign Groups
+      </button>
     </main>
   );
 }

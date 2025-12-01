@@ -22,7 +22,13 @@ export default function TestElementsPage() {
       <SaveButtons link="/about">Save button</SaveButtons>
       <GeneralButtons link="/about">Main page button</GeneralButtons>
       <InfoBox headerText="Question 1">
-        <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
+        <div
+          style={{
+            color: "var(--textGrey)",
+            fontWeight: "normal",
+            fontSize: "16px",
+          }}
+        >
           Info box content goes here.
         </div>
       </InfoBox>
@@ -68,19 +74,11 @@ export default function TestElementsPage() {
       />
       <CheckBoxTable
         headers={["Student Name"]}
-        data={[
-          ["Student 1 "],
-          ["Student 2"],
-          ["Student 3"],
-        ]}
+        data={[["Student 1 "], ["Student 2"], ["Student 3"]]}
       />
       <EditTable
         headers={["Student Name"]}
-        data={[
-          ["Student 1"],
-          ["Student 2"],
-          ["Student 3"],
-        ]}
+        data={[["Student 1"], ["Student 2"], ["Student 3"]]}
       />
     </main>
   );

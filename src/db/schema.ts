@@ -45,7 +45,7 @@ export const seminarData = pgTable("seminar_data", {
   semester: text("semester"),
   teacherFullName: text("teacher_full_name"),
   period: text("period"),
-  groupId: integer("group_id").references(() => groupData.groupId),
+  groupId: integer("group_id"),
 });
 
 // ---------------- freshmen_data ----------------

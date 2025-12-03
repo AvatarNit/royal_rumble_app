@@ -61,4 +61,5 @@ export const updateAdminID = async (
 // Delete
 export const deleteAdminById = async (adminId: number) => {
   await db.delete(adminData).where(eq(adminData.adminId, adminId));
+  return { success: true, id: adminId };
 };

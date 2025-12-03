@@ -14,6 +14,11 @@ export const getFreshmenById = async (freshmenId: number) => {
   return freshman[0];
 };
 
+export const getFreshmen = async () => {
+  const freshmen = await db.select().from(freshmenData);
+  return freshmen;
+};
+
 // Add
 export const addFreshman = async (data: {
   f_name: string;
@@ -41,3 +46,7 @@ export const addFreshman = async (data: {
 // Update
 
 // Delete
+export const deleteFreshmanById = async (freshmenId: number) => {
+  await db.delete(freshmenData).where(eq(freshmenData.freshmenId, freshmenId));
+  return { success: true, id: freshmenId };
+};

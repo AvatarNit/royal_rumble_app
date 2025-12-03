@@ -19,7 +19,6 @@ export default function AdminAddFreshman() {
   const [primaryLanguage, setPrimaryLanguage] = useState("");
 
   const handleLogoClick = () => {
-<<<<<<< HEAD
     router.push("/admin/add");
   };
 
@@ -40,9 +39,7 @@ export default function AdminAddFreshman() {
       console.error(error);
       alert("Failed to add freshman.");
     }
-=======
-      router.push("/admin/freshmen");
->>>>>>> fb5a73741e47ba7b223d7ae1081fccb790252afb
+    router.push("/admin/freshmen");
   };
 
   return (

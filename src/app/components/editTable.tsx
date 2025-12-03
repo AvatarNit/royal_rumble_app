@@ -133,7 +133,7 @@ export default function EditTable({
                     onClick={() => setShowModal(true)}
                   />
 
-                  {/* Modal */}
+                  {/* Modal for Delete */}
                   <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>
                       <Modal.Title>Delete Row</Modal.Title>
@@ -151,9 +151,14 @@ export default function EditTable({
                       <Button
                         variant="danger"
                         onClick={async () => {
-                          if (deleteAction) await deleteAction(Number(id));
-                          setShowModal(false);
-                          location.reload();
+                          if (deleteAction) {
+                            const result = await deleteAction(id);
+                            if (result.success) {
+                              alert(`Successfully deleted item with ID ${id}`);
+                            }
+                            setShowModal(false);
+                            location.reload();
+                          }
                         }}
                       >
                         Delete

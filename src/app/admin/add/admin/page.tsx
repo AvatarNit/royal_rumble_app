@@ -8,6 +8,7 @@ import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { useState } from "react";
 import { addAdmin } from "@/actions/admin";
+import BackButton from "@/app/components/backButton";
 
 export default function AdminAddAdmin() {
   const router = useRouter();
@@ -16,10 +17,6 @@ export default function AdminAddAdmin() {
   const [l_name, setl_name] = useState("");
   const [email, setEmail] = useState("");
   const [adminId, setAdminId] = useState("");
-
-  const handleLogoClick = () => {
-    router.push("/admin/add");
-  };
 
   const handleAdd = async () => {
     try {
@@ -51,9 +48,7 @@ export default function AdminAddAdmin() {
         <h1 className="admin-title">Add New Admin</h1>
       </header>
 
-      <button className="back-button" onClick={handleLogoClick}>
-        <i className="bi bi-arrow-left"></i>
-      </button>
+      <BackButton href="/admin/admin" />
 
       <section className="add-form">
         <div className="edit-user-form">

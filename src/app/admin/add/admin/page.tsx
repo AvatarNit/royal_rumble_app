@@ -32,7 +32,7 @@ export default function AdminAddAdmin() {
         alert(
           `Admin ${admin_return.f_name} ${admin_return.l_name} added successfully!`
         );
-        router.push("/admin/add/admin");
+        router.push("/admin/admin");
       }
     } catch (error) {
       console.error("Error adding admin:", error);

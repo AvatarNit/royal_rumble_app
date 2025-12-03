@@ -1,21 +1,22 @@
 "use client";
 
-import React from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { Modal, Button } from "react-bootstrap";
 
 export default function EditTable({
   headers,
   data,
   editLink,
-  deleteLink,
+  deleteAction,
   idIndex = 0,
   visibleColumns,
 }: {
   headers: string[]; // Table Headers
   data: (string | number)[][]; // Table Data
   editLink: string; // Link shortcut for edit
-  deleteLink: string; // Link shortcut for delete
+  deleteAction?: (id: string | number) => void | Promise<void>; // OnClick for delete
   idIndex?: number; // Index of ID column in data rows
   visibleColumns: number[]; // Indices of columns to display
 }) {
@@ -94,6 +95,7 @@ export default function EditTable({
       <tbody>
         {data.map((row, rowIndex) => {
           const id = row[idIndex];
+          const [showModal, setShowModal] = useState(false);
 
           return (
             // Show data but only for visible columns
@@ -128,8 +130,36 @@ export default function EditTable({
                     style={iconStyle}
                     onMouseEnter={handleIconHover}
                     onMouseLeave={handleIconUnhover}
-                    onClick={() => router.push(`${deleteLink}/${id}`)}
+                    onClick={() => setShowModal(true)}
                   />
+
+                  {/* Modal */}
+                  <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Delete Row</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      Are you sure you want to delete this item?
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={async () => {
+                          if (deleteAction) await deleteAction(Number(id));
+                          setShowModal(false);
+                          location.reload();
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
                 </div>
               </td>
             </tr>

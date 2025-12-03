@@ -8,7 +8,7 @@ import AddButton from "../../components/addButton";
 import BackButton from "../../components/backButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
-import { getAdmins } from "@/actions/admin";
+import { deleteAdminById, getAdmins } from "@/actions/admin";
 
 export default async function AdminAdmin() {
   const admins = await getAdmins();
@@ -53,7 +53,7 @@ export default async function AdminAdmin() {
           ])}
           visibleColumns={[1, 2, 3]}
           editLink="/admin/edit/admin"
-          deleteLink="/admin/delete/admin"
+          deleteAction={deleteAdminById}
           idIndex={0}
         />
       </div>

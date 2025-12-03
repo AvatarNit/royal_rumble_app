@@ -1,19 +1,25 @@
 "use client";
 
 import React from "react";
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { useRouter } from "next/navigation";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 type AddButtonProps = {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
   href?: string;
+  style?: React.CSSProperties;
 };
 
-export default function AddButton({ children, onClick, href }: AddButtonProps) {
+export default function AddButton({
+  children,
+  onClick,
+  href,
+  style,
+}: AddButtonProps) {
   const router = useRouter();
-
   const buttonStyle = {
+    ...(style || {}),
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -21,7 +27,7 @@ export default function AddButton({ children, onClick, href }: AddButtonProps) {
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "30px",
+    fontSize: style?.fontSize || "30px",
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "20px 20px",

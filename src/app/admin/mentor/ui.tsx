@@ -1,40 +1,46 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
+import SaveButton from "../../components/saveButton";
 import EditTable from "../../components/editTable";
 import AddButton from "../../components/addButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import BackButton from "@/app/components/backButton";
-import { deleteFreshmanById } from "@/actions/freshmen";
+import { deleteMentorById } from "@/actions/mentor";
 
-export default function AdminFreshmen({
-  freshmenData,
+export default function AdminMentors({
+  mentorsData,
 }: {
-  freshmenData: Array<{
-    freshmenId: number;
+  mentorsData: Array<{
+    mentorId: number;
     fName: string;
     lName: string;
     email: string;
+    job: string;
     tshirtSize: string;
-    primaryLanguage: string;
-    interests: string;
-    healthConcerns: string;
-    present: boolean;
+    gradYear: number;
+    language: string;
+    phoneNum: string;
+    trainingDay: string;
+    pizzaType: string;
   }>;
 }) {
-  // Column toggle states
+  //   Column toggle states
   const [IDSelected, setIDSelected] = useState(false);
   const [firstNameSelected, setFirstNameSelected] = useState(true);
   const [lastNameSelected, setLastNameSelected] = useState(true);
-  const [shirtSelected, setShirtSelected] = useState(false);
   const [emailSelected, setEmailSelected] = useState(false);
+  const [jobSelected, setJobSelected] = useState(false);
+  const [shirtSelected, setShirtSelected] = useState(false);
+  const [gradYearSelected, setGradYearSelected] = useState(false);
   const [languageSelected, setLanguageSelected] = useState(false);
-  const [interestsSelected, setInterestsSelected] = useState(false);
-  const [healthConcernsSelected, setHealthConcernsSelected] = useState(false);
-  const [presentSelected, setPresentSelected] = useState(false);
+  const [phoneSelected, setPhoneSelected] = useState(false);
+  const [trainingSelected, setTrainingSelected] = useState(false);
+  const [pizzaSelected, setPizzaSelected] = useState(false);
 
   // Search state
   const [searchText, setSearchText] = useState("");
@@ -45,24 +51,28 @@ export default function AdminFreshmen({
     "First Name",
     "Last Name",
     "Email",
-    "T-Shirt",
+    "Job",
+    "Shirt Size",
+    "Grad Year",
     "Language",
-    "Interests",
-    "Health Concerns",
-    "Present",
+    "Phone #",
+    "Training Day",
+    "Pizza Type",
   ];
 
   // Convert freshmen data to the format EditTable expects
-  const tableData = freshmenData.map((f) => [
-    f.freshmenId,
-    f.fName,
-    f.lName,
-    f.email,
-    f.tshirtSize,
-    f.primaryLanguage,
-    f.interests,
-    f.healthConcerns,
-    f.present ? "Yes" : "No",
+  const tableData = mentorsData.map((m) => [
+    m.mentorId,
+    m.fName,
+    m.lName,
+    m.email,
+    m.job,
+    m.tshirtSize,
+    m.gradYear,
+    m.language,
+    m.phoneNum,
+    m.trainingDay,
+    m.pizzaType,
   ]);
 
   // --- SEARCH FILTER LOGIC ---
@@ -90,17 +100,19 @@ export default function AdminFreshmen({
     return fName.includes(query) || lName.includes(query);
   });
 
-  // Generate visible columns
+  //   Generate visible columns
   const visibleColumns: number[] = [];
   if (IDSelected) visibleColumns.push(0);
   if (firstNameSelected) visibleColumns.push(1);
   if (lastNameSelected) visibleColumns.push(2);
   if (emailSelected) visibleColumns.push(3);
-  if (shirtSelected) visibleColumns.push(4);
-  if (languageSelected) visibleColumns.push(5);
-  if (interestsSelected) visibleColumns.push(6);
-  if (healthConcernsSelected) visibleColumns.push(7);
-  if (presentSelected) visibleColumns.push(8);
+  if (jobSelected) visibleColumns.push(4);
+  if (shirtSelected) visibleColumns.push(5);
+  if (gradYearSelected) visibleColumns.push(6);
+  if (languageSelected) visibleColumns.push(7);
+  if (phoneSelected) visibleColumns.push(8);
+  if (trainingSelected) visibleColumns.push(9);
+  if (pizzaSelected) visibleColumns.push(10);
 
   // If none selected → default to first + last name
   if (visibleColumns.length === 0) visibleColumns.push(1, 2);
@@ -111,7 +123,7 @@ export default function AdminFreshmen({
       <LoginButton />
 
       <header className="admin-header">
-        <h1 className="admin-title">Freshmen Information</h1>
+        <h1 className="admin-title">Mentor Information</h1>
       </header>
 
       <BackButton href="/admin" />
@@ -128,7 +140,6 @@ export default function AdminFreshmen({
           />
         </div>
       </div>
-
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}
       <div style={{ width: "85%" }}>
         <div className="form-container" style={{ margin: "0px" }}>
@@ -174,14 +185,22 @@ export default function AdminFreshmen({
                 <input
                   type="checkbox"
                   className="checkbox-input"
-                  checked={shirtSelected}
-                  onChange={(e) => setShirtSelected(e.target.checked)}
+                  checked={jobSelected}
+                  onChange={(e) => setJobSelected(e.target.checked)}
                 />
-                T-Shirt
+                Job
               </label>
             </div>
-
             <div className="form-row checkbox-row">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={gradYearSelected}
+                  onChange={(e) => setGradYearSelected(e.target.checked)}
+                />
+                Grad Year
+              </label>
               <label className="checkbox-label">
                 <input
                   type="checkbox"
@@ -191,42 +210,49 @@ export default function AdminFreshmen({
                 />
                 Language
               </label>
-
               <label className="checkbox-label">
                 <input
                   type="checkbox"
                   className="checkbox-input"
-                  checked={interestsSelected}
-                  onChange={(e) => setInterestsSelected(e.target.checked)}
+                  checked={phoneSelected}
+                  onChange={(e) => setPhoneSelected(e.target.checked)}
                 />
-                Interests
+                Phone #
               </label>
-
               <label className="checkbox-label">
                 <input
                   type="checkbox"
                   className="checkbox-input"
-                  checked={healthConcernsSelected}
-                  onChange={(e) => setHealthConcernsSelected(e.target.checked)}
+                  checked={shirtSelected}
+                  onChange={(e) => setShirtSelected(e.target.checked)}
                 />
-                Health Concerns
+                T-Shirt
               </label>
-
+            </div>
+            <div className="form-row checkbox-row">
               <label className="checkbox-label">
                 <input
                   type="checkbox"
                   className="checkbox-input"
-                  checked={presentSelected}
-                  onChange={(e) => setPresentSelected(e.target.checked)}
+                  checked={trainingSelected}
+                  onChange={(e) => setTrainingSelected(e.target.checked)}
                 />
-                Present
+                Training Day
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={pizzaSelected}
+                  onChange={(e) => setPizzaSelected(e.target.checked)}
+                />
+                Pizza
               </label>
             </div>
           </form>
         </div>
       </div>
-
-      {/* --- ADD FRESHMAN BUTTON --- */}
+      {/* --- ADD MENTOR BUTTON --- */}
       <div
         style={{
           width: "85%",
@@ -236,7 +262,7 @@ export default function AdminFreshmen({
           marginTop: "20px",
         }}
       >
-        <AddButton href="/admin/add/freshman">
+        <AddButton href="/admin/add/mentor">
           Add
           <i
             className="bi bi-plus-circle"
@@ -244,15 +270,14 @@ export default function AdminFreshmen({
           ></i>
         </AddButton>
       </div>
-
       {/* --- TABLE --- */}
       <div style={{ width: "85%", marginTop: "25px" }}>
         <EditTable
           headers={ALL_HEADERS}
           data={filteredData}
           visibleColumns={visibleColumns}
-          editLink="/admin/edit/freshman"
-          deleteAction={deleteFreshmanById}
+          editLink="/admin/edit/mentor"
+          deleteAction={deleteMentorById}
           idIndex={0}
         />
       </div>

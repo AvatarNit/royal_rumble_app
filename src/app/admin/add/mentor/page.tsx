@@ -8,6 +8,7 @@ import { addMentor } from "../../../../actions/mentor";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { useState } from "react";
+import BackButton from "@/app/components/backButton";
 
 export default function AdminAddMentor() {
   const router = useRouter();
@@ -18,11 +19,6 @@ export default function AdminAddMentor() {
   const [graduationYear, setGraduationYear] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-
-  const handleLogoClick = () => {
-<<<<<<< HEAD
-    router.push("/admin/add");
-  };
 
   const handleAdd = async () => {
     try {
@@ -46,9 +42,7 @@ export default function AdminAddMentor() {
       console.error(error);
       alert("Failed to add mentor.");
     }
-=======
-      router.push("/admin/mentor");
->>>>>>> fb5a73741e47ba7b223d7ae1081fccb790252afb
+    router.push("/admin/mentor");
   };
 
   return (
@@ -60,9 +54,7 @@ export default function AdminAddMentor() {
         <h1 className="admin-title">Add New Mentor</h1>
       </header>
 
-      <button className="back-button" onClick={handleLogoClick}>
-        <i className="bi bi-arrow-left"></i>
-      </button>
+      <BackButton href="/admin/mentor" />
 
       <section className="add-form">
         <div className="edit-user-form">

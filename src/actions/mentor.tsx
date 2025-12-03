@@ -13,6 +13,11 @@ export const getMentorById = async (mentorId: number) => {
     .limit(1);
   return mentor[0];
 };
+
+export const getMentors = async () => {
+  const mentors = await db.select().from(mentorData);
+  return mentors;
+};
 // Add
 export const addMentor = async (data: {
   f_name: string;
@@ -42,3 +47,7 @@ export const addMentor = async (data: {
 // Update
 
 // Delete
+export const deleteMentorById = async (mentorId: number) => {
+  await db.delete(mentorData).where(eq(mentorData.mentorId, mentorId));
+  return { success: true, id: mentorId };
+};

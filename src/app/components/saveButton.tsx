@@ -1,13 +1,21 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 
-
-interface SaveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SaveButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  link?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
+  href?: string;
 }
 
-export default function SaveButton({ children, link = "#", ...props }: SaveButtonProps) {
+export default function SaveButton({
+  children,
+  onClick,
+  href = "#",
+  ...props
+}: SaveButtonProps) {
+  const router = useRouter();
 
   const buttonStyle = {
     display: "inline-flex",
@@ -45,11 +53,7 @@ export default function SaveButton({ children, link = "#", ...props }: SaveButto
       style={buttonStyle}
       onMouseEnter={buttonHover}
       onMouseLeave={buttonUnhover}
-      onClick={() => {
-        if (link) {
-          window.location.href = link;
-        }
-      }}
+      onClick={onClick ? onClick : () => href && router.push(href)}
       {...props}
     >
       {children}

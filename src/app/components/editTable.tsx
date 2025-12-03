@@ -2,26 +2,33 @@
 
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { useRouter } from "next/navigation";
 
 export default function EditTable({
   headers,
   data,
+  editLink,
+  deleteLink,
+  idIndex = 0,
+  visibleColumns,
 }: {
-  headers: string[];
-  data: (string | number)[][];
+  headers: string[]; // Table Headers
+  data: (string | number)[][]; // Table Data
+  editLink: string; // Link shortcut for edit
+  deleteLink: string; // Link shortcut for delete
+  idIndex?: number; // Index of ID column in data rows
+  visibleColumns: number[]; // Indices of columns to display
 }) {
- 
-  const colCount = headers.length + 1;
+  const router = useRouter();
+
+  const colCount = visibleColumns.length + 1;
 
   const tableContainerStyle: React.CSSProperties = {
     borderCollapse: "collapse",
     width: "100%",
     height: "300px",
-    maxWidth: "100%",
-    margin: "20px auto 40px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
-    tableLayout: "fixed",
   };
 
   const headerCellStyle: React.CSSProperties = {
@@ -29,7 +36,6 @@ export default function EditTable({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    verticalAlign: "middle",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",
   };
@@ -38,7 +44,6 @@ export default function EditTable({
     backgroundColor: "white",
     color: "var(--textGrey)",
     textAlign: "center",
-    verticalAlign: "middle",
     padding: "20px 4px",
     border: "2px solid var(--primaryBlue)",
     overflow: "hidden",
@@ -62,8 +67,6 @@ export default function EditTable({
     e.currentTarget.style.color = "var(--primaryBlue)";
   };
 
-  const dataColumns = Math.max(1, headers.length);
-
   return (
     <table style={tableContainerStyle}>
       <colgroup>
@@ -71,10 +74,7 @@ export default function EditTable({
           <col
             key={i}
             style={{
-              width:
-                i === colCount - 1
-                  ? "15%"
-                  : `${85 / (colCount - 1)}%`,
+              width: i === colCount - 1 ? "15%" : `${85 / (colCount - 1)}%`,
             }}
           />
         ))}
@@ -82,50 +82,59 @@ export default function EditTable({
 
       <thead>
         <tr>
-          {Array.from({ length: dataColumns }).map((_, i) => (
-            <th key={i} style={headerCellStyle}>
-              {headers[i] ?? ""}
+          {visibleColumns.map((colIndex) => (
+            <th key={colIndex} style={headerCellStyle}>
+              {headers[colIndex]}
             </th>
           ))}
-          <th style={headerCellStyle}> </th>
+          <th style={headerCellStyle}></th>
         </tr>
       </thead>
 
       <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {Array.from({ length: dataColumns }).map((_, ci) => (
-              <td key={ci} style={cellStyle} title={String(row[ci] ?? "")}>
-                {row[ci] ?? ""}
-              </td>
-            ))}
+        {data.map((row, rowIndex) => {
+          const id = row[idIndex];
 
-            <td style={cellStyle}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: 12,
-                }}
-              >
-                <i
-                  className="bi bi-pencil"
-                  style={iconStyle}
-                  onMouseEnter={handleIconHover}
-                  onMouseLeave={handleIconUnhover}
-                />
-                <i
-                  className="bi bi-trash"
-                  style={iconStyle}
-                  onMouseEnter={handleIconHover}
-                  onMouseLeave={handleIconUnhover}
-                  onClick={() => console.log("Delete clicked for row", rowIndex)}
-                />
-              </div>
-            </td>
-          </tr>
-        ))}
+          return (
+            // Show data but only for visible columns
+            <tr key={rowIndex}>
+              {visibleColumns.map((ci) => (
+                <td key={ci} style={cellStyle} title={String(row[ci] ?? "")}>
+                  {row[ci]}
+                </td>
+              ))}
+
+              <td style={cellStyle}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
+                  {/* edit */}
+                  <i
+                    className="bi bi-pencil"
+                    style={iconStyle}
+                    onMouseEnter={handleIconHover}
+                    onMouseLeave={handleIconUnhover}
+                    onClick={() => router.push(`${editLink}/${id}`)}
+                  />
+
+                  {/* delete */}
+                  <i
+                    className="bi bi-trash"
+                    style={iconStyle}
+                    onMouseEnter={handleIconHover}
+                    onMouseLeave={handleIconUnhover}
+                    onClick={() => router.push(`${deleteLink}/${id}`)}
+                  />
+                </div>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

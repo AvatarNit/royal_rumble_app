@@ -3,9 +3,9 @@ import { relations } from "drizzle-orm";
 
 // ---------------- group_data ----------------
 export const groupData = pgTable("group_data", {
-  groupId: integer("group_id").primaryKey(),
+  groupId: text("group_id").primaryKey(),
   eventOrder: text("event_order"),
-  routeColor: text("route_color"),
+  routeNum: integer("route_num"),
   startPos: integer("start_pos"),
 });
 
@@ -45,7 +45,7 @@ export const seminarData = pgTable("seminar_data", {
   semester: text("semester"),
   teacherFullName: text("teacher_full_name"),
   period: text("period"),
-  groupId: integer("group_id"),
+  groupId: text("group_id"),
 });
 
 // ---------------- freshmen_data ----------------
@@ -64,7 +64,7 @@ export const freshmenData = pgTable("freshmen_data", {
 // ---------------- group_leader_data ----------------
 export const groupLeaderData = pgTable("group_leader_data", {
   mentorId: integer("mentor_id"),
-  groupId: integer("group_id").references(() => groupData.groupId),
+  groupId: text("group_id").references(() => groupData.groupId),
 });
 
 // ---------------- mentor_data ----------------

@@ -5,6 +5,18 @@ import { adminData } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // Read
+export const getAdmins = async () => {
+  const admins = await db.select().from(adminData);
+  return admins;
+};
+
+export const getAdminById = async (adminId: number) => {
+  const admin = await db
+    .select()
+    .from(adminData)
+    .where(eq(adminData.adminId, adminId));
+  return admin[0];
+};
 
 // Add
 export const addAdmin = async (data: {
@@ -29,5 +41,21 @@ export const addAdmin = async (data: {
 };
 
 // Update
-
+export const updateAdminID = async (
+  adminId: number,
+  data: {
+    f_name?: string;
+    l_name?: string;
+    email?: string;
+  }
+) => {
+  await db
+    .update(adminData)
+    .set({
+      fName: data.f_name,
+      lName: data.l_name,
+      email: data.email,
+    })
+    .where(eq(adminData.adminId, adminId));
+};
 // Delete

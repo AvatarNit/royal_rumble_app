@@ -2,13 +2,17 @@
 
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { useRouter } from "next/navigation";
 
 type AddButtonProps = {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
+  href?: string;
 };
 
-export default function AddButton({ children, onClick }: AddButtonProps) {
+export default function AddButton({ children, onClick, href }: AddButtonProps) {
+  const router = useRouter();
+
   const buttonStyle = {
     display: "inline-flex",
     alignItems: "center",
@@ -46,7 +50,7 @@ export default function AddButton({ children, onClick }: AddButtonProps) {
       style={buttonStyle}
       onMouseEnter={buttonHover}
       onMouseLeave={buttonUnhover}
-      onClick={onClick} // now standard React prop
+      onClick={onClick ? onClick : () => href && router.push(href)}
       type="button"
     >
       {children}

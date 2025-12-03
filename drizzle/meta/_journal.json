@@ -71,6 +71,13 @@
       "when": 1764555272460,
       "tag": "0009_nosy_doorman",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1764599699840,
+      "tag": "0010_amazing_chat",
+      "breakpoints": true
     }
   ]
 }

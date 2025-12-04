@@ -76,7 +76,6 @@ export default function EditTable({
     (e.currentTarget.style.color = "var(--primaryBlue)");
 
   return (
-    <>
       <table style={tableContainerStyle}>
         <colgroup>
           {Array.from({ length: colCount }).map((_, i) => (

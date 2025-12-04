@@ -29,6 +29,10 @@ export default function EditTable({
 
   const colCount = visibleColumns.length + 1;
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+
+
   const tableContainerStyle: React.CSSProperties = {
     borderCollapse: "collapse",
     width: "100%",
@@ -50,11 +54,12 @@ export default function EditTable({
     backgroundColor: "white",
     color: "var(--textGrey)",
     textAlign: "center",
-    padding: "20px 4px",
+    padding: "20px 2px",
     border: "2px solid var(--primaryBlue)",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
+    fontSize: "20px"
   };
 
   const iconStyle: React.CSSProperties = {
@@ -124,52 +129,53 @@ export default function EditTable({
                       onClick={() => router.push(`${editLink}/${id}`)}
                     />
 
-                    <i
-                      className="bi bi-trash"
-                      style={iconStyle}
-                      onMouseEnter={hover}
-                      onMouseLeave={unhover}
-                      onClick={() => setModalID(id)}
-                    />
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  {/* delete */}
+                  <i
+                    className="bi bi-trash"
+                    style={iconStyle}
+                    onMouseEnter={handleIconHover}
+                    onMouseLeave={handleIconUnhover}
+                    onClick={() => setShowModal(true)}
+                  />
 
-      {/* -------- Modal OUTSIDE map (only one) -------- */}
-      <Modal show={modalID !== null} onHide={() => setModalID(null)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Row</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete this item (ID: {modalID})?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setModalID(null)}>
-            Cancel
-          </Button>
-          <Button
-            variant="danger"
-            onClick={async () => {
-              if (deleteAction && modalID !== null) {
-                const result = await deleteAction(modalID);
-
-                if (result?.success) {
-                  alert(`Successfully deleted item with ID ${modalID}`);
-                }
-
-                setModalID(null);
-                location.reload();
-              }
-            }}
-          >
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
+                  {/* Modal for Delete */}
+                  <Modal show={showModal} onHide={() => setShowModal(false)}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Delete Row</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      Are you sure you want to delete this item?
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        variant="secondary"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={async () => {
+                          if (deleteAction) {
+                            const result = await deleteAction(id);
+                            if (result.success) {
+                              alert(`Successfully deleted item with ID ${id}`);
+                            }
+                            setShowModal(false);
+                            location.reload();
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }

@@ -127,6 +127,16 @@ export default function AdminFreshmen({
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
+        {/* --- ADD FRESHMAN BUTTON --- */}
+        <div style = {{ marginLeft:"200px"}}>
+          <AddButton href="/admin/add/freshman">
+            Add
+            <i
+              className="bi bi-plus-circle"
+              style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+          </AddButton>
+        </div>
       </div>
 
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}
@@ -224,25 +234,6 @@ export default function AdminFreshmen({
             </div>
           </form>
         </div>
-      </div>
-
-      {/* --- ADD FRESHMAN BUTTON --- */}
-      <div
-        style={{
-          width: "85%",
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <AddButton href="/admin/add/freshman">
-          Add
-          <i
-            className="bi bi-plus-circle"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          ></i>
-        </AddButton>
       </div>
 
       {/* --- TABLE --- */}

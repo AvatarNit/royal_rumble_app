@@ -52,13 +52,18 @@ export default function EditTable({
   const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
     color: "var(--textGrey)",
-    textAlign: "center",
-    padding: "20px 2px",
+    textAlign: "left",                   
+    padding: "12px",
     border: "2px solid var(--primaryBlue)",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     fontSize: "20px",
+    whiteSpace: "normal",                  
+    overflowWrap: "break-word",            
+    wordBreak: "normal",                   
+    fontSize: "20px",
+    lineHeight: "1.3"                    
   };
 
   const iconStyle: React.CSSProperties = {
@@ -127,17 +132,17 @@ export default function EditTable({
                       onMouseLeave={unhover}
                       onClick={() => router.push(`${editLink}/${id}`)}
                     />
-
-                    <i
-                      className="bi bi-trash"
-                      style={iconStyle}
-                      onMouseEnter={hover}
-                      onMouseLeave={unhover}
-                      onClick={() => setModalID(id)}
-                    />
-                  </div>
-                </td>
-              </tr>
+                  {/* delete */}
+                  <i
+                    className="bi bi-trash"
+                    style={iconStyle}
+                    onMouseEnter={hover}
+                    onMouseLeave={unhover}
+                    onClick={() => setModalID(id)}
+                  />
+                </div>
+              </td>
+            </tr>
             );
           })}
         </tbody>
@@ -176,4 +181,5 @@ export default function EditTable({
       </Modal>
     </>
   );
+}
 }

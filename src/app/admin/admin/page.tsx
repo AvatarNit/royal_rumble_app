@@ -53,7 +53,10 @@ export default async function AdminAdmin() {
           ])}
           visibleColumns={[1, 2, 3]}
           editLink="/admin/edit/admin"
-          deleteAction={deleteAdminById}
+          deleteAction={async (id) => {
+            const result = await deleteAdminById(Number(id));
+            return { success: result.success };
+          }}
           idIndex={0}
         />
       </div>

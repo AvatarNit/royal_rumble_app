@@ -1,10 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
-import SaveButton from "../../components/saveButton";
 import EditTable from "../../components/editTable";
 import AddButton from "../../components/addButton";
 import "../../css/admin.css";
@@ -277,7 +275,10 @@ export default function AdminMentors({
           data={filteredData}
           visibleColumns={visibleColumns}
           editLink="/admin/edit/mentor"
-          deleteAction={deleteMentorById}
+          deleteAction={async (id) => {
+            const result = await deleteMentorById(Number(id));
+            return { success: result.success };
+          }}
           idIndex={0}
         />
       </div>

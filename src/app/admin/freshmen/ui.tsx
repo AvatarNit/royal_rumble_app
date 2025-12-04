@@ -252,7 +252,10 @@ export default function AdminFreshmen({
           data={filteredData}
           visibleColumns={visibleColumns}
           editLink="/admin/edit/freshman"
-          deleteAction={deleteFreshmanById}
+          deleteAction={async (id) => {
+            const result = await deleteFreshmanById(Number(id));
+            return { success: result.success };
+          }}
           idIndex={0}
         />
       </div>

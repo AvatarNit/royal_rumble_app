@@ -53,13 +53,14 @@ export default function EditTable({
   const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
     color: "var(--textGrey)",
-    textAlign: "center",
-    padding: "20px 2px",
+    textAlign: "left",                   
+    padding: "12px",
     border: "2px solid var(--primaryBlue)",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-    fontSize: "20px"
+    whiteSpace: "normal",                  
+    overflowWrap: "break-word",            
+    wordBreak: "normal",                   
+    fontSize: "20px",
+    lineHeight: "1.3"                    
   };
 
   const iconStyle: React.CSSProperties = {
@@ -132,8 +133,8 @@ export default function EditTable({
                   <i
                     className="bi bi-trash"
                     style={iconStyle}
-                    onMouseEnter={handleIconHover}
-                    onMouseLeave={handleIconUnhover}
+                    onMouseEnter={hover}
+                    onMouseLeave={unhover}
                     onClick={() => setShowModal(true)}
                   />
 

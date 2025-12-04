@@ -137,9 +137,22 @@ export default function AdminMentors({
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
+        {/* --- ADD MENTOR BUTTON --- */}
+        <div
+          style={{ marginLeft: "200px" }}
+        >
+          <AddButton href="/admin/add/mentor">
+            Add
+            <i
+              className="bi bi-plus-circle"
+              style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+          </AddButton>
+        </div>
       </div>
+
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}
-      <div style={{ width: "85%" }}>
+      <div style={{ width: "85%", marginTop: "20px" }}>
         <div className="form-container" style={{ margin: "0px" }}>
           <form className="manual-add-form">
             <div className="form-row checkbox-row">
@@ -250,26 +263,8 @@ export default function AdminMentors({
           </form>
         </div>
       </div>
-      {/* --- ADD MENTOR BUTTON --- */}
-      <div
-        style={{
-          width: "85%",
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <AddButton href="/admin/add/mentor">
-          Add
-          <i
-            className="bi bi-plus-circle"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          ></i>
-        </AddButton>
-      </div>
       {/* --- TABLE --- */}
-      <div style={{ width: "85%", marginTop: "25px" }}>
+      <div style={{ width: "85%", marginTop: "50px" }}>
         <EditTable
           headers={ALL_HEADERS}
           data={filteredData}

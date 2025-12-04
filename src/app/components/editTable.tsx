@@ -24,6 +24,10 @@ export default function EditTable({
 
   const colCount = visibleColumns.length + 1;
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+
+
   const tableContainerStyle: React.CSSProperties = {
     borderCollapse: "collapse",
     width: "100%",
@@ -45,11 +49,12 @@ export default function EditTable({
     backgroundColor: "white",
     color: "var(--textGrey)",
     textAlign: "center",
-    padding: "20px 4px",
+    padding: "20px 2px",
     border: "2px solid var(--primaryBlue)",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
+    fontSize: "20px"
   };
 
   const iconStyle: React.CSSProperties = {
@@ -130,7 +135,10 @@ export default function EditTable({
                     style={iconStyle}
                     onMouseEnter={handleIconHover}
                     onMouseLeave={handleIconUnhover}
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                                      setSelectedId(id);
+                                      setShowModal(true);
+                                    }}
                   />
 
                   {/* Modal for Delete */}
@@ -151,11 +159,14 @@ export default function EditTable({
                       <Button
                         variant="danger"
                         onClick={async () => {
-                          if (deleteAction) {
-                            const result = await deleteAction(id);
-                            if (result.success) {
-                              alert(`Successfully deleted item with ID ${id}`);
+                          if (deleteAction && selectedId !== null) {
+
+                            const result = (await deleteAction(selectedId)) as { success?: boolean } | void;
+
+                            if (result?.success) {
+                              alert(`Successfully deleted item with ID ${selectedId}`);
                             }
+
                             setShowModal(false);
                             location.reload();
                           }

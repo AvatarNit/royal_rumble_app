@@ -10,7 +10,7 @@ import BackButton from "@/app/components/backButton";
 import "../../../../css/admin.css";
 import "../../../../css/logo+login.css";
 
-import { getAdminById, updateAdminID } from "@/actions/admin";
+import { getAdminById, updateAdminByID } from "@/actions/admin";
 
 export default function AdminEditAdmin({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function AdminEditAdmin({ params }: { params: { id: string } }) {
   }, [adminId]);
 
   const handleSave = async () => {
-    await updateAdminID(adminId, {
+    await updateAdminByID(adminId, {
       f_name: fName,
       l_name: lName,
       email: email,

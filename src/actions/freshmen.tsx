@@ -5,7 +5,7 @@ import { freshmenData } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // Read
-export const getFreshmenById = async (freshmenId: number) => {
+export const getFreshmanById = async (freshmenId: number) => {
   const freshman = await db
     .select()
     .from(freshmenData)
@@ -44,6 +44,32 @@ export const addFreshman = async (data: {
 };
 
 // Update
+export const updateFreshmanByID = async (
+  freshmenId: number,
+  data: {
+    f_name?: string;
+    l_name?: string;
+    tshirt_size?: string;
+    email?: string;
+    primary_language?: string;
+    interests?: string;
+    health_concerns?: string;
+  }
+) => {
+  await db
+    .update(freshmenData)
+    .set({
+      fName: data.f_name,
+      lName: data.l_name,
+      tshirtSize: data.tshirt_size,
+      email: data.email,
+      primaryLanguage: data.primary_language,
+      interests: data.interests,
+      healthConcerns: data.health_concerns,
+    })
+    .where(eq(freshmenData.freshmenId, freshmenId));
+  return { success: true, id: freshmenId };
+};
 
 // Delete
 export const deleteFreshmanById = async (freshmenId: number) => {

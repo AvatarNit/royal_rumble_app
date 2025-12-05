@@ -41,7 +41,7 @@ export const addAdmin = async (data: {
 };
 
 // Update
-export const updateAdminID = async (
+export const updateAdminByID = async (
   adminId: number,
   data: {
     f_name?: string;

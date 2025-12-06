@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Modal, Button } from "react-bootstrap";
+import { useAlert } from "@/app/context/AlertContext";
 
 interface EditTableProps {
   headers: string[];
@@ -23,14 +24,11 @@ export default function EditTable({
   visibleColumns,
 }: EditTableProps) {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
-  // ✔ One modal state instead of a hook per row
   const [modalID, setModalID] = useState<null | string | number>(null);
 
   const colCount = visibleColumns.length + 1;
-
-  const [showModal, setShowModal] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | number | null>(null);
 
   const tableContainerStyle: React.CSSProperties = {
     borderCollapse: "collapse",
@@ -59,7 +57,7 @@ export default function EditTable({
     overflowWrap: "break-word",
     wordBreak: "normal",
     fontSize: "20px",
-    lineHeight: "1.3"
+    lineHeight: "1.3",
   };
 
   const iconStyle: React.CSSProperties = {
@@ -128,17 +126,17 @@ export default function EditTable({
                       onMouseLeave={unhover}
                       onClick={() => router.push(`${editLink}/${id}`)}
                     />
-                  {/* delete */}
-                  <i
-                    className="bi bi-trash"
-                    style={iconStyle}
-                    onMouseEnter={hover}
-                    onMouseLeave={unhover}
-                    onClick={() => setModalID(id)}
-                  />
-                </div>
-              </td>
-            </tr>
+                    {/* delete */}
+                    <i
+                      className="bi bi-trash"
+                      style={iconStyle}
+                      onMouseEnter={hover}
+                      onMouseLeave={unhover}
+                      onClick={() => setModalID(id)}
+                    />
+                  </div>
+                </td>
+              </tr>
             );
           })}
         </tbody>
@@ -163,7 +161,15 @@ export default function EditTable({
                 const result = await deleteAction(modalID);
 
                 if (result?.success) {
-                  alert(`Successfully deleted item with ID ${modalID}`);
+                  showAlert(
+                    `Successfully deleted item with ID ${modalID}`,
+                    "success"
+                  );
+                } else {
+                  showAlert(
+                    `Failed to delete item with ID ${modalID}`,
+                    "danger"
+                  );
                 }
 
                 setModalID(null);
@@ -178,4 +184,3 @@ export default function EditTable({
     </div>
   );
 }
-

@@ -9,12 +9,14 @@ import SaveButton from "../../../../components/saveButton";
 import BackButton from "@/app/components/backButton";
 import "../../../../css/admin.css";
 import "../../../../css/logo+login.css";
+import { useAlert } from "@/app/context/AlertContext";
 
 import { getAdminById, updateAdminByID } from "@/actions/admin";
 
 export default function AdminEditAdmin({ params }: { params: { id: string } }) {
   const router = useRouter();
   const adminId = Number(params.id);
+  const { showAlert } = useAlert();
 
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState("");
@@ -37,6 +39,7 @@ export default function AdminEditAdmin({ params }: { params: { id: string } }) {
       l_name: lName,
       email: email,
     });
+    showAlert(`Admin ${fName} ${lName} updated successfully!`, "success");
     router.push("/admin/admin"); // redirect after save
   };
 

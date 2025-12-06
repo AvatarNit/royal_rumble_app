@@ -9,6 +9,7 @@ import "@/app/css/admin.css";
 import "@/app/css/logo+login.css";
 import BackButton from "@/app/components/backButton";
 import { getFreshmanById, updateFreshmanByID } from "@/actions/freshmen";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminEditFreshmen({
   params,
@@ -18,6 +19,7 @@ export default function AdminEditFreshmen({
   const freshmanId = Number(params.id);
 
   const router = useRouter();
+  const { showAlert } = useAlert();
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState("");
   const [tshirtSize, setTshirtSize] = useState("");
@@ -51,6 +53,7 @@ export default function AdminEditFreshmen({
       interests: interests,
       health_concerns: healthConcerns,
     });
+    showAlert(`Freshman ${fName} ${lName} updated successfully!`, "success");
     router.push("/admin/freshmen"); // redirect after save
   };
   const contentBoxStyle = {

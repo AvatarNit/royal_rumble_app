@@ -9,6 +9,7 @@ import "@/app/css/admin.css";
 import "@/app/css/logo+login.css";
 import BackButton from "@/app/components/backButton";
 import { getMentorById, updateMentorByID } from "@/actions/mentor";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminEditMentor({
   params,
@@ -16,6 +17,7 @@ export default function AdminEditMentor({
   params: { id: string };
 }) {
   const mentorId = Number(params.id);
+  const { showAlert } = useAlert();
 
   const router = useRouter();
   const [fName, setFName] = useState("");
@@ -60,6 +62,7 @@ export default function AdminEditMentor({
       training_day: trainingDay,
       phone_num: phoneNum,
     });
+    showAlert(`Mentor ${fName} ${lName} updated successfully!`, "success");
     router.push("/admin/mentor"); // redirect after save
   };
   const contentBoxStyle = {

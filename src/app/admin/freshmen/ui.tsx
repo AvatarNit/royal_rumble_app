@@ -128,7 +128,7 @@ export default function AdminFreshmen({
           />
         </div>
         {/* --- ADD FRESHMAN BUTTON --- */}
-        <div style = {{ marginLeft:"200px"}}>
+        <div style={{ marginLeft: "200px" }}>
           <AddButton href="/admin/add/freshman">
             Add
             <i

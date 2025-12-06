@@ -9,9 +9,11 @@ import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { useState } from "react";
 import BackButton from "@/app/components/backButton";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminAddMentor() {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   const [f_name, setf_name] = useState("");
   const [l_name, setl_name] = useState("");
@@ -33,14 +35,14 @@ export default function AdminAddMentor() {
       if (!mentor_return.success) {
         throw new Error("Failed to add mentor");
       } else {
-        alert(
-          `Mentor ${mentor_return.f_name} ${mentor_return.l_name} added successfully!`
+        showAlert(
+          `Mentor ${mentor_return.f_name} ${mentor_return.l_name} added successfully!`,
+          "success"
         );
         router.push("/admin/add/mentor");
       }
     } catch (error) {
-      console.error(error);
-      alert("Failed to add mentor.");
+      showAlert(`Failed to add mentor: ${f_name} ${l_name}`, "danger");
     }
     router.push("/admin/mentor");
   };

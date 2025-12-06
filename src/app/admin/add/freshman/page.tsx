@@ -8,9 +8,11 @@ import AddButton from "../../../components/addButton";
 import { addFreshman } from "../../../../actions/freshmen";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminAddFreshman() {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   const [f_name, setf_name] = useState("");
   const [l_name, setl_name] = useState("");
@@ -31,13 +33,17 @@ export default function AdminAddFreshman() {
         email,
         primary_language: primaryLanguage,
       });
-      alert(
-        `Freshman ${freshmen_return.f_name} ${freshmen_return.l_name} added successfully!`
+      if (!freshmen_return.success) {
+        throw new Error("Failed to add freshman");
+      }
+      showAlert(
+        `Freshman ${freshmen_return.f_name} ${freshmen_return.l_name} added successfully!`,
+        "success"
       );
       router.push("/admin/add/freshman");
     } catch (error) {
       console.error(error);
-      alert("Failed to add freshman.");
+      showAlert(`Failed to add freshman: ${f_name} ${l_name}`, "danger");
     }
     router.push("/admin/freshmen");
   };

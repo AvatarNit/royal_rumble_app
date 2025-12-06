@@ -9,9 +9,11 @@ import "../../../css/logo+login.css";
 import { useState } from "react";
 import { addAdmin } from "@/actions/admin";
 import BackButton from "@/app/components/backButton";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminAddAdmin() {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   const [f_name, setf_name] = useState("");
   const [l_name, setl_name] = useState("");
@@ -26,16 +28,20 @@ export default function AdminAddAdmin() {
         email,
         admin_id: parseInt(adminId),
       });
+
       if (!admin_return.success) {
-        throw new Error("Failed to add admin");
-      } else {
-        alert(
-          `Admin ${admin_return.f_name} ${admin_return.l_name} added successfully!`
-        );
-        router.push("/admin/admin");
+        showAlert("Failed to add admin", "danger");
+        return;
       }
+
+      showAlert(
+        `Admin ${admin_return.f_name} ${admin_return.l_name} added successfully!`,
+        "success"
+      );
+
+      router.push("/admin/admin");
     } catch (error) {
-      console.error("Error adding admin:", error);
+      showAlert(`Error adding admin: ${f_name} ${l_name}`, "danger");
     }
   };
 
@@ -90,6 +96,7 @@ export default function AdminAddAdmin() {
           </div>
         </div>
       </section>
+
       <div className="add-button-align">
         <AddButton onClick={handleAdd}>
           Add

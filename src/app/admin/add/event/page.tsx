@@ -8,9 +8,11 @@ import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { addTraining } from "@/actions/other";
 import { useState } from "react";
+import { useAlert } from "@/app/context/AlertContext";
 
 export default function AdminAddEvent() {
   const router = useRouter();
+  const { showAlert } = useAlert();
 
   const [name, setName] = useState("");
   const [job, setJob] = useState("");
@@ -32,13 +34,14 @@ export default function AdminAddEvent() {
       if (!training_return.success) {
         throw new Error("Failed to add training");
       } else {
-        alert(
-          `Training ${training_return.name} on ${training_return.date} for ${training_return.job} added successfully!`
+        showAlert(
+          `Training ${training_return.name} on ${training_return.date} for ${training_return.job} added successfully!`,
+          "success"
         );
         router.push("/admin/add/event");
       }
     } catch (error) {
-      console.error("Error adding training:", error);
+      showAlert(`Error adding training: ${name}`, "danger");
     }
   };
 

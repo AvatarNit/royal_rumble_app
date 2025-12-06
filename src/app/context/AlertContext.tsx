@@ -23,8 +23,8 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   function showAlert(message: string, type: AlertType = "success") {
     setAlert({ message, type });
 
-    // Auto dismiss after 3 seconds
-    setTimeout(() => setAlert(null), 3000);
+    // Auto dismiss after 10 seconds
+    setTimeout(() => setAlert(null), 10000);
   }
 
   function clearAlert() {
@@ -38,8 +38,6 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ⭐ IMPORTANT FIX ⭐
-// Force TypeScript to treat the return type as guaranteed.
 export function useAlert(): AlertContextType {
   const ctx = useContext(AlertContext);
   if (!ctx) {

@@ -173,7 +173,8 @@ export default function EditTable({
                 }
 
                 setModalID(null);
-                location.reload();
+                // location.reload();
+                router.refresh();
               }
             }}
           >

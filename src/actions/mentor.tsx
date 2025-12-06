@@ -45,6 +45,38 @@ export const addMentor = async (data: {
 };
 
 // Update
+export const updateMentorByID = async (
+  mentorId: number,
+  data: {
+    f_name: string;
+    l_name: string;
+    email: string;
+    grad_year: number;
+    job: string;
+    pizza_type: string;
+    languages: string;
+    training_day: string;
+    tshirt_size: string;
+    phone_num: string;
+  }
+) => {
+  await db
+    .update(mentorData)
+    .set({
+      fName: data.f_name,
+      lName: data.l_name,
+      email: data.email,
+      gradYear: data.grad_year,
+      job: data.job,
+      pizzaType: data.pizza_type,
+      languages: data.languages,
+      trainingDay: data.training_day,
+      tshirtSize: data.tshirt_size,
+      phoneNum: data.phone_num,
+    })
+    .where(eq(mentorData.mentorId, mentorId));
+  return { success: true, id: mentorId };
+};
 
 // Delete
 export const deleteMentorById = async (mentorId: number) => {

@@ -2,22 +2,22 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-interface SaveButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type SaveButtonProps = {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // properly typed
   href?: string;
-}
+  style?: React.CSSProperties;
+};
 
 export default function SaveButton({
   children,
   onClick,
-  href = "#",
-  ...props
+  href,
+  style,
 }: SaveButtonProps) {
   const router = useRouter();
-
   const buttonStyle = {
+    ...(style || {}),
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -25,11 +25,12 @@ export default function SaveButton({
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
+    fontSize: style?.fontSize || "30px",
     border: "5px solid transparent",
     borderRadius: "14px",
-    padding: "20px 20px",
-    width: "100px",
-    height: "40px",
+    padding: style?.padding || "20px 20px",
+    width: style?.width || "250px",
+    height: style?.height || "70px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
@@ -41,7 +42,7 @@ export default function SaveButton({
     e.currentTarget.style.color = "var(--primaryBlue)";
     e.currentTarget.style.borderColor = "var(--primaryBlue)";
   };
-
+  
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
     e.currentTarget.style.color = "white";
@@ -54,7 +55,7 @@ export default function SaveButton({
       onMouseEnter={buttonHover}
       onMouseLeave={buttonUnhover}
       onClick={onClick ? onClick : () => href && router.push(href)}
-      {...props}
+      type="button"
     >
       {children}
     </button>

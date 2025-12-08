@@ -1,15 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { Modal, Button } from "react-bootstrap";
+import { useAlert } from "@/app/context/AlertContext";
+import { View } from "drizzle-orm";
 
-export default function ViewDropdown({
-  header,
-  sections = [],
-}: {
+interface ViewDropdownProps {
+  editLink: string;
+  deleteAction?: (id: string | number) => Promise<{ success: boolean }>;
+  idIndex?: number;
   header?: string;
   sections?: { title: string; content: React.ReactNode }[]; 
-}) {
+}
+
+export default function ViewDropdown({ 
+  header,
+  sections = [],
+  editLink,
+  deleteAction,
+  idIndex = 0,
+}: ViewDropdownProps) {
+  const router = useRouter();
+  const { showAlert } = useAlert();
+
   const [openIndices, setOpenIndices] = useState<number[]>([]);
+  const [modalID, setModalID] = useState<null | string | number>(null);
 
   const containerStyle = {
     border: "5px solid var(--primaryBlue)",
@@ -80,27 +97,25 @@ export default function ViewDropdown({
     );
   };
 
-  const handleIconHover = (e: React.MouseEvent<HTMLElement>) => {
-      e.currentTarget.style.color = "var(--primaryRed)";
+  const iconStyle: React.CSSProperties = {
+    fontSize: "40px",
+    color: "var(--primaryBlue)",
+    cursor: "pointer",
+    margin: "0px 3px",
+    transition: "color 0.3s",
   };
   
-  const handleIconUnhover = (e: React.MouseEvent<HTMLElement>) => {
-    e.currentTarget.style.color = "var(--primaryBlue)";
-  };
+  const hover = (e: React.MouseEvent<HTMLElement>) =>
+    (e.currentTarget.style.color = "var(--primaryRed)");
+  const unhover = (e: React.MouseEvent<HTMLElement>) =>
+    (e.currentTarget.style.color = "var(--primaryBlue)");
 
-  const iconStyle: React.CSSProperties = {
-      fontSize: "40px",
-      color: "var(--primaryBlue)",
-      cursor: "pointer",
-      margin: "0px 3px",
-      transition: "color 0.3s",
-  };
   const iconContainer: React.CSSProperties = {
-      display: "flex",
-      justifyContent: "flex-end",
-      alignItems: "center",
-      gap: 12,
-      margin: "20px 60px 10px 10px"
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 12,
+    margin: "20px 60px 10px 10px"
   };
 
   return (
@@ -126,20 +141,25 @@ export default function ViewDropdown({
 
             {isOpen && (
               <div>
-                <div style={iconContainer}>
-                  <i
-                    className="bi bi-pencil"
-                    style={iconStyle}
-                    onMouseEnter={handleIconHover}
-                    onMouseLeave={handleIconUnhover}
-                  />
-                  <i
-                    className="bi bi-trash"
-                    style={iconStyle}
-                    onMouseEnter={handleIconHover}
-                    onMouseLeave={handleIconUnhover}
-                  />
-                </div>
+                <div
+                    style={iconContainer}
+                  >
+                    <i
+                      className="bi bi-pencil"
+                      style={iconStyle}
+                      onMouseEnter={hover}
+                      onMouseLeave={unhover}
+                      onClick={() => router.push(`${editLink}`)}
+                    />
+                    {/* delete */}
+                    <i
+                      className="bi bi-trash"
+                      style={iconStyle}
+                      onMouseEnter={hover}
+                      onMouseLeave={unhover}
+                      onClick={() => setModalID(index)}
+                    />
+                  </div>
                 <div style={contentWrapperStyle}>
                   <div style={contentBoxStyle}>
                     <p>{section.content}</p>
@@ -150,6 +170,48 @@ export default function ViewDropdown({
           </div>
         );
       })}
+
+      {/* -------- Modal OUTSIDE map (only one) -------- */}
+      <Modal show={modalID !== null} onHide={() => setModalID(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Group</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this item (ID: {modalID})?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setModalID(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              if (deleteAction && modalID !== null) {
+                const result = await deleteAction(modalID);
+
+                if (result?.success) {
+                  showAlert(
+                    `Successfully deleted item with ID ${modalID}`,
+                    "success"
+                  );
+                } else {
+                  showAlert(
+                    `Failed to delete item with ID ${modalID}`,
+                    "danger"
+                  );
+                }
+
+                setModalID(null);
+                // location.reload();
+                router.refresh();
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </div>
   );
 }

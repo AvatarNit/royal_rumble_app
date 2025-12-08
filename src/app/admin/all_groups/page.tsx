@@ -30,7 +30,7 @@ export default function AdminAllGroups() {
 
       <header className="admin-header">
         <h1 className="admin-title" 
-            style={{ marginBottom: "45px" }}>
+            style={{ marginBottom: "30px" }}>
             All Group Information
         </h1>
       </header>
@@ -55,15 +55,40 @@ export default function AdminAllGroups() {
             </div>
         </div>
       </div>
-      <div style={{ width: "85%", display: "flex", justifyContent: "flex-end",
+
+      {/* --- CHECKBOXES FOR GROUP VISIBILITY --- */}
+      <div style={{ width: "85%", marginTop: "20px" }}>
+        <div className="form-container" style={{ margin: "0px" }}>
+          <form className="manual-add-form">
+            <div className="form-row checkbox-row">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                />
+                Freshmen Groups
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                />
+                Hallway Groups
+              </label>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div style={{ width: "87%", display: "flex", justifyContent: "space-between",
                           alignItems: "center", marginTop: "20px", fontSize: "15px" }}>
-          <AddButton onClick={() => router.push("/admin/add/student")} style={{ fontSize: "21px" }}>
+          <AddButton onClick={() => router.push("/admin/add/student")} style={{ fontSize: "21px", justifyContent: "flex-start" }}>
               Add Student
               <i className="bi bi-plus-circle" 
                   style={{ marginLeft: "30px", fontSize: "30px" }}>
               </i>
           </AddButton>
-          <AddButton onClick={() => router.push("/admin/add/custom_group")} style={{ fontSize: "25px" }}>
+          <AddButton onClick={() => router.push("/admin/add/custom_group")} style={{ fontSize: "25px", justifyContent: "flex-end" }}>
               Add Group
               <i className="bi bi-plus-circle" 
                   style={{ marginLeft: "30px", fontSize: "30px" }}>
@@ -73,6 +98,7 @@ export default function AdminAllGroups() {
 
      <ViewDropdown
         header="Freshmen Groups"
+        editLink="/admin/edit/freshmenGroup"
         sections={[
           {
             title: "Group 1 (Mentor assigned)",
@@ -96,8 +122,8 @@ export default function AdminAllGroups() {
                 </div>
 
                 <label className="info-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div style={{ width: 925 }}>
+                       style={{marginBottom: "30px"}}>Mentors:</label>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[
@@ -108,8 +134,8 @@ export default function AdminAllGroups() {
                   />
                 </div>
                 <label className="info-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
-                <div style={{ width: 925 }}>
+                       style={{marginBottom: "30px"}}>Freshmen:</label>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Freshman Name", "Student ID"]}
                           data={[
@@ -144,7 +170,7 @@ export default function AdminAllGroups() {
 
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div style={{ width: 925 }}>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[
@@ -156,7 +182,7 @@ export default function AdminAllGroups() {
                 </div>
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
-                <div style={{ width: 925 }}>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Freshman Name", "Student ID"]}
                           data={[
@@ -191,7 +217,7 @@ export default function AdminAllGroups() {
 
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div style={{ width: 925 }}>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[
@@ -203,7 +229,7 @@ export default function AdminAllGroups() {
                 </div>
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
-                <div style={{ width: 925 }}>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Freshmen Name", "Student ID"]}
                           data={[
@@ -219,6 +245,7 @@ export default function AdminAllGroups() {
       />
      <ViewDropdown
         header="Hallway Groups"
+        editLink="/admin/edit/hallwayGroup"
         sections={[
           {
             title: "Hallway 1 (Mentor assigned)",
@@ -235,7 +262,7 @@ export default function AdminAllGroups() {
 
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div style={{ width: 925 }}>
+                <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[
@@ -262,7 +289,7 @@ export default function AdminAllGroups() {
 
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                 <div style={{ width: 925 }}>
+                 <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[
@@ -290,7 +317,7 @@ export default function AdminAllGroups() {
 
                 <label className="info-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                 <div style={{ width: 925 }}>
+                 <div style={{ width: "122%" }}>
                   <InfoTable
                           headers={["Mentor Name", "Student ID"]}
                           data={[

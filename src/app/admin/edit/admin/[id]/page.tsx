@@ -102,8 +102,12 @@ export default function AdminEditAdmin({ params }: { params: { id: string } }) {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <SaveButton onClick={handleSave}>Save</SaveButton>
         </div>
+      </div>
+      <div style={{display: "flex", alignItems: "center"}}>
+        <SaveButton onClick={handleSave}>
+          Save
+        </SaveButton>
       </div>
     </main>
   );

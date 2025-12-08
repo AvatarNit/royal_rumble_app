@@ -9,6 +9,8 @@ import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { assignSeminarGroups } from "@/actions/other";
+import { Popover, OverlayTrigger } from "react-bootstrap";
+import AddButton from "@/app/components/addButton";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -86,10 +88,11 @@ export default function AdminUpload() {
         ...prev,
         [tableName]: truncatedMessage,
       }));
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
       setMessages((prev) => ({
         ...prev,
-        [tableName]: "Upload failed: " + err.message,
+        [tableName]: "Upload failed: " + errorMessage,
       }));
       setProgress((prev) => ({ ...prev, [tableName]: 0 }));
       setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
@@ -102,6 +105,35 @@ export default function AdminUpload() {
   const router = useRouter();
   const handleLogoClick = () => {
     router.push("/admin");
+  };
+
+  const buttonStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "var(--primaryBlue)",
+    color: "white",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "bold",
+    fontSize: "20px",
+    border: "5px solid transparent",
+    borderRadius: "14px",
+    padding: "5px 5px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+  };
+
+  const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--primaryBlue)";
+    e.currentTarget.style.borderColor = "var(--primaryBlue)";
+  };
+
+  const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
   };
 
   return (
@@ -122,13 +154,25 @@ export default function AdminUpload() {
           <div className="upload-form">
             {/* Inputs needed */}
             {[
-              { label: "GoFan → Freshmen Data", table: "freshmen_data" },
+              {
+                label: "GoFan → Freshmen Data",
+                table: "freshmen_data",
+                headers:
+                  "Freshmen ID,	First Name,	Last Name,	Shirt Size,	Email,	Primary Language,	Interests,	Health Concerns",
+              },
               {
                 label: "Freshman Prep Classes → Seminar Data",
                 table: "seminar_data",
+                headers:
+                  "Last Name,	First Name,	Freshmen ID,	semester,	Teacher full name,	Period",
               },
-              { label: "Mentor Data", table: "mentor_data" },
-              { label: "Group Data", table: "group_data" },
+              {
+                label: "Mentor Data",
+                table: "mentor_data",
+                headers:
+                  "Mentor ID,	First Name,	Last Name,	Graduation Year,	Job,	Pizza,	Languages,	Training Day,	Shirt Size,	Phone Number, Email",
+              },
+              { label: "Group Data", table: "group_data", headers: "Group ID" },
             ].map((item) => (
               // Giving all of the inputs the proper elements
               <div
@@ -136,7 +180,7 @@ export default function AdminUpload() {
                 className="upload-row"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "1fr 2fr 2fr",
+                  gridTemplateColumns: "1.5fr 2fr 2fr",
                   rowGap: "0.5rem",
                   alignItems: "center",
                   marginBottom: "2rem",
@@ -168,6 +212,32 @@ export default function AdminUpload() {
                   )}
                 </div>
 
+                {/* Popover Status Button */}
+                <OverlayTrigger
+                  trigger="click"
+                  rootClose
+                  placement="right"
+                  overlay={
+                    <Popover id={`popover-${item.table}`}>
+                      <Popover.Header as="h3">
+                        Column Headers should be:
+                      </Popover.Header>
+                      <Popover.Body>{item.headers}</Popover.Body>
+                    </Popover>
+                  }
+                >
+                  {/* <button type="button" className="btn btn-primary">
+                    Column Details
+                  </button> */}
+                  <button
+                    style={buttonStyle}
+                    onMouseEnter={buttonHover}
+                    onMouseLeave={buttonUnhover}
+                    type="button"
+                  >
+                    Column Details
+                  </button>
+                </OverlayTrigger>
                 {/* Success/Error message */}
                 <p
                   style={{

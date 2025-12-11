@@ -8,9 +8,8 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { assignSeminarGroups } from "@/actions/other";
+import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
 import { Popover, OverlayTrigger } from "react-bootstrap";
-import AddButton from "@/app/components/addButton";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -19,7 +18,7 @@ export default function AdminUpload() {
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
 
   const runGrouping = async () => {
-    return await assignSeminarGroups();
+    return await createSeminarGroups();
   };
 
   const handleUpload = async (
@@ -172,6 +171,12 @@ export default function AdminUpload() {
                 headers:
                   "Mentor ID,	First Name,	Last Name,	Graduation Year,	Job,	Pizza,	Languages,	Training Day,	Shirt Size,	Phone Number, Email",
               },
+              {
+                label: "Mentor Group Assignments",
+                table: "mentor_group_assignments",
+                headers:
+                  "Mentor ID, First Name(Optional), Last Name(Optional), Group ID",
+              },
               { label: "Group Data", table: "group_data", headers: "Group ID" },
             ].map((item) => (
               // Giving all of the inputs the proper elements
@@ -226,9 +231,6 @@ export default function AdminUpload() {
                     </Popover>
                   }
                 >
-                  {/* <button type="button" className="btn btn-primary">
-                    Column Details
-                  </button> */}
                   <button
                     style={buttonStyle}
                     onMouseEnter={buttonHover}
@@ -307,6 +309,26 @@ export default function AdminUpload() {
         }}
       >
         Assign Groups
+      </button>
+      <button
+        onClick={async () => {
+          const groupTotal = await createGroups();
+          alert(`Created Groups: ${groupTotal}`);
+        }}
+      >
+        Create Groups
+      </button>
+      <button
+        onClick={async () => {
+          const syncResult = await syncGroups();
+          alert(
+            `Groups synced: ${syncResult.success} \n ${JSON.stringify(
+              syncResult.unmatched
+            )}`
+          );
+        }}
+      >
+        Sync Groups
       </button>
     </main>
   );

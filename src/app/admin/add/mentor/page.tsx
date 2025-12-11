@@ -41,7 +41,7 @@ export default function AdminAddMentor() {
         );
         router.push("/admin/add/mentor");
       }
-    } catch (error) {
+    } catch {
       showAlert(`Failed to add mentor: ${f_name} ${l_name}`, "danger");
     }
     router.push("/admin/mentor");

@@ -6,7 +6,6 @@ export const groupData = pgTable("group_data", {
   groupId: text("group_id").primaryKey(),
   eventOrder: text("event_order"),
   routeNum: integer("route_num"),
-  startPos: integer("start_pos"),
 });
 
 // ---------------- mentor_attendance_data ----------------
@@ -59,6 +58,7 @@ export const freshmenData = pgTable("freshmen_data", {
   interests: text("interests"),
   healthConcerns: text("health_concerns"),
   present: boolean("present"),
+  groupId: text("group_id"),
 });
 
 // ---------------- group_leader_data ----------------

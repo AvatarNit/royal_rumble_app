@@ -120,6 +120,13 @@
       "when": 1765432160377,
       "tag": "0016_fresh_the_liberteens",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1767883290405,
+      "tag": "0017_nebulous_adam_warlock",
+      "breakpoints": true
     }
   ]
 }

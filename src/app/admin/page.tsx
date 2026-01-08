@@ -58,8 +58,9 @@ export default function AdminHomepage() {
             margin: "20px",
           }}
         >
-          <AdminButtons link="/admin/add">Add New</AdminButtons>
+          {/* <AdminButtons link="/admin/add">Add New</AdminButtons> */}
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
+          <AdminButtons link="/admin/all_events">All Events</AdminButtons>
         </div>
       </section>
     </main>

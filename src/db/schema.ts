@@ -64,7 +64,7 @@ export const freshmenData = pgTable("freshmen_data", {
 // ---------------- group_leader_data ----------------
 export const groupLeaderData = pgTable("group_leader_data", {
   mentorId: integer("mentor_id"),
-  groupId: text("group_id").references(() => groupData.groupId),
+  groupId: text("group_id"),
 });
 
 // ---------------- mentor_data ----------------

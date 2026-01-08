@@ -150,8 +150,13 @@ export default function AdminEditMentor({
               className="form-select"
               aria-label="Default select example"
               onChange={(e) => setJob(e.target.value)}
-              value={job}
+              value={job || ""}
             >
+              {job === "" ? (
+                <option disabled value="">
+                  Select Job
+                </option>
+              ) : null}
               <option value="GROUP LEADER">GROUP LEADER</option>
               <option value="HALLWAY HOST">HALLWAY HOST</option>
               <option value="SPIRIT SESSION">SPIRIT SESSION</option>
@@ -170,10 +175,8 @@ export default function AdminEditMentor({
           </div>
         </div>
       </div>
-      <div style={{display: "flex", alignItems: "center"}}>
-        <SaveButton onClick={handleSave}>
-          Save
-        </SaveButton>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <SaveButton onClick={handleSave}>Save</SaveButton>
       </div>
     </main>
   );

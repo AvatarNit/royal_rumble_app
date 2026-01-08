@@ -41,7 +41,7 @@ export default function AdminUpload() {
       // Smooth progress animation with funny messages
       let currentProgress = 0;
       const interval = setInterval(() => {
-        currentProgress += Math.random() * 5;
+        currentProgress += Math.random() * 0.65;
         if (currentProgress > 99) currentProgress = 99;
         setProgress((prev) => ({ ...prev, [tableName]: currentProgress }));
 
@@ -59,7 +59,13 @@ export default function AdminUpload() {
         } else if (currentProgress >= 80 && currentProgress < 90) {
           setFunnyText((prev) => ({
             ...prev,
-            [tableName]: "Almost done, hold tight!",
+            [tableName]: "Indian sweets are being cooked",
+          }));
+        } else if (currentProgress >= 99) {
+          setFunnyText((prev) => ({
+            ...prev,
+            [tableName]:
+              "This is a fake progress bar... but if you are seeing this, it is still working!",
           }));
         } else {
           setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
@@ -173,11 +179,10 @@ export default function AdminUpload() {
               },
               {
                 label: "Mentor Group Assignments",
-                table: "mentor_group_assignments",
+                table: "group_leader_data",
                 headers:
                   "Mentor ID, First Name(Optional), Last Name(Optional), Group ID",
               },
-              { label: "Group Data", table: "group_data", headers: "Group ID" },
             ].map((item) => (
               // Giving all of the inputs the proper elements
               <div

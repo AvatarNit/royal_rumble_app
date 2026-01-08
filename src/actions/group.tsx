@@ -36,7 +36,7 @@ export async function createGroups() {
     count: index < remainder ? countPerOrder + 1 : countPerOrder,
   }));
 
-  // 3. Build insert list
+  // Build insert list
 
   interface InsertRow {
     groupId: string;

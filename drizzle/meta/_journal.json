@@ -127,6 +127,20 @@
       "when": 1767883290405,
       "tag": "0017_nebulous_adam_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1768225784469,
+      "tag": "0018_daily_prodigy",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1768225838149,
+      "tag": "0019_overjoyed_sunspot",
+      "breakpoints": true
     }
   ]
 }

@@ -1,5 +1,6 @@
 import { pgTable, integer, text, boolean, date, primaryKey } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { time } from "console";
 
 // ---------------- group_data ----------------
 export const groupData = pgTable("group_data", {
@@ -15,12 +16,14 @@ export const mentorAttendanceData = pgTable("mentor_attendance_data", {
   status: text("status"),
 });
 
-// ---------------- trainings_data ----------------
-export const trainingsData = pgTable("trainings_data", {
-  trainingId: integer("training_id").primaryKey().generatedAlwaysAsIdentity(),
+// ---------------- events_data ----------------
+export const eventsData = pgTable("events_data", {
+  eventId: integer("event_id").primaryKey().generatedAlwaysAsIdentity(),
   name: text("name"),
   job: text("job"),
   date: date("date"),
+  time: text("time"),
+  location: text("location"),
   description: text("description"),
 });
 

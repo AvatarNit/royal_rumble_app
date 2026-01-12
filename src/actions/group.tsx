@@ -1,14 +1,78 @@
 "use server";
 
 import { db } from "@/db";
-import { seminarData, groupData, freshmenData } from "@/db/schema";
+import {
+  seminarData,
+  groupData,
+  freshmenData,
+  groupLeaderData,
+  mentorData,
+} from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 // Read
 
 export async function getAllGroups() {
-  const groups = await db.select().from(groupData).orderBy(groupData.groupId);
-  return groups;
+  const groups = await db
+    .select({
+      groupId: groupData.groupId,
+      routeNum: groupData.routeNum,
+      eventOrder: groupData.eventOrder,
+    })
+    .from(groupData)
+    .orderBy(groupData.groupId);
+  const freshmen = await db
+    .select({
+      groupId: freshmenData.groupId,
+      freshmenId: freshmenData.freshmenId,
+      fName: freshmenData.fName,
+      lName: freshmenData.lName,
+    })
+    .from(freshmenData);
+  const mentors = await db
+    .select({
+      groupId: groupLeaderData.groupId,
+      mentorId: mentorData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(groupLeaderData)
+    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
+
+  // Create Groups
+  const groupMap = new Map<text, any>();
+
+  // initialize groups
+  for (const g of groups) {
+    groupMap.set(g.groupId, {
+      group_id: g.groupId,
+      route_num: g.routeNum,
+      event_order: g.eventOrder,
+      freshmen: [],
+      mentors: [],
+    });
+  }
+
+  // attach freshmen
+  for (const f of freshmen) {
+    if (!f.groupId) continue;
+    groupMap.get(f.groupId)?.freshmen.push({
+      freshman_id: f.freshmenId,
+      name: f.fName + " " + f.lName,
+    });
+  }
+
+  // attach mentors
+  for (const m of mentors) {
+    groupMap.get(m.groupId)?.mentors.push({
+      mentor_id: m.mentorId,
+      name: m.fName + " " + m.lName,
+    });
+  }
+
+  const result = Array.from(groupMap.values());
+
+  return result;
 }
 
 // Add

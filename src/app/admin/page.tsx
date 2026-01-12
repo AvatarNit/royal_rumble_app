@@ -60,7 +60,7 @@ export default function AdminHomepage() {
         >
           {/* <AdminButtons link="/admin/add">Add New</AdminButtons> */}
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
-          <AdminButtons link="/admin/all_events">Events</AdminButtons>
+          <AdminButtons link="/admin/events">Events</AdminButtons>
         </div>
       </section>
     </main>

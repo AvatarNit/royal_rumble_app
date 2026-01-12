@@ -7,7 +7,7 @@ import AddButton from "../../../components/addButton";
 import SaveButton from "../../../components/saveButton";
 import InfoBox from "../../../components/infoBox";
 import EditUserDropdown from "../../../components/editUserDropdown";
-import EditTable from "../../../components/editTable"
+import InfoTable from "../../../components/infoTable"
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 
@@ -67,7 +67,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                 <div >
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],
@@ -79,7 +79,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Freshman Name"]}
                           data={[
                             ["Student 1"],
@@ -108,7 +108,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],
@@ -120,7 +120,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Freshman Name"]}
                           data={[
                             ["Student 1"],
@@ -149,7 +149,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],
@@ -161,7 +161,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Freshman Name"]}
                           data={[
                             ["Student 1"],
@@ -191,7 +191,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                 <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],
@@ -216,7 +216,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                  <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],
@@ -241,7 +241,7 @@ export default function AdminEditGroups() {
                 <label className="edit-group-label" 
                        style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
                  <div style={{ width: 925 }}>
-                  <EditTable
+                  <InfoTable
                           headers={["Mentor Name"]}
                           data={[
                             ["Student 1"],

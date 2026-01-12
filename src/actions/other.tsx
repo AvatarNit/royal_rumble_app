@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { trainingsData } from "@/db/schema";
+import { eventsData } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { date } from "drizzle-orm/mysql-core";
 
@@ -14,7 +14,7 @@ export const addTraining = async (data: {
   date: string;
   description: string;
 }) => {
-  await db.insert(trainingsData).values({
+  await db.insert(eventsData).values({
     name: data.name,
     job: data.job,
     date: data.date,

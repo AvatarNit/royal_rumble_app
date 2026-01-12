@@ -6,6 +6,11 @@ import { eq } from "drizzle-orm";
 
 // Read
 
+export async function getAllGroups() {
+  const groups = await db.select().from(groupData).orderBy(groupData.groupId);
+  return groups;
+}
+
 // Add
 
 export async function createGroups() {

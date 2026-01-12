@@ -59,11 +59,21 @@ export default function AdminAllGroups() {
           <form className="manual-add-form">
             <div className="form-row checkbox-row">
               <label className="checkbox-label">
-                <input type="checkbox" className="checkbox-input" />
+                <input
+                  type="radio"
+                  name="groupType"
+                  value="freshmen"
+                  className="checkbox-input"
+                />
                 Freshmen Groups
               </label>
               <label className="checkbox-label">
-                <input type="checkbox" className="checkbox-input" />
+                <input
+                  type="radio"
+                  name="groupType"
+                  value="hallway"
+                  className="checkbox-input"
+                />
                 Hallway Groups
               </label>
             </div>

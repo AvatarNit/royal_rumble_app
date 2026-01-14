@@ -44,6 +44,15 @@ export default function AdminEvents() {
                   value="freshmen"
                   className="checkbox-input"
                 />
+                All
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="radio"
+                  name="groupType"
+                  value="freshmen"
+                  className="checkbox-input"
+                />
                 Group Leader
               </label>
               <label className="checkbox-label">
@@ -114,89 +123,45 @@ export default function AdminEvents() {
                     <div className="info-value">Name</div>
                   </div>
                   <div className="info-pair">
-                    <div className="info-label">Event date:</div>
+                    <div className="info-label">Date:</div>
                     <div className="info-value">Date</div>
                   </div>
                   <div className="info-pair">
-                    <div className="info-label">Event Time:</div>
+                    <div className="info-label">Time:</div>
                     <div className="info-value">Time</div>
                   </div>
                   <div className="info-pair">
-                    <div className="info-label">Event Location:</div>
+                    <div className="info-label">Location:</div>
                     <div className="info-value">Location</div>
                   </div>
                   <div className="info-pair">
-                    <div className="info-label">Event Description:</div>
-                    <div className="info-value">Descrption</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Assigned To:</div>
+                    <div className="info-label">Assigned to:</div>
                     <div className="info-value">All</div>
                   </div>
+                </div>
+                  <label className="info-label">Description:</label>
+                  <div className="info-value">Description about this event and more information event infoarmtion.</div>
+                <div
+                  className="info-pair"
+                  style={{ marginBottom: "50px" }}
+                >
                 </div>
 
                 <label className="info-label" style={{ marginBottom: "30px" }}>
                   Mentors:
                 </label>
-                <div style={{ width: "122%" }}>
+                <div style={{ width: "100%" }}>
                   <CheckBoxTable
-                    headers={["First Name", "Last Name"]}
+                    headers={["Mentor Name", "Student ID"]}
                     data={[
-                      ["First Name", "Last Name"],
-                      ["First Name", "Last Name"],
-                      ["First Name", "Last Name"],
+                      ["Student 1", "######"],
+                      ["Student 2", "######"],
+                      ["Student 3", "######"],
                     ]}
                   />
                 </div>
               </section>
-            )
-          },
-          {
-            title: "Event Name",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div className="info-pair">
-                    <div className="info-label">Event Name:</div>
-                    <div className="info-value">Name</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event date:</div>
-                    <div className="info-value">Date</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Time:</div>
-                    <div className="info-value">Time</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Location:</div>
-                    <div className="info-value">Location</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Description:</div>
-                    <div className="info-value">Descrption</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Assigned To:</div>
-                    <div className="info-value">All</div>
-                  </div>
-                </div>
-
-                <label className="info-label" style={{ marginBottom: "30px" }}>
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <CheckBoxTable
-                    headers={["First Name", "Last Name"]}
-                    data={[
-                      ["First Name", "Last Name"],
-                      ["First Name", "Last Name"],
-                      ["First Name", "Last Name"],
-                    ]}
-                  />
-                </div>
-              </section>
-            )
+            ),
           },
         ]}
       />

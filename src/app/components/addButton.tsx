@@ -31,12 +31,12 @@ export default function AddButton({
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "20px 20px",
-    width: "250px",
+    width: style?.width || "250px",
     height: "70px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    margin: "10px",
+    margin: style?.margin || "10px",
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {

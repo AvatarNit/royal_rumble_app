@@ -47,7 +47,7 @@ export default function AdminHomepage() {
         >
           <AdminButtons link="/admin/upload">Upload</AdminButtons>
           <AdminButtons link="/admin/attendance">Attendance</AdminButtons>
-          <AdminButtons link="/admin/search">Search</AdminButtons>
+          <AdminButtons link="/admin/events">Events</AdminButtons>
         </div>
 
         <div
@@ -60,7 +60,7 @@ export default function AdminHomepage() {
         >
           {/* <AdminButtons link="/admin/add">Add New</AdminButtons> */}
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
-          <AdminButtons link="/admin/events">Events</AdminButtons>
+          <AdminButtons link="/admin/search">Search</AdminButtons>
         </div>
       </section>
     </main>

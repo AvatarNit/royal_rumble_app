@@ -58,7 +58,7 @@ export default function AdminMentors({
     "Pizza Type",
   ];
 
-  // Convert freshmen data to the format EditTable expects
+  // Convert data to the format EditTable expects
   const tableData = mentorsData.map((m) => [
     m.mentorId,
     m.fName,
@@ -126,6 +126,24 @@ export default function AdminMentors({
 
       <BackButton href="/admin" />
 
+      {/* --- ADD MENTOR BUTTON --- */}
+      <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
+        <AddButton href="/admin/add/mentor">
+          Add
+          <i
+            className="bi bi-plus-circle"
+            style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+        </AddButton>
+        <AddButton href="/admin/mentor/assignGroup" style = {{ fontSize: "30px", width: "340px" }}>
+          Assign Groups
+          <i
+            className="bi bi-plus-circle"
+            style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+        </AddButton>
+      </div>
+
       {/* --- SEARCH BAR --- */}
       <div className="search-container" style={{ marginLeft: "15%" }}>
         <div className="search-row">
@@ -136,18 +154,6 @@ export default function AdminMentors({
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
           />
-        </div>
-        {/* --- ADD MENTOR BUTTON --- */}
-        <div
-          style={{ marginLeft: "200px" }}
-        >
-          <AddButton href="/admin/add/mentor">
-            Add
-            <i
-              className="bi bi-plus-circle"
-              style={{ marginLeft: "30px", fontSize: "30px" }}
-            ></i>
-          </AddButton>
         </div>
       </div>
 

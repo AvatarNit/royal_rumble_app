@@ -20,7 +20,7 @@ export default function AdminAddEvent() {
   const [description, setDescription] = useState("");
 
   const handleLogoClick = () => {
-    router.push("/admin/add");
+    router.push("/admin/events");
   };
 
   const handleAddClick = async () => {
@@ -70,7 +70,7 @@ export default function AdminAddEvent() {
             />
           </div>
           <div className="form-row">
-            <label className="form-label">Event Date:</label>
+            <label className="form-label">Date:</label>
             <input
               type="text"
               className="form-input"
@@ -78,7 +78,21 @@ export default function AdminAddEvent() {
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
-          <label className="form-label">Event Description:</label>
+          <div className="form-row">
+            <label className="form-label">Time:</label>
+            <input
+              type="text"
+              className="form-input"
+            />
+          </div>
+          <div className="form-row">
+            <label className="form-label">Location:</label>
+            <input
+              type="text"
+              className="form-input"
+            />
+          </div>
+          <label className="form-label">Description:</label>
           <textarea
             className="form-input-large"
             rows={2}
@@ -91,6 +105,64 @@ export default function AdminAddEvent() {
             onChange={(e) => setDescription(e.target.value)}
           />
           <label className="form-label">Assign To:</label>
+
+          <div style={{ width: "90%", marginTop: "20px" }}>
+            <div className="form-container" style={{ margin: "0px" }}>
+              <form className="manual-add-form">
+                <div className="form-row checkbox-row">
+                  <label className="checkbox-label">
+                    <input
+                      type="radio"
+                      name="mentorType"
+                      value="groupLeader"
+                      className="checkbox-input"
+                    />
+                    Group Leader
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="radio"
+                      name="mentorType"
+                      value="hallwayHost"
+                      className="checkbox-input"
+                    />
+                    Hallway Host
+                  </label>
+                </div>
+                <div className="form-row checkbox-row">
+                  <label className="checkbox-label">
+                    <input
+                      type="radio"
+                      name="mentorType"
+                      value="all"
+                      className="checkbox-input"
+                    />
+                    All
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="radio"
+                      name="mentorType"
+                      value="spirit"
+                      className="checkbox-input"
+                    />
+                    Spirit
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="radio"
+                      name="mentorType"
+                      value="utility"
+                      className="checkbox-input"
+                    />
+                    Utility
+                  </label>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/*}
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
@@ -151,6 +223,7 @@ export default function AdminAddEvent() {
               Spirit
             </label>
           </div>
+          */}
         </div>
       </section>
       <div className="add-button-align">

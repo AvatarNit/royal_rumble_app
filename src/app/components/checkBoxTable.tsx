@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 
 export default function CheckBoxTable({
-  headers = [],
-  data = [],
+  headers,
+  data,
 }: {
-  headers?: string[];
-  data?: string[][];
+  headers: string[];
+  data: string[][];
+
 }) {
   const [checked, setChecked] = useState(data.map(() => false));
 
@@ -18,11 +19,14 @@ export default function CheckBoxTable({
   };
 
   const tableStyle: React.CSSProperties = {
-    borderCollapse: "collapse",
-    width: "800px",
+    borderCollapse: "collapse" as const,
+    width: "85%",
+    height: "300px",
+    maxWidth: "85%",
     margin: "20px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
+    tableLayout: "fixed" as const,
   };
 
   const headerRowStyle: React.CSSProperties = {

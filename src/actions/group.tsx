@@ -50,7 +50,6 @@ export async function getAllGroups() {
     })
     .from(groupLeaderData)
     .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
-
   // Create Groups
   interface GroupDetail {
     group_id: string;
@@ -94,6 +93,47 @@ export async function getAllGroups() {
   const result = Array.from(groupMap.values());
 
   return result;
+}
+
+export async function getGroupByGroupId(groupId: string) {
+  const group = await db
+    .select()
+    .from(groupData)
+    .where(eq(groupData.groupId, groupId))
+    .limit(1);
+  return group[0];
+}
+
+export async function getFreshmenByGroupId(groupId: string) {
+  const freshmen = await db
+    .select()
+    .from(freshmenData)
+    .where(eq(freshmenData.groupId, groupId));
+  return freshmen;
+}
+
+export async function getMentorsByGroupId(groupId: string) {
+  const mentorsId = await db
+    .select()
+    .from(groupLeaderData)
+    .where(eq(groupLeaderData.groupId, groupId));
+
+  const mentors = Array<{ mentor_id: string; fname: string; lname: string }>();
+
+  for (const id of mentorsId) {
+    if (id.mentorId === null) continue;
+    const mentor = await db
+      .select()
+      .from(mentorData)
+      .where(eq(mentorData.mentorId, id.mentorId));
+    mentors.push({
+      mentor_id: mentor[0].mentorId.toString(),
+      fname: mentor[0].fName ?? "",
+      lname: mentor[0].lName ?? "",
+    });
+  }
+
+  return mentors;
 }
 
 // Add

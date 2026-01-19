@@ -19,6 +19,7 @@ export default function AdminAddMentor() {
   const [l_name, setl_name] = useState("");
   const [mentorId, setMentorId] = useState("");
   const [graduationYear, setGraduationYear] = useState("");
+  const [job, setJob] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -29,6 +30,7 @@ export default function AdminAddMentor() {
         l_name: l_name,
         mentor_id: Number(mentorId),
         graduation_year: Number(graduationYear),
+        job: job,
         email,
         phone_number: phoneNumber,
       });
@@ -37,7 +39,7 @@ export default function AdminAddMentor() {
       } else {
         showAlert(
           `Mentor ${mentor_return.f_name} ${mentor_return.l_name} added successfully!`,
-          "success"
+          "success",
         );
         router.push("/admin/add/mentor");
       }
@@ -95,6 +97,25 @@ export default function AdminAddMentor() {
               value={graduationYear}
               onChange={(e) => setGraduationYear(e.target.value)}
             />
+          </div>
+          <div className="form-row">
+            <label className="form-label">Job:</label>
+            <select
+              className="form-select"
+              aria-label="Default select example"
+              onChange={(e) => setJob(e.target.value)}
+              value={job || ""}
+            >
+              {job === "" ? (
+                <option disabled value="">
+                  Select Job
+                </option>
+              ) : null}
+              <option value="GROUP LEADER">GROUP LEADER</option>
+              <option value="HALLWAY HOST">HALLWAY HOST</option>
+              <option value="SPIRIT SESSION">SPIRIT SESSION</option>
+              <option value="UTILITY SQUAD">UTILITY SQUAD</option>
+            </select>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>

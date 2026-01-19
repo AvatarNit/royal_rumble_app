@@ -1,8 +1,15 @@
 "use server";
 
 import { db } from "@/db";
-import { hallwayHostData, hallwayStopData, mentorData } from "@/db/schema";
+import {
+  groupLeaderData,
+  hallwayHostData,
+  hallwayStopData,
+  mentorData,
+} from "@/db/schema";
+import { groupEnd } from "console";
 import { eq, sql } from "drizzle-orm";
+import { get } from "http";
 
 // Read
 export const getMentorById = async (mentorId: number) => {
@@ -77,6 +84,7 @@ export const addMentor = async (data: {
   l_name: string;
   mentor_id: number;
   graduation_year: number;
+  job: string;
   email: string;
   phone_number: string;
 }) => {
@@ -85,6 +93,7 @@ export const addMentor = async (data: {
     lName: data.l_name,
     mentorId: data.mentor_id,
     gradYear: data.graduation_year,
+    job: data.job,
     email: data.email,
     phoneNum: data.phone_number,
   });
@@ -111,7 +120,7 @@ export const updateMentorByID = async (
     training_day: string;
     tshirt_size: string;
     phone_num: string;
-  }
+  },
 ) => {
   await db
     .update(mentorData)
@@ -133,6 +142,17 @@ export const updateMentorByID = async (
 
 // Delete
 export const deleteMentorById = async (mentorId: number) => {
+  const mentor = await getMentorById(mentorId);
+  console.log("Deleting mentor:", mentor);
+  if (mentor.job === "GROUP LEADER") {
+    await db
+      .delete(groupLeaderData)
+      .where(eq(groupLeaderData.mentorId, mentorId));
+  } else if (mentor.job === "HALLWAY HOST") {
+    await db
+      .delete(hallwayHostData)
+      .where(eq(hallwayHostData.mentorId, mentorId));
+  }
   await db.delete(mentorData).where(eq(mentorData.mentorId, mentorId));
   return { success: true, id: mentorId };
 };

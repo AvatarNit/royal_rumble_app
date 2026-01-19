@@ -1,24 +1,43 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
-import SaveButton from "../../components/saveButton";
 import ViewDropdown from "../../components/viewDropdown";
 import InfoTable from "../../components/infoTable";
 import AddButton from "../../components/addButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
+import { deleteGroupByGroupId } from "@/actions/group";
 
-export default function AdminAllGroups() {
+interface FreshmenGroup {
+  group_id: string;
+  route_num: number;
+  event_order: string;
+  freshmen: Array<{ freshman_id: string; name: string }>;
+  mentors: Array<{ mentor_id: string; name: string }>;
+}
+interface HallwayGroup {
+  hallwayStopId: number;
+  location: string;
+  mentors: Array<{ mentor_id: string; name: string }>;
+}
+
+export default function AdminAllGroups({
+  freshmenGroups,
+  hallwayGroups,
+}: {
+  freshmenGroups: FreshmenGroup[];
+  hallwayGroups: HallwayGroup[];
+}) {
   const router = useRouter();
   const handleLogoClick = () => {
     router.push("/admin");
   };
 
-  const handleFilter = () => {};
-
-  const groupOptions = ["1", "2", "3", "4"];
+  const [displayFreshmenGroup, setDisplayFreshmenGroup] = useState(true);
+  const [selectedGroupId, setSelectedGroupId] = useState("");
 
   return (
     <main className="admin-container">
@@ -38,21 +57,31 @@ export default function AdminAllGroups() {
       <div className="search-container" style={{ marginLeft: "15%" }}>
         <div className="search-row">
           <div className="form-row">
-            <select className="form-select">
-              <option value="">Show Group ... </option>
-              {groupOptions.map((group, index) => (
-                <option key={index} value={group}>
-                  {group}
-                </option>
-              ))}
+            <select
+              className="form-select"
+              value={selectedGroupId}
+              onChange={(e) => setSelectedGroupId(e.target.value)}
+            >
+              <option value="">All Groups</option>
+              {displayFreshmenGroup &&
+                freshmenGroups.map((group) => (
+                  <option key={group.group_id} value={group.group_id}>
+                    {group.group_id}
+                  </option>
+                ))}
+              {!displayFreshmenGroup &&
+                hallwayGroups.map((group) => (
+                  <option
+                    key={group.hallwayStopId}
+                    value={group.hallwayStopId - 1}
+                  >
+                    {group.location}
+                  </option>
+                ))}
             </select>
-          </div>
-          <div>
-            <SaveButton onClick={handleFilter}>Filter</SaveButton>
           </div>
         </div>
       </div>
-
       {/* --- CHECKBOXES FOR GROUP VISIBILITY --- */}
       <div style={{ width: "85%", marginTop: "20px" }}>
         <div className="form-container" style={{ margin: "0px" }}>
@@ -62,8 +91,12 @@ export default function AdminAllGroups() {
                 <input
                   type="radio"
                   name="groupType"
-                  value="freshmen"
                   className="checkbox-input"
+                  checked={displayFreshmenGroup}
+                  onChange={() => {
+                    setDisplayFreshmenGroup(true);
+                    setSelectedGroupId("");
+                  }}
                 />
                 Freshmen Groups
               </label>
@@ -73,6 +106,11 @@ export default function AdminAllGroups() {
                   name="groupType"
                   value="hallway"
                   className="checkbox-input"
+                  checked={!displayFreshmenGroup}
+                  onChange={() => {
+                    setDisplayFreshmenGroup(false);
+                    setSelectedGroupId("");
+                  }}
                 />
                 Hallway Groups
               </label>
@@ -101,294 +139,119 @@ export default function AdminAllGroups() {
             style={{ marginLeft: "30px", fontSize: "30px" }}
           ></i>
         </AddButton>
-        <AddButton
-          onClick={() => router.push("/admin/add/custom_group")}
-          style={{ fontSize: "25px", justifyContent: "flex-end" }}
-        >
-          Add Group
-          <i
-            className="bi bi-plus-circle"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          ></i>
-        </AddButton>
+        {displayFreshmenGroup ? (
+          <AddButton
+            onClick={() => router.push("/admin/add/freshmen_group")}
+            style={{ fontSize: "21px", justifyContent: "flex-end" }}
+          >
+            Add Group
+            <i
+              className="bi bi-plus-circle"
+              style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+          </AddButton>
+        ) : (
+          <AddButton
+            onClick={() => router.push("/admin/add/hallway_group")}
+            style={{ fontSize: "21px", justifyContent: "flex-end" }}
+          >
+            Add Hallway
+            <i
+              className="bi bi-plus-circle"
+              style={{ marginLeft: "30px", fontSize: "30px" }}
+            ></i>
+          </AddButton>
+        )}
       </div>
-
-      <ViewDropdown
-        header="Freshmen Groups"
-        editLink="/admin/edit/freshmenGroup"
-        sections={[
-          {
-            title: "Group 1 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div className="info-pair">
-                    <div className="info-label">Route #:</div>
-                    <div className="info-value">10</div>
+      {displayFreshmenGroup ? (
+        <ViewDropdown
+          header={`Freshmen Group ${selectedGroupId}`}
+          editLink={`/admin/edit/freshmenGroup`}
+          sections={freshmenGroups
+            .filter(
+              (group) =>
+                selectedGroupId === "" || group.group_id === selectedGroupId,
+            )
+            .map((group) => ({
+              title: `Group ${group.group_id} [${group.mentors
+                .map((mentor) => mentor.name)
+                .join(", ")}]`,
+              content: (
+                <section>
+                  <div className="info-pairs">
+                    <div className="info-pair">
+                      <div className="info-label">Route #:</div>
+                      <div className="info-value">{group.route_num}</div>
+                    </div>
+                    <div className="info-pair">
+                      <div className="info-label">Event Order:</div>
+                      <div className="info-value">{group.event_order}</div>
+                    </div>
                   </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Order:</div>
-                    <div className="info-value">Tour - LGI - GYM</div>
-                  </div>
-                </div>
-                <div
-                  className="info-pair"
-                  style={{ marginBottom: "50px", marginTop: "30px" }}
-                >
-                  <label className="info-label">Most Recent Stop:</label>
-                  <div className="info-value">A Hallway</div>
-                </div>
 
-                <label className="info-label" style={{ marginBottom: "30px" }}>
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
+                  <label className="info-label" style={{ marginTop: "30px" }}>
+                    Mentors:
+                  </label>
                   <InfoTable
                     headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
+                    data={group.mentors.map((m) => [m.name, m.mentor_id])}
                   />
-                </div>
-                <label className="info-label" style={{ marginBottom: "30px" }}>
-                  Freshmen:
-                </label>
-                <div style={{ width: "122%" }}>
+
+                  <label className="info-label" style={{ marginTop: "30px" }}>
+                    Freshmen:
+                  </label>
                   <InfoTable
                     headers={["Freshman Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
+                    data={group.freshmen.map((f) => [f.name, f.freshman_id])}
                   />
-                </div>
-              </section>
-            ),
-          },
-          {
-            title: "Group 2 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div className="info-pair">
-                    <div className="info-label">Route #:</div>
-                    <div className="info-value">11</div>
+                </section>
+              ),
+              sectionId: group.group_id,
+            }))}
+          deleteAction={async (id) => {
+            const result = await deleteGroupByGroupId(id.toString());
+            return { success: result.success };
+          }}
+        />
+      ) : !displayFreshmenGroup ? (
+        <ViewDropdown
+          header={`Hallway Group ${
+            hallwayGroups[Number(selectedGroupId)].hallwayStopId
+          }`}
+          editLink="/admin/edit/hallwayGroup"
+          sections={hallwayGroups
+            .filter(
+              (group) =>
+                selectedGroupId === "" ||
+                group.hallwayStopId === Number(selectedGroupId) + 1,
+            )
+            .map((group) => ({
+              title: `${group.location}`,
+              content: (
+                <section>
+                  <div className="info-pairs">
+                    <div
+                      className="info-pair"
+                      style={{ marginBottom: "50px", marginTop: "30px" }}
+                    >
+                      <div className="info-label">Location:</div>
+                      <div className="info-value">{group.location}</div>
+                    </div>
                   </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Order:</div>
-                    <div className="info-value">LGI - Tour - GYM</div>
-                  </div>
-                </div>
-                <div
-                  className="info-pair"
-                  style={{ marginBottom: "50px", marginTop: "30px" }}
-                >
-                  <label className="info-label">Most Recent Stop:</label>
-                  <div className="info-value">B Hallway</div>
-                </div>
 
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
+                  <label className="info-label" style={{ marginTop: "30px" }}>
+                    Mentors:
+                  </label>
                   <InfoTable
                     headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
+                    data={group.mentors.map((m) => [m.name, m.mentor_id])}
                   />
-                </div>
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Freshmen:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Freshman Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-              </section>
-            ),
-          },
-          {
-            title: "Group 3 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div className="info-pair">
-                    <div className="info-label">Route #:</div>
-                    <div className="info-value">5</div>
-                  </div>
-                  <div className="info-pair">
-                    <div className="info-label">Event Order:</div>
-                    <div className="info-value">GYM - LGI - Tour</div>
-                  </div>
-                </div>
-                <div
-                  className="info-pair"
-                  style={{ marginBottom: "50px", marginTop: "30px" }}
-                >
-                  <label className="info-label">Most Recent Stop:</label>
-                  <div className="info-value">J Hallway (Downstairs)</div>
-                </div>
-
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Freshmen:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Freshmen Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-              </section>
-            ),
-          },
-        ]}
-      />
-      <ViewDropdown
-        header="Hallway Groups"
-        editLink="/admin/edit/hallwayGroup"
-        sections={[
-          {
-            title: "Hallway 1 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div
-                    className="info-pair"
-                    style={{ marginBottom: "50px", marginTop: "30px" }}
-                  >
-                    <div className="info-label">Location:</div>
-                    <div className="info-value">B Hallway</div>
-                  </div>
-                </div>
-
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-              </section>
-            ),
-          },
-          {
-            title: "Hallway 2 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div
-                    className="info-pair"
-                    style={{ marginBottom: "50px", marginTop: "30px" }}
-                  >
-                    <div className="info-label">Location:</div>
-                    <div className="info-value">A Hallway</div>
-                  </div>
-                </div>
-
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-              </section>
-            ),
-          },
-          {
-            title: "Hallway 3 (Mentor assigned)",
-            content: (
-              <section>
-                <div className="info-pairs">
-                  <div
-                    className="info-pair"
-                    style={{ marginBottom: "50px", marginTop: "30px" }}
-                  >
-                    <div className="info-label">Location:</div>
-                    <div className="info-value">J Hallway (Upstairs)</div>
-                  </div>
-                </div>
-
-                <label
-                  className="info-label"
-                  style={{ marginLeft: "20px", marginBottom: "30px" }}
-                >
-                  Mentors:
-                </label>
-                <div style={{ width: "122%" }}>
-                  <InfoTable
-                    headers={["Mentor Name", "Student ID"]}
-                    data={[
-                      ["Student 1", "######"],
-                      ["Student 2", "######"],
-                      ["Student 3", "######"],
-                    ]}
-                  />
-                </div>
-              </section>
-            ),
-          },
-        ]}
-      />
+                </section>
+              ),
+              sectionId: group.hallwayStopId,
+            }))}
+        />
+      ) : null}
     </main>
   );
 }

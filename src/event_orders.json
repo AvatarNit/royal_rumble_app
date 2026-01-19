@@ -1,0 +1,6 @@
+[["Tour", "LGI", "Gym"],
+    ["Tour", "Gym", "LGI"],
+    ["LGI", "Tour", "Gym"],
+    ["LGI", "Gym", "Tour"],
+    ["Gym", "Tour", "LGI"],
+    ["Gym", "LGI", "Tour"]]

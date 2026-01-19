@@ -8,7 +8,7 @@ import {
   groupLeaderData,
   mentorData,
 } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 // Read
 
@@ -20,7 +20,19 @@ export async function getAllGroups() {
       eventOrder: groupData.eventOrder,
     })
     .from(groupData)
-    .orderBy(groupData.groupId);
+    .orderBy(
+      sql`
+              CASE
+                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
+              END,
+              CASE
+                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
+                ELSE NULL
+              END,
+              LOWER(${groupData.groupId})
+            `,
+    );
+
   const freshmen = await db
     .select({
       groupId: freshmenData.groupId,
@@ -40,14 +52,22 @@ export async function getAllGroups() {
     .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
 
   // Create Groups
-  const groupMap = new Map<text, any>();
+  interface GroupDetail {
+    group_id: string;
+    route_num: number;
+    event_order: number;
+    freshmen: Array<{ freshman_id: string; name: string }>;
+    mentors: Array<{ mentor_id: string; name: string }>;
+  }
+
+  const groupMap = new Map<string, GroupDetail>();
 
   // initialize groups
   for (const g of groups) {
     groupMap.set(g.groupId, {
       group_id: g.groupId,
-      route_num: g.routeNum,
-      event_order: g.eventOrder,
+      route_num: g.routeNum ?? 0,
+      event_order: g.eventOrder ? JSON.parse(g.eventOrder).join(", ") : "",
       freshmen: [],
       mentors: [],
     });
@@ -57,15 +77,16 @@ export async function getAllGroups() {
   for (const f of freshmen) {
     if (!f.groupId) continue;
     groupMap.get(f.groupId)?.freshmen.push({
-      freshman_id: f.freshmenId,
+      freshman_id: f.freshmenId.toString(),
       name: f.fName + " " + f.lName,
     });
   }
 
   // attach mentors
   for (const m of mentors) {
+    if (!m.groupId) continue;
     groupMap.get(m.groupId)?.mentors.push({
-      mentor_id: m.mentorId,
+      mentor_id: m.mentorId.toString(),
       name: m.fName + " " + m.lName,
     });
   }
@@ -78,14 +99,7 @@ export async function getAllGroups() {
 // Add
 
 export async function createGroups() {
-  const orders = [
-    ["Tour", "LGI", "Gym"],
-    ["Tour", "Gym", "LGI"],
-    ["LGI", "Tour", "Gym"],
-    ["LGI", "Gym", "Tour"],
-    ["Gym", "Tour", "LGI"],
-    ["Gym", "LGI", "Tour"],
-  ];
+  const orders: string[][] = (await import("../event_orders.json")).default;
 
   // get IDs
   const groupRows = await db
@@ -136,6 +150,24 @@ export async function createGroups() {
   return result.length;
 }
 
+// Add Single Group
+export async function addCustomGroup(
+  groupName: string,
+  eventOrder: string[],
+  routeNumber: number,
+): Promise<{ groupId: string; eventOrder: string; routeNum: number }[]> {
+  const result = await db
+    .insert(groupData)
+    .values({
+      groupId: groupName,
+      eventOrder: JSON.stringify(eventOrder),
+      routeNum: routeNumber,
+    })
+    .returning();
+
+  return result as { groupId: string; eventOrder: string; routeNum: number }[];
+}
+
 // Update
 export async function createSeminarGroups() {
   const allStudents = await db.select().from(seminarData);
@@ -156,7 +188,7 @@ export async function createSeminarGroups() {
   let currentGroupB = 2;
 
   // Assign group IDs per class
-  for (const [key, students] of groups.entries()) {
+  for (const [, students] of groups.entries()) {
     const total = students.length;
     const half = Math.floor(total / 2);
 
@@ -259,3 +291,22 @@ export async function syncGroups() {
 }
 
 // Delete
+export async function deleteGroupByGroupId(groupId: string) {
+  console.log("Deleting group:", groupId);
+  // Change groupId of freshmen to unassigned
+  await db
+    .update(freshmenData)
+    .set({ groupId: "unassigned" })
+    .where(eq(freshmenData.groupId, groupId));
+  // Change groupId of group leaders to unassigned
+  await db
+    .update(groupLeaderData)
+    .set({ groupId: "unassigned" })
+    .where(eq(groupLeaderData.groupId, groupId));
+  // Delete group
+  const result = await db
+    .delete(groupData)
+    .where(eq(groupData.groupId, groupId))
+    .returning();
+  return { success: result.length > 0 };
+}

@@ -1,0 +1,1 @@
+ALTER TABLE "hallway_host_data" DROP CONSTRAINT "hallway_host_data_hallway_stop_id_hallway_stop_data_hallway_stop_id_fk";

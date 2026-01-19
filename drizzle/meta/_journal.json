@@ -141,6 +141,20 @@
       "when": 1768225838149,
       "tag": "0019_overjoyed_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1768622919632,
+      "tag": "0020_jazzy_fenris",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1768623061170,
+      "tag": "0021_organic_sentinels",
+      "breakpoints": true
     }
   ]
 }

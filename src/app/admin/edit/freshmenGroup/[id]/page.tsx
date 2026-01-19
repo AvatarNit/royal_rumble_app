@@ -12,11 +12,9 @@ import BackButton from "@/app/components/backButton";
 import { useAlert } from "@/app/context/AlertContext";
 
 export default function EditFreshmenGroup({
-
   params,
 }: {
   params: { id: string };
-
 }) {
   const groupId = Number(params.id);
   const { showAlert } = useAlert();
@@ -68,9 +66,7 @@ export default function EditFreshmenGroup({
       <LoginButton />
 
       <header className="admin-header">
-        <h1 className="admin-title">
-          Edit Group - {groupId}
-        </h1>
+        <h1 className="admin-title">Edit Group - {groupId}</h1>
       </header>
 
       <BackButton href="/admin/all_groups" />
@@ -121,7 +117,7 @@ export default function EditFreshmenGroup({
               data={[
                 [1, "fname", "lName"],
                 [1, "fName", "lName"],
-                [1, "fName", "lName"]
+                [1, "fName", "lName"],
               ]}
               visibleColumns={[1, 2]}
               link="/admin/edit/reassign"
@@ -131,21 +127,19 @@ export default function EditFreshmenGroup({
             <label className="form-label">Freshmen:</label>
           </div>
           <ReassignTable
-              headers={["First Name", "Last Name"]}
-              data={[
-                [1, "fname", "lName"],
-                [1, "fName", "lName"],
-                [1, "fName", "lName"]
-              ]}
-              visibleColumns={[1, 2]}
-              link="/admin/edit/reassign"
-              />
+            headers={["First Name", "Last Name"]}
+            data={[
+              [1, "fname", "lName"],
+              [1, "fName", "lName"],
+              [1, "fName", "lName"],
+            ]}
+            visibleColumns={[1, 2]}
+            link="/admin/edit/reassign"
+          />
         </div>
       </div>
-      <div style={{display: "flex", alignItems: "center"}}>
-        <SaveButton>
-          Save
-        </SaveButton>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <SaveButton>Save</SaveButton>
       </div>
     </main>
   );

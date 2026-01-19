@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { mentorData } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { hallwayHostData, hallwayStopData, mentorData } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 
 // Read
 export const getMentorById = async (mentorId: number) => {
@@ -18,6 +18,59 @@ export const getMentors = async () => {
   const mentors = await db.select().from(mentorData);
   return mentors;
 };
+
+// Hallway Host queries
+export async function getAllHallways() {
+  const hallways = await db
+    .select({
+      hallwayStopId: hallwayStopData.hallwayStopId,
+      location: hallwayStopData.location,
+    })
+    .from(hallwayStopData)
+    .orderBy();
+
+  const mentors = await db
+    .select({
+      hallwayStopId: hallwayHostData.hallwayStopId,
+      mentorId: mentorData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(hallwayHostData)
+    .innerJoin(mentorData, eq(hallwayHostData.mentorId, mentorData.mentorId));
+
+  // Create Groups
+  interface GroupDetail {
+    hallwayStopId: number;
+    location: string | null;
+    mentors: Array<{ mentor_id: string; name: string }>;
+  }
+
+  const groupMap = new Map<string, GroupDetail>();
+
+  // initialize groups
+  for (const g of hallways) {
+    groupMap.set(g.hallwayStopId.toString(), {
+      hallwayStopId: g.hallwayStopId,
+      location: g.location,
+      mentors: [],
+    });
+  }
+
+  // attach mentors
+  for (const m of mentors) {
+    if (!m.hallwayStopId) continue;
+    groupMap.get(m.hallwayStopId.toString())?.mentors.push({
+      mentor_id: m.mentorId.toString(),
+      name: m.fName + " " + m.lName,
+    });
+  }
+
+  const result = Array.from(groupMap.values());
+
+  return result;
+}
+
 // Add
 export const addMentor = async (data: {
   f_name: string;

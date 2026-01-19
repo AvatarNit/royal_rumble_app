@@ -29,14 +29,14 @@ export const eventsData = pgTable("events_data", {
 
 // ---------------- hallway_stop_data ----------------
 export const hallwayStopData = pgTable("hallway_stop_data", {
-  hallwayStopId: integer("hallway_stop_id").primaryKey(),
+  hallwayStopId: integer("hallway_stop_id").primaryKey().generatedAlwaysAsIdentity(),
   location: text("location"),
 });
 
 // ---------------- hallway_host_data ----------------
 export const hallwayHostData = pgTable("hallway_host_data", {
   mentorId: integer("mentor_id"),
-  hallwayStopId: integer("hallway_stop_id").references(() => hallwayStopData.hallwayStopId),
+  hallwayStopId: integer("hallway_stop_id"),
 });
 
 // ---------------- seminar_data ----------------

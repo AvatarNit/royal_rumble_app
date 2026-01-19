@@ -12,10 +12,14 @@ interface ViewDropdownProps {
   deleteAction?: (id: string | number) => Promise<{ success: boolean }>;
   idIndex?: number;
   header?: string;
-  sections?: { title: string; content: React.ReactNode }[]; 
+  sections?: {
+    title: string;
+    content: React.ReactNode;
+    sectionId: string | number;
+  }[];
 }
 
-export default function ViewDropdown({ 
+export default function ViewDropdown({
   header,
   sections = [],
   editLink,
@@ -25,7 +29,7 @@ export default function ViewDropdown({
   const router = useRouter();
   const { showAlert } = useAlert();
 
-  const [openIndices, setOpenIndices] = useState<number[]>([]);
+  const [openIndices, setOpenIndices] = useState<(string | number)[]>([]);
   const [modalID, setModalID] = useState<null | string | number>(null);
 
   const containerStyle = {
@@ -89,11 +93,11 @@ export default function ViewDropdown({
     transition: "transform 0.2s",
   };
 
-  const handleToggle = (index: number) => {
+  const handleToggle = (index: number | string) => {
     setOpenIndices((prevOpen) =>
       prevOpen.includes(index)
         ? prevOpen.filter((i) => i !== index)
-        : [...prevOpen, index]
+        : [...prevOpen, index],
     );
   };
 
@@ -104,7 +108,7 @@ export default function ViewDropdown({
     margin: "0px 3px",
     transition: "color 0.3s",
   };
-  
+
   const hover = (e: React.MouseEvent<HTMLElement>) =>
     (e.currentTarget.style.color = "var(--primaryRed)");
   const unhover = (e: React.MouseEvent<HTMLElement>) =>
@@ -115,7 +119,7 @@ export default function ViewDropdown({
     justifyContent: "flex-end",
     alignItems: "center",
     gap: 12,
-    margin: "20px 60px 10px 10px"
+    margin: "20px 60px 10px 10px",
   };
 
   return (
@@ -124,12 +128,15 @@ export default function ViewDropdown({
       {header && <div style={headerStyle}>{header}</div>}
 
       {/* Accordion Sections */}
-      {sections.map((section, index) => {
-        const isOpen = openIndices.includes(index);
+      {sections.map((section) => {
+        const isOpen = openIndices.includes(section.sectionId);
 
         return (
-          <div key={index}>
-            <div style={accordionHeaderStyle} onClick={() => handleToggle(index)}>
+          <div key={section.sectionId}>
+            <div
+              style={accordionHeaderStyle}
+              onClick={() => handleToggle(section.sectionId)}
+            >
               <span>{section.title}</span>
               <i
                 style={{
@@ -141,29 +148,27 @@ export default function ViewDropdown({
 
             {isOpen && (
               <div>
-                <div
-                    style={iconContainer}
-                  >
-                    <i
-                      className="bi bi-pencil"
-                      style={iconStyle}
-                      onMouseEnter={hover}
-                      onMouseLeave={unhover}
-                      onClick={() => router.push(`${editLink}`)}
-                    />
-                    {/* delete */}
-                    <i
-                      className="bi bi-trash"
-                      style={iconStyle}
-                      onMouseEnter={hover}
-                      onMouseLeave={unhover}
-                      onClick={() => setModalID(index)}
-                    />
-                  </div>
+                <div style={iconContainer}>
+                  <i
+                    className="bi bi-pencil"
+                    style={iconStyle}
+                    onMouseEnter={hover}
+                    onMouseLeave={unhover}
+                    onClick={() =>
+                      router.push(`${editLink}/${section.sectionId}`)
+                    }
+                  />
+                  {/* delete */}
+                  <i
+                    className="bi bi-trash"
+                    style={iconStyle}
+                    onMouseEnter={hover}
+                    onMouseLeave={unhover}
+                    onClick={() => setModalID(section.sectionId)}
+                  />
+                </div>
                 <div style={contentWrapperStyle}>
-                  <div style={contentBoxStyle}>
-                    <p>{section.content}</p>
-                  </div>
+                  <div style={contentBoxStyle}>{section.content}</div>
                 </div>
               </div>
             )}
@@ -192,12 +197,12 @@ export default function ViewDropdown({
                 if (result?.success) {
                   showAlert(
                     `Successfully deleted item with ID ${modalID}`,
-                    "success"
+                    "success",
                   );
                 } else {
                   showAlert(
                     `Failed to delete item with ID ${modalID}`,
-                    "danger"
+                    "danger",
                   );
                 }
 
@@ -211,7 +216,6 @@ export default function ViewDropdown({
           </Button>
         </Modal.Footer>
       </Modal>
-
     </div>
   );
 }

@@ -33,6 +33,7 @@ export const addFreshman = async (data: {
     freshmenId: data.freshmen_id,
     email: data.email,
     primaryLanguage: data.primary_language,
+    groupId: "unassigned",
   });
   // return to display confirmation
   return {
@@ -54,7 +55,7 @@ export const updateFreshmanByID = async (
     primary_language?: string;
     interests?: string;
     health_concerns?: string;
-  }
+  },
 ) => {
   await db
     .update(freshmenData)
@@ -66,6 +67,19 @@ export const updateFreshmanByID = async (
       primaryLanguage: data.primary_language,
       interests: data.interests,
       healthConcerns: data.health_concerns,
+    })
+    .where(eq(freshmenData.freshmenId, freshmenId));
+  return { success: true, id: freshmenId };
+};
+
+export const reassignFreshmenGroup = async (
+  freshmenId: number,
+  newGroupId: string,
+) => {
+  await db
+    .update(freshmenData)
+    .set({
+      groupId: newGroupId,
     })
     .where(eq(freshmenData.freshmenId, freshmenId));
   return { success: true, id: freshmenId };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Modal, Button } from "react-bootstrap";
@@ -10,23 +10,42 @@ import { useAlert } from "@/app/context/AlertContext";
 interface ReassignTableProps {
   headers: string[];
   data: any[];
-  link: string;
   deleteAction?: (id: string | number) => Promise<{ success: boolean }>;
   idIndex?: number;
   visibleColumns: number[];
+  reassignAction?: (
+    id: string | number,
+    newGroupId: string | number,
+  ) => Promise<{ success: boolean }>;
+  currentGroupId: string | number;
+  possibleGroups: Array<{ group_id: string; name?: string }>;
 }
 export default function ReassignTable({
   headers,
   data,
-  link,
   deleteAction,
   idIndex = 0,
   visibleColumns,
+  reassignAction,
+  currentGroupId,
+  possibleGroups,
 }: ReassignTableProps) {
   const router = useRouter();
   const { showAlert } = useAlert();
 
-  const [modalID, setModalID] = useState<null | string | number>(null);
+  const [deleteModalID, setDeleteModalID] = useState<null | string | number>(
+    null,
+  );
+  const [reassignModalID, setReassignModalID] = useState<
+    null | string | number
+  >(null);
+  const [newGroupId, setNewGroupId] = useState<string | number>("");
+
+  useEffect(() => {
+    if (reassignModalID !== null) {
+      setNewGroupId(currentGroupId);
+    }
+  }, [reassignModalID, currentGroupId]);
 
   const colCount = visibleColumns.length + 1;
 
@@ -119,9 +138,15 @@ export default function ReassignTable({
                       gap: 12,
                     }}
                   >
-                    <SaveButton onClick={() => router.push(`${link}`)}
-                                style={{ width: "120px", fontSize: "16px", padding: "10px" }}>
-                        Reassign
+                    <SaveButton
+                      onClick={() => setReassignModalID(id)}
+                      style={{
+                        width: "120px",
+                        fontSize: "16px",
+                        padding: "10px",
+                      }}
+                    >
+                      Reassign
                     </SaveButton>
 
                     {/* delete */}
@@ -130,7 +155,7 @@ export default function ReassignTable({
                       style={iconStyle}
                       onMouseEnter={hover}
                       onMouseLeave={unhover}
-                      onClick={() => setModalID(id)}
+                      onClick={() => setDeleteModalID(id)}
                     />
                   </div>
                 </td>
@@ -140,43 +165,107 @@ export default function ReassignTable({
         </tbody>
       </table>
 
-      {/* -------- Modal OUTSIDE map (only one) -------- */}
-      <Modal show={modalID !== null} onHide={() => setModalID(null)}>
+      {/* -------- Delete Modal-------- */}
+      <Modal
+        show={deleteModalID !== null}
+        onHide={() => setDeleteModalID(null)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Delete Row</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete this item (ID: {modalID})?
+          Are you sure you want to delete this item (ID: {deleteModalID})?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setModalID(null)}>
+          <Button variant="secondary" onClick={() => setDeleteModalID(null)}>
             Cancel
           </Button>
           <Button
             variant="danger"
             onClick={async () => {
-              if (deleteAction && modalID !== null) {
-                const result = await deleteAction(modalID);
+              if (deleteAction && deleteModalID !== null) {
+                const result = await deleteAction(deleteModalID);
 
                 if (result?.success) {
                   showAlert(
-                    `Successfully deleted item with ID ${modalID}`,
-                    "success"
+                    `Successfully deleted item with ID ${deleteModalID}`,
+                    "success",
                   );
                 } else {
                   showAlert(
-                    `Failed to delete item with ID ${modalID}`,
-                    "danger"
+                    `Failed to delete item with ID ${deleteModalID}`,
+                    "danger",
                   );
                 }
 
-                setModalID(null);
+                setDeleteModalID(null);
                 // location.reload();
                 router.refresh();
               }
             }}
           >
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* -------- Reassign Modal -------- */}
+      <Modal
+        show={reassignModalID !== null}
+        onHide={() => setReassignModalID(null)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Reassign Row</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          What do you want to reassign {reassignModalID} to?
+          <div className="form-row">
+            <label className="form-label">New Group:</label>
+            <select
+              className="form-select"
+              value={newGroupId}
+              onChange={(e) => setNewGroupId(e.target.value)}
+            >
+              <option value="">All Groups</option>
+              {possibleGroups.map((group) => (
+                <option key={group.group_id} value={group.group_id}>
+                  {group.name ? group.name : group.group_id}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setReassignModalID(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              if (reassignAction && reassignModalID !== null) {
+                const result = await reassignAction(
+                  reassignModalID,
+                  newGroupId,
+                );
+
+                if (result?.success) {
+                  showAlert(
+                    `Successfully reassigned item with ID ${reassignModalID}`,
+                    "success",
+                  );
+                } else {
+                  showAlert(
+                    `Failed to reassign item with ID ${reassignModalID}`,
+                    "danger",
+                  );
+                }
+
+                setReassignModalID(null);
+                // location.reload();
+                router.refresh();
+              }
+            }}
+          >
+            Reassign
           </Button>
         </Modal.Footer>
       </Modal>

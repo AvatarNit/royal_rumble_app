@@ -11,17 +11,36 @@ import "@/app/css/logo+login.css";
 import BackButton from "@/app/components/backButton";
 import { useAlert } from "@/app/context/AlertContext";
 
-import { deleteMentorById } from "@/actions/mentor";
-import { deleteFreshmanById } from "@/actions/freshmen";
+import { deleteMentorById, reassignMentorGroup } from "@/actions/mentor";
+import { deleteFreshmanById, reassignFreshmenGroup } from "@/actions/freshmen";
+import { updateGroupByGroupId, getGroupIds } from "@/actions/group";
+
+interface GroupData {
+  groupId: string | number;
+  routeNum: number;
+  eventOrder?: string;
+}
+
+interface MentorData {
+  mentor_id: string | number;
+  fname: string;
+  lname: string;
+}
+
+interface FreshmanData {
+  freshmenId: string | number;
+  fName: string;
+  lName: string;
+}
 
 export default function EditFreshmenGroupUI({
   groupData,
   freshmenData: f,
   mentorData,
 }: {
-  groupData: any;
-  freshmenData: any;
-  mentorData: any;
+  groupData: GroupData;
+  freshmenData: FreshmanData[];
+  mentorData: MentorData[];
 }) {
   const { showAlert } = useAlert();
 
@@ -29,6 +48,9 @@ export default function EditFreshmenGroupUI({
   const [groupId, setGroupId] = useState("");
   const [routeNum, setRouteNum] = useState(0);
   const [eventOrder, setEventOrder] = useState("");
+  const [possibleGroups, setPossibleGroups] = useState<
+    { group_id: string; name?: string }[]
+  >([]);
 
   useEffect(() => {
     setGroupId(groupData.groupId?.toString() || "");
@@ -37,6 +59,19 @@ export default function EditFreshmenGroupUI({
       groupData.eventOrder ? JSON.parse(groupData.eventOrder).join(", ") : "",
     );
   }, [groupData]);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      const groups = await getGroupIds();
+      setPossibleGroups(
+        groups.map((g: any) => ({
+          group_id: g.groupId,
+          name: g.name,
+        })),
+      );
+    };
+    fetchGroups();
+  }, []);
 
   const contentBoxStyle = {
     border: "5px solid var(--primaryRed)",
@@ -51,6 +86,21 @@ export default function EditFreshmenGroupUI({
     alignItems: "flex-start",
     textAlign: "left" as const,
     overflow: "auto" as const,
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    const result = await updateGroupByGroupId(
+      groupData.groupId.toString(),
+      groupId,
+      eventOrder.split(","),
+      routeNum,
+    );
+    if (result.success) {
+      showAlert(`Group ${result.groupId} updated!`, "success");
+    } else {
+      showAlert(`Failed to update group ${result.groupId}.`, "danger");
+    }
+    router.push("/admin/edit/freshmenGroup/" + groupId);
   };
 
   return (
@@ -99,7 +149,7 @@ export default function EditFreshmenGroupUI({
             style={{ display: "flex", alignItems: "center" }}
             className="d-flex justify-content-center"
           >
-            <SaveButton>Save</SaveButton>
+            <SaveButton onClick={handleSave}>Save</SaveButton>
           </div>
           <div className="form-row">
             <label className="form-label">Mentor:</label>
@@ -109,11 +159,19 @@ export default function EditFreshmenGroupUI({
               headers={["ID", "First Name", "Last Name"]}
               data={mentorData.map((m: any) => [m.mentor_id, m.fname, m.lname])}
               visibleColumns={[0, 1, 2]}
-              link="/admin/edit/reassign"
               deleteAction={async (id) => {
                 const result = await deleteMentorById(Number(id));
                 return { success: result.success };
               }}
+              reassignAction={async (id, newGroupId) => {
+                const result = await reassignMentorGroup(
+                  Number(id),
+                  newGroupId.toString(),
+                );
+                return { success: result.success };
+              }}
+              currentGroupId={groupId}
+              possibleGroups={possibleGroups}
             />
           </div>
           <div className="form-row">
@@ -123,11 +181,19 @@ export default function EditFreshmenGroupUI({
             headers={["ID", "First Name", "Last Name"]}
             data={f.map((f: any) => [f.freshmenId, f.fName, f.lName])}
             visibleColumns={[0, 1, 2]}
-            link="/admin/edit/reassign"
             deleteAction={async (id) => {
               const result = await deleteFreshmanById(Number(id));
               return { success: result.success };
             }}
+            reassignAction={async (id, newGroupId) => {
+              const result = await reassignFreshmenGroup(
+                Number(id),
+                newGroupId.toString(),
+              );
+              return { success: result.success };
+            }}
+            currentGroupId={groupId}
+            possibleGroups={possibleGroups}
           />
         </div>
       </div>

@@ -7,11 +7,14 @@ import {
   hallwayStopData,
   mentorData,
 } from "@/db/schema";
-import { groupEnd } from "console";
 import { eq, sql } from "drizzle-orm";
-import { get } from "http";
 
-// Read
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                         Read                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const getMentorById = async (mentorId: number) => {
   const mentor = await db
     .select()
@@ -77,8 +80,16 @@ export async function getAllHallways() {
 
   return result;
 }
+//--------------------------------------------------------------------------------------//
+//                                     End of Read                                      //
+//--------------------------------------------------------------------------------------//
 
-// Add
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                         Add                                          //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const addMentor = async (data: {
   f_name: string;
   l_name: string;
@@ -106,7 +117,16 @@ export const addMentor = async (data: {
   };
 };
 
-// Update
+//--------------------------------------------------------------------------------------//
+//                                     End of Add                                       //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                       Update                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const updateMentorByID = async (
   mentorId: number,
   data: {
@@ -140,7 +160,29 @@ export const updateMentorByID = async (
   return { success: true, id: mentorId };
 };
 
-// Delete
+export const reassignMentorGroup = async (
+  mentorId: number,
+  newGroupId: string,
+) => {
+  await db
+    .update(groupLeaderData)
+    .set({
+      groupId: newGroupId,
+    })
+    .where(eq(groupLeaderData.mentorId, mentorId));
+  return { success: true, id: mentorId };
+};
+
+//--------------------------------------------------------------------------------------//
+//                                    End of Update                                     //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                       Delete                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const deleteMentorById = async (mentorId: number) => {
   const mentor = await getMentorById(mentorId);
   console.log("Deleting mentor:", mentor);
@@ -156,3 +198,6 @@ export const deleteMentorById = async (mentorId: number) => {
   await db.delete(mentorData).where(eq(mentorData.mentorId, mentorId));
   return { success: true, id: mentorId };
 };
+//--------------------------------------------------------------------------------------//
+//                                    End of Delete                                     //
+//--------------------------------------------------------------------------------------//

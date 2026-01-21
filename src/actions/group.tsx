@@ -10,7 +10,33 @@ import {
 } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 
-// Read
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                         Read                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
+export async function getGroupIds() {
+  const groups = await db
+    .select({
+      groupId: groupData.groupId,
+    })
+    .from(groupData)
+    .orderBy(
+      sql`
+              CASE
+                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
+              END,
+              CASE
+                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
+                ELSE NULL
+              END,
+              LOWER(${groupData.groupId})
+            `,
+    );
+
+  return groups;
+}
 
 export async function getAllGroups() {
   const groups = await db
@@ -136,7 +162,15 @@ export async function getMentorsByGroupId(groupId: string) {
   return mentors;
 }
 
-// Add
+//--------------------------------------------------------------------------------------//
+//                                     End of Read                                      //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                         Add                                          //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 export async function createGroups() {
   const orders: string[][] = (await import("../event_orders.json")).default;
@@ -208,7 +242,16 @@ export async function addCustomGroup(
   return result as { groupId: string; eventOrder: string; routeNum: number }[];
 }
 
-// Update
+//--------------------------------------------------------------------------------------//
+//                                      End of Add                                      //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                        Update                                        //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export async function createSeminarGroups() {
   const allStudents = await db.select().from(seminarData);
 
@@ -330,7 +373,33 @@ export async function syncGroups() {
   };
 }
 
-// Delete
+export async function updateGroupByGroupId(
+  currentGroupId: string,
+  groupId: string,
+  event_order: string[],
+  route_num: number,
+) {
+  await db
+    .update(groupData)
+    .set({
+      groupId: groupId,
+      eventOrder: JSON.stringify(event_order),
+      routeNum: route_num,
+    })
+    .where(eq(groupData.groupId, currentGroupId));
+  return { success: true, groupId };
+}
+
+//--------------------------------------------------------------------------------------//
+//                                    End of Update                                     //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                        Delete                                        //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export async function deleteGroupByGroupId(groupId: string) {
   console.log("Deleting group:", groupId);
   // Change groupId of freshmen to unassigned
@@ -350,3 +419,7 @@ export async function deleteGroupByGroupId(groupId: string) {
     .returning();
   return { success: result.length > 0 };
 }
+
+//--------------------------------------------------------------------------------------//
+//                                        End of Delete                                 //
+//--------------------------------------------------------------------------------------//

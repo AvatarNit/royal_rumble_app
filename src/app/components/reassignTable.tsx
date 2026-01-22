@@ -32,7 +32,6 @@ export default function ReassignTable({
 }: ReassignTableProps) {
   const router = useRouter();
   const { showAlert } = useAlert();
-
   const [deleteModalID, setDeleteModalID] = useState<null | string | number>(
     null,
   );
@@ -225,7 +224,7 @@ export default function ReassignTable({
               value={newGroupId}
               onChange={(e) => setNewGroupId(e.target.value)}
             >
-              <option value="">All Groups</option>
+              <option value="unassigned">Unassigned</option>
               {possibleGroups.map((group) => (
                 <option key={group.group_id} value={group.group_id}>
                   {group.name ? group.name : group.group_id}

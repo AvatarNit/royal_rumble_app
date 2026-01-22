@@ -33,7 +33,7 @@ export const addFreshman = async (data: {
     freshmenId: data.freshmen_id,
     email: data.email,
     primaryLanguage: data.primary_language,
-    groupId: "unassigned",
+    groupId: null,
   });
   // return to display confirmation
   return {
@@ -76,6 +76,9 @@ export const reassignFreshmenGroup = async (
   freshmenId: number,
   newGroupId: string,
 ) => {
+  if (newGroupId.toLowerCase() === "unassigned") {
+    newGroupId = null as any;
+  }
   await db
     .update(freshmenData)
     .set({

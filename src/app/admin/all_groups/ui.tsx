@@ -9,7 +9,13 @@ import InfoTable from "../../components/infoTable";
 import AddButton from "../../components/addButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
-import { deleteGroupByGroupId } from "@/actions/group";
+import {
+  addHallway,
+  deleteGroupByGroupId,
+  deleteHallwayByStopId,
+} from "@/actions/group";
+import { Button, Modal } from "react-bootstrap";
+import { useAlert } from "@/app/context/AlertContext";
 
 interface FreshmenGroup {
   group_id: string;
@@ -39,6 +45,11 @@ export default function AdminAllGroups({
   const [displayFreshmenGroup, setDisplayFreshmenGroup] = useState(true);
   const [selectedGroupId, setSelectedGroupId] = useState("");
 
+  const [newHallway, setNewHallway] = useState("");
+  const [showHallwayModal, setShowHallwayModal] = useState(false);
+
+  const { showAlert } = useAlert();
+
   return (
     <main className="admin-container">
       <LogoButton />
@@ -54,6 +65,7 @@ export default function AdminAllGroups({
         <i className="bi bi-arrow-left"></i>
       </button>
 
+      {/* Group Dropdown */}
       <div className="search-container" style={{ marginLeft: "15%" }}>
         <div className="search-row">
           <div className="form-row">
@@ -82,7 +94,7 @@ export default function AdminAllGroups({
           </div>
         </div>
       </div>
-      {/* --- CHECKBOXES FOR GROUP VISIBILITY --- */}
+      {/* --- Group/Hallway Radio Buttons --- */}
       <div style={{ width: "85%", marginTop: "20px" }}>
         <div className="form-container" style={{ margin: "0px" }}>
           <form className="manual-add-form">
@@ -129,38 +141,61 @@ export default function AdminAllGroups({
           fontSize: "15px",
         }}
       >
-        <AddButton
-          onClick={() => router.push("/admin/add/student")}
-          style={{ fontSize: "21px", justifyContent: "flex-start" }}
-        >
-          Add Student
-          <i
-            className="bi bi-plus-circle"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          ></i>
-        </AddButton>
+        {/* Add Buttons */}
         {displayFreshmenGroup ? (
-          <AddButton
-            onClick={() => router.push("/admin/add/freshmen_group")}
-            style={{ fontSize: "21px", justifyContent: "flex-end" }}
-          >
-            Add Group
-            <i
-              className="bi bi-plus-circle"
-              style={{ marginLeft: "30px", fontSize: "30px" }}
-            ></i>
-          </AddButton>
+          <>
+            <AddButton
+              onClick={() => router.push("/admin/add/freshman")}
+              style={{
+                fontSize: "21px",
+                justifyContent: "flex-start",
+                width: "270px",
+              }}
+            >
+              Add Freshman
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginLeft: "30px", fontSize: "30px" }}
+              ></i>
+            </AddButton>
+            <AddButton
+              onClick={() => router.push("/admin/add/freshmen_group")}
+              style={{ fontSize: "21px", justifyContent: "flex-end" }}
+            >
+              Add Group
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginLeft: "30px", fontSize: "30px" }}
+              ></i>
+            </AddButton>
+          </>
         ) : (
-          <AddButton
-            onClick={() => router.push("/admin/add/hallway_group")}
-            style={{ fontSize: "21px", justifyContent: "flex-end" }}
-          >
-            Add Hallway
-            <i
-              className="bi bi-plus-circle"
-              style={{ marginLeft: "30px", fontSize: "30px" }}
-            ></i>
-          </AddButton>
+          <>
+            <AddButton
+              onClick={() => router.push("/admin/add/mentor")}
+              style={{
+                fontSize: "21px",
+                justifyContent: "flex-start",
+                width: "270px",
+              }}
+            >
+              Add Mentor
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginLeft: "30px", fontSize: "30px" }}
+              ></i>
+            </AddButton>
+            <AddButton
+              onClick={() => setShowHallwayModal(true)}
+              style={{ fontSize: "21px", justifyContent: "flex-end" }}
+            >
+              Add Hallway
+              <i
+                className="bi bi-plus-circle"
+                style={{ marginLeft: "30px", fontSize: "30px" }}
+              ></i>
+            </AddButton>
+          </>
         )}
       </div>
       {displayFreshmenGroup ? (
@@ -213,11 +248,9 @@ export default function AdminAllGroups({
             return { success: result.success };
           }}
         />
-      ) : !displayFreshmenGroup ? (
+      ) : !displayFreshmenGroup && hallwayGroups.length > 0 ? (
         <ViewDropdown
-          header={`Hallway Group ${
-            hallwayGroups[Number(selectedGroupId)].hallwayStopId
-          }`}
+          header={`Hallways`}
           editLink="/admin/edit/hallwayGroup"
           sections={hallwayGroups
             .filter(
@@ -250,8 +283,66 @@ export default function AdminAllGroups({
               ),
               sectionId: group.hallwayStopId,
             }))}
+          deleteAction={async (id) => {
+            const result = await deleteHallwayByStopId(Number(id));
+            return { success: result.success };
+          }}
         />
       ) : null}
+
+      {/* -------- Add Hallway Modal -------- */}
+
+      <Modal show={showHallwayModal} onHide={() => setShowHallwayModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Hallway</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-row">
+            <label className="form-label">New Hallway:</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Hallway Name"
+              onChange={(e) => setNewHallway(e.target.value)}
+            ></input>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowHallwayModal(false);
+              setNewHallway("");
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={async () => {
+              const result = await addHallway(newHallway);
+
+              if (result?.success) {
+                showAlert(
+                  `Successfully added hallway with ID ${newHallway}`,
+                  "success",
+                );
+              } else {
+                showAlert(
+                  `Failed to add hallway with ID ${newHallway}`,
+                  "danger",
+                );
+              }
+
+              setNewHallway("");
+              setShowHallwayModal(false);
+              router.refresh();
+            }}
+          >
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </main>
   );
 }

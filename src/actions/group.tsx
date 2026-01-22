@@ -7,8 +7,10 @@ import {
   freshmenData,
   groupLeaderData,
   mentorData,
+  hallwayHostData,
+  hallwayStopData,
 } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, isNull } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -162,6 +164,97 @@ export async function getMentorsByGroupId(groupId: string) {
   return mentors;
 }
 
+export async function getNullGroupFreshmen() {
+  const freshmen = await db
+    .select({
+      groupId: freshmenData.groupId,
+      freshmenId: freshmenData.freshmenId,
+      fName: freshmenData.fName,
+      lName: freshmenData.lName,
+    })
+    .from(freshmenData)
+    .where(isNull(freshmenData.groupId));
+  return freshmen;
+}
+
+export async function getNullGroupMentors() {
+  const groupLeaders = await db
+    .select({
+      groupId: groupLeaderData.groupId,
+      mentorId: mentorData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(groupLeaderData)
+    .where(isNull(groupLeaderData.groupId))
+    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
+  return groupLeaders;
+}
+
+{
+  /* ====================================
+=               Hallways Read                =
+==================================== */
+}
+
+export async function getNullHallwayMentors() {
+  const hallwayHosts = await db
+    .select({
+      hallwayStopId: hallwayHostData.hallwayStopId,
+      mentorId: mentorData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(hallwayHostData)
+    .where(isNull(hallwayHostData.hallwayStopId))
+    .innerJoin(mentorData, eq(hallwayHostData.mentorId, mentorData.mentorId));
+  return hallwayHosts;
+}
+
+export async function getHallwayByHallwayId(hallwayId: number) {
+  const hallway = await db
+    .select()
+    .from(hallwayStopData)
+    .where(eq(hallwayStopData.hallwayStopId, hallwayId));
+  return hallway[0];
+}
+
+export async function getMentorsByHallwayId(hallwayId: number) {
+  const mentorsId = await db
+    .select()
+    .from(hallwayHostData)
+    .where(eq(hallwayHostData.hallwayStopId, hallwayId));
+
+  const mentors = Array<{ mentor_id: string; fname: string; lname: string }>();
+
+  for (const id of mentorsId) {
+    if (id.mentorId === null) continue;
+    const mentor = await db
+      .select()
+      .from(mentorData)
+      .where(eq(mentorData.mentorId, id.mentorId));
+    mentors.push({
+      mentor_id: mentor[0].mentorId.toString(),
+      fname: mentor[0].fName ?? "",
+      lname: mentor[0].lName ?? "",
+    });
+  }
+
+  return mentors;
+}
+
+export async function getAllHallways() {
+  const hallways = await db
+    .select()
+    .from(hallwayStopData)
+    .orderBy(hallwayStopData.hallwayStopId);
+  return hallways;
+}
+
+{
+  /* ======== End of Hallways Read ======== */
+}
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -230,6 +323,7 @@ export async function addCustomGroup(
   eventOrder: string[],
   routeNumber: number,
 ): Promise<{ groupId: string; eventOrder: string; routeNum: number }[]> {
+  console.log("Event Order", eventOrder);
   const result = await db
     .insert(groupData)
     .values({
@@ -240,6 +334,26 @@ export async function addCustomGroup(
     .returning();
 
   return result as { groupId: string; eventOrder: string; routeNum: number }[];
+}
+
+{
+  /* ====================================
+=               Hallways add           =
+==================================== */
+}
+
+export async function addHallway(
+  hallwayName: string,
+): Promise<{ success: boolean; hallwayName: string }> {
+  // Insert hallway stops
+  await db.insert(hallwayStopData).values({
+    location: hallwayName,
+  });
+  return { success: true, hallwayName };
+}
+
+{
+  /* ======== End of Hallways add ======== */
 }
 
 //--------------------------------------------------------------------------------------//
@@ -379,6 +493,7 @@ export async function updateGroupByGroupId(
   event_order: string[],
   route_num: number,
 ) {
+  console.log("Event Order", event_order);
   await db
     .update(groupData)
     .set({
@@ -388,6 +503,26 @@ export async function updateGroupByGroupId(
     })
     .where(eq(groupData.groupId, currentGroupId));
   return { success: true, groupId };
+}
+
+{
+  /* Hallway Update
+==================================== */
+}
+
+export async function updateHallwayByID(hallwayId: number, location: string) {
+  await db
+    .update(hallwayStopData)
+    .set({
+      location: location,
+    })
+    .where(eq(hallwayStopData.hallwayStopId, hallwayId));
+  return { success: true, hallwayId };
+}
+
+{
+  /* End of Hallway Update
+==================================== */
 }
 
 //--------------------------------------------------------------------------------------//
@@ -402,15 +537,15 @@ export async function updateGroupByGroupId(
 
 export async function deleteGroupByGroupId(groupId: string) {
   console.log("Deleting group:", groupId);
-  // Change groupId of freshmen to unassigned
+  // Change groupId of freshmen to null
   await db
     .update(freshmenData)
-    .set({ groupId: "unassigned" })
+    .set({ groupId: null })
     .where(eq(freshmenData.groupId, groupId));
-  // Change groupId of group leaders to unassigned
+  // Change groupId of group leaders to null
   await db
     .update(groupLeaderData)
-    .set({ groupId: "unassigned" })
+    .set({ groupId: null })
     .where(eq(groupLeaderData.groupId, groupId));
   // Delete group
   const result = await db
@@ -418,6 +553,30 @@ export async function deleteGroupByGroupId(groupId: string) {
     .where(eq(groupData.groupId, groupId))
     .returning();
   return { success: result.length > 0 };
+}
+
+{
+  /* ====================================
+=               Hallway Delete                =
+==================================== */
+}
+
+export async function deleteHallwayByStopId(stopId: number) {
+  // Reassign mentors
+  await db
+    .update(hallwayHostData)
+    .set({ hallwayStopId: null })
+    .where(eq(hallwayHostData.hallwayStopId, stopId));
+  // Delete hallway
+  const result = await db
+    .delete(hallwayStopData)
+    .where(eq(hallwayStopData.hallwayStopId, stopId))
+    .returning();
+  return { success: result.length > 0 };
+}
+
+{
+  /* ======== End of Hallway Delete ======== */
 }
 
 //--------------------------------------------------------------------------------------//

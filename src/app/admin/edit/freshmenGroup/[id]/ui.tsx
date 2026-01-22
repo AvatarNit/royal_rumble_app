@@ -2,23 +2,28 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
+
 import LogoButton from "@/app/components/logoButton";
 import LoginButton from "@/app/components/loginButton";
 import SaveButton from "@/app/components/saveButton";
 import ReassignTable from "@/app/components/reassignTable";
+import BackButton from "@/app/components/backButton";
+
 import "@/app/css/admin.css";
 import "@/app/css/logo+login.css";
-import BackButton from "@/app/components/backButton";
+
 import { useAlert } from "@/app/context/AlertContext";
 
 import { deleteMentorById, reassignMentorGroup } from "@/actions/mentor";
 import { deleteFreshmanById, reassignFreshmenGroup } from "@/actions/freshmen";
 import { updateGroupByGroupId, getGroupIds } from "@/actions/group";
 
+/* ---------------- TYPES ---------------- */
+
 interface GroupData {
   groupId: string | number;
-  routeNum: number;
-  eventOrder?: string;
+  routeNum: number | null;
+  eventOrder: string | null;
 }
 
 interface MentorData {
@@ -33,18 +38,43 @@ interface FreshmanData {
   lName: string;
 }
 
+/* ---------------- HELPERS ---------------- */
+
+const normalizeEventOrder = (value: string | null): string => {
+  if (!value) return "";
+
+  // JSON string from DB
+  if (value.trim().startsWith("[")) {
+    try {
+      return JSON.parse(value).join(",");
+    } catch {
+      return "";
+    }
+  }
+
+  // Comma-separated string with spaces
+  return value
+    .split(",")
+    .map((v) => v.trim())
+    .join(",");
+};
+
+/* ---------------- COMPONENT ---------------- */
+
 export default function EditFreshmenGroupUI({
   groupData,
   freshmenData: f,
   mentorData,
+  orders,
 }: {
   groupData: GroupData;
   freshmenData: FreshmanData[];
   mentorData: MentorData[];
+  orders: string[][];
 }) {
   const { showAlert } = useAlert();
-
   const router = useRouter();
+
   const [groupId, setGroupId] = useState("");
   const [routeNum, setRouteNum] = useState(0);
   const [eventOrder, setEventOrder] = useState("");
@@ -52,13 +82,17 @@ export default function EditFreshmenGroupUI({
     { group_id: string; name?: string }[]
   >([]);
 
+  /* ---------------- SYNC GROUP DATA ---------------- */
+
   useEffect(() => {
-    setGroupId(groupData.groupId?.toString() || "");
+    if (!groupData) return;
+
+    setGroupId(groupData.groupId.toString());
     setRouteNum(groupData.routeNum || 0);
-    setEventOrder(
-      groupData.eventOrder ? JSON.parse(groupData.eventOrder).join(", ") : "",
-    );
+    setEventOrder(normalizeEventOrder(groupData.eventOrder));
   }, [groupData]);
+
+  /* ---------------- FETCH GROUP IDS ---------------- */
 
   useEffect(() => {
     const fetchGroups = async () => {
@@ -70,38 +104,30 @@ export default function EditFreshmenGroupUI({
         })),
       );
     };
+
     fetchGroups();
   }, []);
 
-  const contentBoxStyle = {
-    border: "5px solid var(--primaryRed)",
-    padding: "16px",
-    margin: "15px 50px",
-    width: "85%",
-    height: "auto",
-    color: "var(--textGrey)",
-    backgroundColor: "white",
-    display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    textAlign: "left" as const,
-    overflow: "auto" as const,
-  };
+  /* ---------------- SAVE ---------------- */
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async () => {
     const result = await updateGroupByGroupId(
       groupData.groupId.toString(),
       groupId,
       eventOrder.split(","),
       routeNum,
     );
+
     if (result.success) {
       showAlert(`Group ${result.groupId} updated!`, "success");
     } else {
       showAlert(`Failed to update group ${result.groupId}.`, "danger");
     }
+
     router.push("/admin/edit/freshmenGroup/" + groupId);
   };
+
+  /* ---------------- UI ---------------- */
 
   return (
     <main className="admin-container">
@@ -113,73 +139,100 @@ export default function EditFreshmenGroupUI({
       </header>
 
       <BackButton href="/admin/all_groups" />
-      <div style={contentBoxStyle}>
+
+      <div
+        style={{
+          border: "5px solid var(--primaryRed)",
+          padding: "16px",
+          margin: "15px 50px",
+          width: "85%",
+          backgroundColor: "white",
+        }}
+      >
         <div className="edit-user-form">
+          {/* GROUP ID */}
           <div className="form-row">
             <label className="form-label">Group ID:</label>
             <input
               type="text"
               className="form-input"
-              placeholder="Group ID:"
               value={groupId}
               onChange={(e) => setGroupId(e.target.value)}
             />
           </div>
+
+          {/* ROUTE */}
           <div className="form-row">
             <label className="form-label">Route:</label>
             <input
-              type="text"
+              type="number"
               className="form-input"
-              placeholder="Route:"
               value={routeNum}
               onChange={(e) => setRouteNum(Number(e.target.value))}
             />
           </div>
+
+          {/* EVENT ORDER */}
           <div className="form-row">
             <label className="form-label">Event Order:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Event Order:"
+            <select
+              className="form-select"
               value={eventOrder}
               onChange={(e) => setEventOrder(e.target.value)}
-            />
+            >
+              <option value="" disabled>
+                Select Order
+              </option>
+
+              {orders.map((order, index) => {
+                const value = order.join(",");
+
+                return (
+                  <option key={index} value={value}>
+                    {order.join(", ")}
+                  </option>
+                );
+              })}
+            </select>
           </div>
-          <div
-            style={{ display: "flex", alignItems: "center" }}
-            className="d-flex justify-content-center"
-          >
+
+          {/* SAVE */}
+          <div className="d-flex justify-content-center">
             <SaveButton onClick={handleSave}>Save</SaveButton>
           </div>
+
+          {/* MENTORS */}
           <div className="form-row">
             <label className="form-label">Mentor:</label>
           </div>
-          <div>
-            <ReassignTable
-              headers={["ID", "First Name", "Last Name"]}
-              data={mentorData.map((m: any) => [m.mentor_id, m.fname, m.lname])}
-              visibleColumns={[0, 1, 2]}
-              deleteAction={async (id) => {
-                const result = await deleteMentorById(Number(id));
-                return { success: result.success };
-              }}
-              reassignAction={async (id, newGroupId) => {
-                const result = await reassignMentorGroup(
-                  Number(id),
-                  newGroupId.toString(),
-                );
-                return { success: result.success };
-              }}
-              currentGroupId={groupId}
-              possibleGroups={possibleGroups}
-            />
-          </div>
+
+          <ReassignTable
+            headers={["ID", "First Name", "Last Name"]}
+            data={mentorData.map((m) => [m.mentor_id, m.fname, m.lname])}
+            visibleColumns={[0, 1, 2]}
+            deleteAction={async (id) => {
+              const result = await deleteMentorById(Number(id));
+              return { success: result.success };
+            }}
+            reassignAction={async (id, newGroupId) => {
+              const result = await reassignMentorGroup(
+                Number(id),
+                newGroupId.toString(),
+              );
+              return { success: result.success };
+            }}
+            currentGroupId={groupId}
+            possibleGroups={possibleGroups}
+          />
+
+          {/* FRESHMEN */}
           <div className="form-row">
             <label className="form-label">Freshmen:</label>
           </div>
+
           <ReassignTable
             headers={["ID", "First Name", "Last Name"]}
-            data={f.map((f: any) => [f.freshmenId, f.fName, f.lName])}
+            data={f.map((f) => [f.freshmenId, f.fName, f.lName])}
             visibleColumns={[0, 1, 2]}
             deleteAction={async (id) => {
               const result = await deleteFreshmanById(Number(id));

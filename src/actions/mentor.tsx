@@ -108,6 +108,17 @@ export const addMentor = async (data: {
     email: data.email,
     phoneNum: data.phone_number,
   });
+  if (data.job === "GROUP LEADER") {
+    await db.insert(groupLeaderData).values({
+      mentorId: data.mentor_id,
+      groupId: null,
+    });
+  } else if (data.job === "HALLWAY HOST") {
+    await db.insert(hallwayHostData).values({
+      mentorId: data.mentor_id,
+      hallwayStopId: null,
+    });
+  }
   // return to display confirmation
   return {
     success: true,
@@ -164,12 +175,31 @@ export const reassignMentorGroup = async (
   mentorId: number,
   newGroupId: string,
 ) => {
+  if (newGroupId.toLowerCase() === "unassigned") {
+    newGroupId = null as any;
+  }
   await db
     .update(groupLeaderData)
     .set({
       groupId: newGroupId,
     })
     .where(eq(groupLeaderData.mentorId, mentorId));
+  return { success: true, id: mentorId };
+};
+
+export const reassignMentorHallway = async (
+  mentorId: number,
+  newHallwayId: string,
+) => {
+  if (newHallwayId.toLowerCase() === "unassigned") {
+    newHallwayId = null as any;
+  }
+  await db
+    .update(hallwayHostData)
+    .set({
+      hallwayStopId: newHallwayId ? Number(newHallwayId) : null,
+    })
+    .where(eq(hallwayHostData.mentorId, mentorId));
   return { success: true, id: mentorId };
 };
 

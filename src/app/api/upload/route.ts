@@ -6,7 +6,8 @@ import {
   groupData,
   freshmenData,
   seminarData,
-  groupLeaderData
+  groupLeaderData,
+  hallwayHostData
 } from "@/db/schema";
 import * as XLSX from "xlsx";
 
@@ -42,7 +43,18 @@ async function insertData(table: string, rows: any[]) {
           phoneNum: row["phone_number"],
           email: row["email"]?.trim() || undefined, // optional
         }).onConflictDoNothing();
+        if (row["job"] === "GROUP LEADER") {
+          await db.insert(groupLeaderData).values({
+            mentorId: row["mentor_id"],
+            groupId: null,
+          }).onConflictDoNothing();
+        } else if (row["job"] === "HALLWAY HOST") {
+          await db.insert(hallwayHostData).values({
+            mentorId: row["mentor_id"],
+            hallwayStopId: null,
+          }).onConflictDoNothing();
       }
+    }
       break;
 
     case "freshmen_data":
@@ -76,16 +88,6 @@ async function insertData(table: string, rows: any[]) {
       }
       break;
 
-    case "group_data":
-      for (const row of rows) {
-        await db.insert(groupData).values({
-          groupId: row["group_id"],
-          eventOrder: row["event_order"],
-          routeColor: row["route_color"],
-          startPos: row["start_pos"],
-        }).onConflictDoNothing();
-      }
-      break;
     case "group_leader_data":
       for (const row of rows) {
         await db.insert(groupLeaderData).values({

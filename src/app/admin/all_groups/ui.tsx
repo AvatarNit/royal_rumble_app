@@ -208,9 +208,11 @@ export default function AdminAllGroups({
                 selectedGroupId === "" || group.group_id === selectedGroupId,
             )
             .map((group) => ({
-              title: `Group ${group.group_id} [${group.mentors
-                .map((mentor) => mentor.name)
-                .join(", ")}]`,
+              title: `Group ${group.group_id}${
+                group.group_id !== "Unassigned"
+                  ? ` [${group.mentors.map((mentor) => mentor.name).join(", ")}]`
+                  : ""
+              }`,
               content: (
                 <section>
                   <div className="info-pairs">

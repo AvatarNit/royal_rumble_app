@@ -1,23 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-
 export default function CheckBoxTable({
   headers,
   data,
+  status,
 }: {
   headers: string[];
   data: string[][];
-
+  status: boolean[];
 }) {
-  const [checked, setChecked] = useState(data.map(() => false));
-
-  const handleCheck = (index: number) => {
-    const newChecked = [...checked];
-    newChecked[index] = !newChecked[index];
-    setChecked(newChecked);
-  };
-
   const tableStyle: React.CSSProperties = {
     borderCollapse: "collapse" as const,
     width: "85%",
@@ -84,8 +75,8 @@ export default function CheckBoxTable({
             <td style={cellStyle}>
               <input
                 type="checkbox"
-                checked={checked[rowIndex]}
-                onChange={() => handleCheck(rowIndex)}
+                checked={status[rowIndex]}
+                disabled
                 style={checkboxStyle}
               />
             </td>

@@ -12,8 +12,8 @@ export const groupData = pgTable("group_data", {
 // ---------------- mentor_attendance_data ----------------
 export const mentorAttendanceData = pgTable("mentor_attendance_data", {
   mentorId: integer("mentor_id"),
-  trainingId: integer("training_id"),
-  status: text("status"),
+  eventId: integer("event_id"),
+  status: boolean("status"),
 });
 
 // ---------------- events_data ----------------

@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { eventsData, mentorAttendanceData, mentorData } from "@/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { eq, asc, and } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -110,6 +110,58 @@ export const getEventById = async (eventId: number) => {
     .where(eq(eventsData.eventId, eventId));
   return event[0];
 };
+
+export const getMentorAttendanceAllEvents = async () => {
+  interface EventWithMentorsAttendance {
+    eventId: number;
+    name: string;
+    date: string;
+    mentors: Array<{
+      fName: string;
+      lName: string;
+      mentor_id: number;
+      job: string;
+      status: boolean;
+    }>;
+  }
+
+  const allEventsWithMentorsAttendance: EventWithMentorsAttendance[] = [];
+
+  const events = await db
+    .select()
+    .from(eventsData)
+    .orderBy(asc(eventsData.date));
+
+  for (const event of events) {
+    const attendance = await db
+      .select({
+        mentor_id: mentorAttendanceData.mentorId,
+        status: mentorAttendanceData.status,
+        fName: mentorData.fName,
+        lName: mentorData.lName,
+        job: mentorData.job,
+      })
+      .from(mentorAttendanceData)
+      .innerJoin(
+        mentorData,
+        eq(mentorAttendanceData.mentorId, mentorData.mentorId),
+      )
+      .where(eq(mentorAttendanceData.eventId, event.eventId));
+    allEventsWithMentorsAttendance.push({
+      eventId: event.eventId,
+      name: String(event.name),
+      date: String(event.date),
+      mentors: attendance as Array<{
+        fName: string;
+        lName: string;
+        mentor_id: number;
+        job: string;
+        status: boolean;
+      }>,
+    });
+  }
+  return allEventsWithMentorsAttendance;
+};
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -189,6 +241,23 @@ export const updateEventByID = async (
 
   return { success: true, eventId: eventId };
 };
+
+export const updateMentorAttendanceById = async (
+  eventId: number,
+  mentorId: number,
+  status: boolean,
+) => {
+  await db
+    .update(mentorAttendanceData)
+    .set({ status: status })
+    .where(
+      and(
+        eq(mentorAttendanceData.eventId, eventId),
+        eq(mentorAttendanceData.mentorId, mentorId),
+      ),
+    );
+  return { success: true, eventId: eventId, mentorId: mentorId, status: status };
+}
 //--------------------------------------------------------------------------------------//
 //                                    End of Update                                     //
 //--------------------------------------------------------------------------------------//

@@ -5,7 +5,7 @@ interface CheckBoxTableProps {
   headers: string[];
   data: string[][];
   status: boolean[];
-  rowIds: number[]; // mentor IDs
+  rowIds: number[];
   onStatusChange?: (mentorId: number, newStatus: boolean) => void;
 }
 

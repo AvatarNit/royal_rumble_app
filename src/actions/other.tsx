@@ -162,6 +162,7 @@ export const getMentorAttendanceAllEvents = async () => {
   }
   return allEventsWithMentorsAttendance;
 };
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -256,8 +257,13 @@ export const updateMentorAttendanceById = async (
         eq(mentorAttendanceData.mentorId, mentorId),
       ),
     );
-  return { success: true, eventId: eventId, mentorId: mentorId, status: status };
-}
+  return {
+    success: true,
+    eventId: eventId,
+    mentorId: mentorId,
+    status: status,
+  };
+};
 //--------------------------------------------------------------------------------------//
 //                                    End of Update                                     //
 //--------------------------------------------------------------------------------------//

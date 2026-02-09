@@ -68,7 +68,7 @@ async function insertData(table: string, rows: any[]) {
       primaryLanguage: row["primary_language"] || "English", // default to English
       interests: row["interests"],
       healthConcerns: row["health_concerns"],
-      present: null, // always null
+      present: false, // always null
     });
   }
   break;

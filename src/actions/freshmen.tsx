@@ -2,9 +2,14 @@
 
 import { db } from "@/db";
 import { freshmenData } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 
-// Read
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                        Read                                          //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const getFreshmanById = async (freshmenId: number) => {
   const freshman = await db
     .select()
@@ -19,7 +24,30 @@ export const getFreshmen = async () => {
   return freshmen;
 };
 
-// Add
+export const getFreshmenAttendance = async () => {
+  const freshmen = await db
+    .select({
+      fName: freshmenData.fName,
+      lName: freshmenData.lName,
+      freshmenId: freshmenData.freshmenId,
+      present: freshmenData.present,
+    })
+    .from(freshmenData)
+    .orderBy(asc(freshmenData.freshmenId));
+
+  return freshmen;
+};
+
+//--------------------------------------------------------------------------------------//
+//                                     End of Read                                      //
+//--------------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                         Add                                          //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+
 export const addFreshman = async (data: {
   f_name: string;
   l_name: string;
@@ -43,8 +71,14 @@ export const addFreshman = async (data: {
     freshmen_id: data.freshmen_id,
   };
 };
-
-// Update
+//--------------------------------------------------------------------------------------//
+//                                      End of Add                                      //
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                       Update                                         //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 export const updateFreshmanByID = async (
   freshmenId: number,
   data: {
@@ -88,8 +122,29 @@ export const reassignFreshmenGroup = async (
   return { success: true, id: freshmenId };
 };
 
-// Delete
-export const deleteFreshmanById = async (freshmenId: number) => {
+export const updateFreshmanAttendanceById = async (
+  freshmenId: number,
+  newStatus: boolean,
+) => {
+  await db
+    .update(freshmenData)
+    .set({
+      present: newStatus,
+    })
+    .where(eq(freshmenData.freshmenId, freshmenId));
+  return { success: true, id: freshmenId };
+};
+//                                    End of Update                                     //
+//--------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                        Delete                                        //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
+const deleteFreshmanById = async (freshmenId: number) => {
   await db.delete(freshmenData).where(eq(freshmenData.freshmenId, freshmenId));
   return { success: true, id: freshmenId };
 };
+//--------------------------------------------------------------------------------------//
+//                                    End of Delete                                     //
+//--------------------------------------------------------------------------------------//

@@ -141,7 +141,7 @@ export const updateFreshmanAttendanceById = async (
 //                                        Delete                                        //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
-const deleteFreshmanById = async (freshmenId: number) => {
+export const deleteFreshmanById = async (freshmenId: number) => {
   await db.delete(freshmenData).where(eq(freshmenData.freshmenId, freshmenId));
   return { success: true, id: freshmenId };
 };

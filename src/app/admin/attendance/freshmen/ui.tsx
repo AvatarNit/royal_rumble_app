@@ -30,7 +30,7 @@ export default function AdminAttendanceFreshmenUI({
   const [attendanceState, setAttendanceState] =
     useState<Freshman[]>(freshmenAttendance);
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     setAttendanceState(freshmenAttendance);
@@ -67,7 +67,7 @@ export default function AdminAttendanceFreshmenUI({
   };
 
   const filteredFreshmen = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
+    const term = searchText.trim().toLowerCase();
     if (!term) return attendanceState;
 
     return attendanceState.filter((student) => {
@@ -76,7 +76,7 @@ export default function AdminAttendanceFreshmenUI({
 
       return fullName.includes(term) || id.includes(term);
     });
-  }, [attendanceState, searchTerm]);
+  }, [attendanceState, searchText]);
 
   return (
     <main className="admin-container">
@@ -96,8 +96,8 @@ export default function AdminAttendanceFreshmenUI({
           type="text"
           placeholder="Search Name / ID..."
           className="search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
 

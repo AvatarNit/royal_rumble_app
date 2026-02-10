@@ -6,7 +6,7 @@ import LoginButton from "../../../components/loginButton";
 import AddButton from "../../../components/addButton";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
-import { addTraining } from "@/actions/other";
+import { addEvent } from "@/actions/other";
 import { useState } from "react";
 import { useAlert } from "@/app/context/AlertContext";
 
@@ -15,8 +15,10 @@ export default function AdminAddEvent() {
   const { showAlert } = useAlert();
 
   const [name, setName] = useState("");
-  const [job, setJob] = useState("");
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [location, setLocation] = useState("");
+  const [job, setJob] = useState("");
   const [description, setDescription] = useState("");
 
   const handleLogoClick = () => {
@@ -25,23 +27,25 @@ export default function AdminAddEvent() {
 
   const handleAddClick = async () => {
     try {
-      const training_return = await addTraining({
+      const event_return = await addEvent({
         name,
-        job,
         date,
+        time,
+        location,
+        job,
         description,
       });
-      if (!training_return.success) {
-        throw new Error("Failed to add training");
+      if (!event_return.success) {
+        throw new Error("Failed to add event");
       } else {
         showAlert(
-          `Training ${training_return.name} on ${training_return.date} for ${training_return.job} added successfully!`,
-          "success"
+          `Event ${event_return.name} on ${event_return.date} for ${event_return.job} added successfully!`,
+          "success",
         );
-        router.push("/admin/add/event");
+        router.push("/admin/events");
       }
     } catch (error) {
-      showAlert(`Error adding training: ${name}`, "danger");
+      showAlert(`Error adding event: ${name}`, "danger");
     }
   };
 
@@ -72,7 +76,7 @@ export default function AdminAddEvent() {
           <div className="form-row">
             <label className="form-label">Date:</label>
             <input
-              type="text"
+              type="date"
               className="form-input"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -83,6 +87,8 @@ export default function AdminAddEvent() {
             <input
               type="text"
               className="form-input"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
             />
           </div>
           <div className="form-row">
@@ -90,6 +96,8 @@ export default function AdminAddEvent() {
             <input
               type="text"
               className="form-input"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
           <label className="form-label">Description:</label>
@@ -116,6 +124,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="groupLeader"
                       className="checkbox-input"
+                      onChange={(e) => setJob("GROUP LEADER")}
                     />
                     Group Leader
                   </label>
@@ -125,6 +134,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="hallwayHost"
                       className="checkbox-input"
+                      onChange={(e) => setJob("HALLWAY HOST")}
                     />
                     Hallway Host
                   </label>
@@ -136,6 +146,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="all"
                       className="checkbox-input"
+                      onChange={(e) => setJob("ALL")}
                     />
                     All
                   </label>
@@ -145,6 +156,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="spirit"
                       className="checkbox-input"
+                      onChange={(e) => setJob("SPIRIT SESSION")}
                     />
                     Spirit
                   </label>
@@ -154,6 +166,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="utility"
                       className="checkbox-input"
+                      onChange={(e) => setJob("UTILITY SQUAD")}
                     />
                     Utility
                   </label>
@@ -161,69 +174,6 @@ export default function AdminAddEvent() {
               </form>
             </div>
           </div>
-
-          {/*}
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="radioDefault"
-              id="radioAllMentors"
-              onClick={(e) => setJob("All Mentors")}
-            />
-            <label className="form-check-label" htmlFor="radioAllMentors">
-              All Mentors
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="radioDefault"
-              id="radioGroupLeaders"
-              onClick={(e) => setJob("Group Leader")}
-            />
-            <label className="form-check-label" htmlFor="radioGroupLeaders">
-              Group Leaders
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="radioDefault"
-              id="radioHallwayHosts"
-              onClick={(e) => setJob("Hallway Host")}
-            />
-            <label className="form-check-label" htmlFor="radioHallwayHosts">
-              Hallway Hosts
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="radioDefault"
-              id="radioUtility"
-              onClick={(e) => setJob("Utility")}
-            />
-            <label className="form-check-label" htmlFor="radioUtility">
-              Utility
-            </label>
-          </div>
-          <div className="form-check form-check-inline">
-            <input
-              className="form-check-input"
-              type="radio"
-              name="radioDefault"
-              id="radioSpirit"
-              onClick={(e) => setJob("Spirit")}
-            />
-            <label className="form-check-label" htmlFor="radioSpirit">
-              Spirit
-            </label>
-          </div>
-          */}
         </div>
       </section>
       <div className="add-button-align">

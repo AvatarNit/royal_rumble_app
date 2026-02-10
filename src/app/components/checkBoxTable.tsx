@@ -1,60 +1,45 @@
 "use client";
+import React from "react";
 
-import React, { useState } from "react";
+interface CheckBoxTableProps {
+  headers: string[];
+  data: string[][];
+  status: boolean[];
+  rowIds: number[];
+  onStatusChange?: (mentorId: number, newStatus: boolean) => void;
+}
 
 export default function CheckBoxTable({
   headers,
   data,
-}: {
-  headers: string[];
-  data: string[][];
-
-}) {
-  const [checked, setChecked] = useState(data.map(() => false));
-
-  const handleCheck = (index: number) => {
-    const newChecked = [...checked];
-    newChecked[index] = !newChecked[index];
-    setChecked(newChecked);
-  };
-
+  status,
+  rowIds,
+  onStatusChange,
+}: CheckBoxTableProps) {
   const tableStyle: React.CSSProperties = {
-    borderCollapse: "collapse" as const,
+    borderCollapse: "collapse",
     width: "85%",
     height: "300px",
     maxWidth: "85%",
     margin: "20px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
-    tableLayout: "fixed" as const,
-  };
-
-  const headerRowStyle: React.CSSProperties = {
-    backgroundColor: "var(--primaryBlue)",
-    color: "white",
+    tableLayout: "fixed",
   };
 
   const headerCellStyle: React.CSSProperties = {
     backgroundColor: "var(--primaryBlue)",
     color: "white",
     fontWeight: "bold",
-    textAlign: "center" as const,
-    verticalAlign: "middle" as const,
+    textAlign: "center",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",
-  };
-
-  const firstHeaderCellStyle: React.CSSProperties = {
-    ...headerCellStyle,
-    backgroundColor: "var(--primaryBlue)",
-    color: "#var(--primaryBlue)",
   };
 
   const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
     color: "var(--textGrey)",
-    textAlign: "center" as const,
-    verticalAlign: "middle" as const,
+    textAlign: "center",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",
   };
@@ -68,8 +53,8 @@ export default function CheckBoxTable({
   return (
     <table style={tableStyle}>
       <thead>
-        <tr style={headerRowStyle}>
-          <th style={firstHeaderCellStyle}></th>
+        <tr>
+          <th style={headerCellStyle}></th>
           {headers.map((header, i) => (
             <th key={i} style={headerCellStyle}>
               {header}
@@ -84,11 +69,15 @@ export default function CheckBoxTable({
             <td style={cellStyle}>
               <input
                 type="checkbox"
-                checked={checked[rowIndex]}
-                onChange={() => handleCheck(rowIndex)}
+                checked={status[rowIndex] ?? false}
+                onChange={(e) =>
+                  onStatusChange?.(rowIds[rowIndex], e.target.checked)
+                }
                 style={checkboxStyle}
+                {...(!onStatusChange && { disabled: true })}
               />
             </td>
+
             {row.map((cell, colIndex) => (
               <td key={colIndex} style={cellStyle}>
                 {cell}

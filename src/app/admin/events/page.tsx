@@ -1,22 +1,13 @@
-"use client";
-import { useRouter } from "next/navigation";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import LogoButton from "../../components/logoButton";
-import LoginButton from "../../components/loginButton";
-import ViewDropdown from "../../components/viewDropdown";
-import CheckBoxTable from "../../components/checkBoxTable";
-import AddButton from "../../components/addButton";
-import "../../css/admin.css";
-import "../../css/logo+login.css";
+import React from "react";
+import AdminEventsUI from "./ui";
+import { getAllEvents } from "@/actions/other";
 
-export default function AdminEvents() {
-  const router = useRouter();
-  const handleLogoClick = () => {
-    router.push("/admin");
-  };
-
-  const handleFilter = () => {};
-
+async function AdminEvents() {
+  const allEvents = await getAllEvents();
+  const groupLeaderEvents = await getAllEvents("GROUP LEADER");
+  const hallwayHostEvents = await getAllEvents("HALLWAY HOST");
+  const spiritEvents = await getAllEvents("SPIRIT SESSION");
+  const utilityEvents = await getAllEvents("UTILITY SQUAD");
   return (
     <main className="admin-container">
       <LogoButton />
@@ -170,3 +161,5 @@ export default function AdminEvents() {
     </main>
   );
 }
+
+export default AdminEvents;

@@ -1,6 +1,6 @@
 import React from "react";
 import AdminEventsUI from "./ui";
-import { getAllEvents } from "@/actions/other";
+import { getAllEvents } from ".././../../actions/other";
 
 async function AdminEvents() {
   const allEvents = await getAllEvents();
@@ -18,6 +18,5 @@ async function AdminEvents() {
     />
   );
 }
-// His
 
 export default AdminEvents;

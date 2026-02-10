@@ -115,6 +115,7 @@ export default function AdminEvents() {
         sections={[
           {
             title: "Event Name",
+            sectionId: "event-info",
             content: (
               <section>
                 <div className="info-pairs">

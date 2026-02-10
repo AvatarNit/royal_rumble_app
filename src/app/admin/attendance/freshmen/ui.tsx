@@ -92,13 +92,15 @@ export default function AdminAttendanceFreshmenUI({
       </button>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Name / ID..."
-          className="search-input"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
+        <div className="search-row">
+          <input
+            type="text"
+            placeholder="Search Name/ ID..."
+            className="search-input"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
       </div>
 
       <InfoBox headerText="All Freshmen">

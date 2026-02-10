@@ -128,6 +128,20 @@ export default function EditFreshmenGroupUI({
   };
 
   /* ---------------- UI ---------------- */
+    const contentBoxStyle = {
+    border: "5px solid var(--primaryRed)",
+    padding: "16px",
+    margin: "15px 50px",
+    width: "85%",
+    height: "auto",
+    color: "var(--textGrey)",
+    backgroundColor: "white",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    textAlign: "left" as const,
+    overflow: "auto" as const,
+  };
 
   return (
     <main className="admin-container">
@@ -140,15 +154,7 @@ export default function EditFreshmenGroupUI({
 
       <BackButton href="/admin/all_groups" />
 
-      <div
-        style={{
-          border: "5px solid var(--primaryRed)",
-          padding: "16px",
-          margin: "15px 50px",
-          width: "85%",
-          backgroundColor: "white",
-        }}
-      >
+      <div style={contentBoxStyle}>
         <div className="edit-user-form">
           {/* GROUP ID */}
           <div className="form-row">

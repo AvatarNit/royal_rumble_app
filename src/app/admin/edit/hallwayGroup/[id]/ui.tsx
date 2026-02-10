@@ -56,6 +56,7 @@ export default function EditHallwayGroupUI({
     padding: "16px",
     margin: "15px 50px",
     height: "auto",
+    width: "85%",
     color: "var(--textGrey)",
     backgroundColor: "white",
     display: "flex",
@@ -87,8 +88,8 @@ export default function EditHallwayGroupUI({
               onChange={(e) => setLocation(e.target.value)}
             />
           </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <SaveButton onClick={() => handleSave()}>Save</SaveButton>
+          <div className="d-flex justify-content-center">
+            <SaveButton onClick={handleSave}>Save</SaveButton>
           </div>
           <div className="form-row">
             <label className="form-label">Mentor:</label>

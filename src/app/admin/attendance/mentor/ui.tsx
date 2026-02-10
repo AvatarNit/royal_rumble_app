@@ -38,7 +38,7 @@ export default function AdminAttendanceMentorUI({
     useState<EventWithMentorsAttendance[]>(mentorAttendance);
 
   const [selectedEvent, setSelectedEvent] = useState<number>(-1);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     setAttendanceState(mentorAttendance);
@@ -100,7 +100,7 @@ export default function AdminAttendanceMentorUI({
   const filteredMentors = useMemo(() => {
     if (!selectedEventData) return [];
 
-    const term = searchTerm.trim().toLowerCase();
+    const term = searchText.trim().toLowerCase();
     if (!term) return selectedEventData.mentors;
 
     return selectedEventData.mentors.filter((mentor) => {
@@ -112,7 +112,7 @@ export default function AdminAttendanceMentorUI({
         mentorId.includes(term)
       );
     });
-  }, [selectedEventData, searchTerm]);
+  }, [selectedEventData, searchText]);
 
   return (
     <main className="admin-container">
@@ -128,29 +128,34 @@ export default function AdminAttendanceMentorUI({
       </button>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search Name / ID..."
-          className="search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="search-row">
+          <input
+            type="text"
+            placeholder="Search Name/ ID..."
+            className="search-input"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          
+          />
+        </div>
+        <div className="search-dropdown">
+          <select
+            className="form-select"
+            value={selectedEvent}
+            onChange={(e) => {
+              setSelectedEvent(Number(e.target.value));
+              setSearchText("");
+            }}
+          >
+            {attendanceState.map((event) => (
+              <option key={event.eventId} value={event.eventId}>
+                {event.name} ({event.date})
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <select
-        className="form-select"
-        value={selectedEvent}
-        onChange={(e) => {
-          setSelectedEvent(Number(e.target.value));
-          setSearchTerm("");
-        }}
-      >
-        {attendanceState.map((event) => (
-          <option key={event.eventId} value={event.eventId}>
-            {event.name} ({event.date})
-          </option>
-        ))}
-      </select>
 
       <InfoBox headerText="Mentors">
         <CheckBoxTable

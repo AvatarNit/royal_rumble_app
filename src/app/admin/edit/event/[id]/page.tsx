@@ -133,7 +133,7 @@ export default function AdminEditEvents({
           <div className="form-row">
             <label className="form-label">Job:</label>
             <select
-              className="form-select"
+              className="form-input"
               aria-label="Default select example"
               onChange={(e) => setJob(e.target.value)}
               value={job || ""}

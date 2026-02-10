@@ -10,7 +10,7 @@ import CheckBoxTable from "../../components/checkBoxTable";
 import AddButton from "../../components/addButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
-import { deleteEvent } from "@/src/actions/other";
+import { deleteEvent } from "../../../../src/actions/other";
 
 interface Events {
   events: Array<{
@@ -207,6 +207,9 @@ export default function AdminEventsUI({
                   ],
                 )}
                 status={event.mentors.map((m: { status: boolean }) => m.status)}
+                rowIds={event.mentors.map(
+                  (m: { mentor_id: number }) => m.mentor_id,
+                )}
               />
             </section>
           ),

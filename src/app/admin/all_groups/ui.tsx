@@ -277,10 +277,12 @@ export default function AdminAllGroups({
                   <label className="info-label" style={{ marginTop: "30px" }}>
                     Mentors:
                   </label>
-                  <InfoTable
-                    headers={["Mentor Name", "Student ID"]}
-                    data={group.mentors.map((m) => [m.name, m.mentor_id])}
-                  />
+                  <div style={{ width: "100%" }}>
+                    <InfoTable
+                      headers={["Mentor Name", "Student ID"]}
+                      data={group.mentors.map((m) => [m.name, m.mentor_id])}
+                    />
+                  </div>
                 </section>
               ),
               sectionId: group.hallwayStopId,
@@ -316,6 +318,23 @@ export default function AdminAllGroups({
               setShowHallwayModal(false);
               setNewHallway("");
             }}
+            style = {{ 
+              backgroundColor: "var(--primaryRed)",
+              color: "white",
+              fontFamily: "Poppins, sans-serif",
+              border: "5px solid transparent",
+              borderRadius: "10px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.color = "var(--primaryRed)";
+              e.currentTarget.style.borderColor = "var(--primaryRed)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--primaryRed)";
+              e.currentTarget.style.color = "white";
+              e.currentTarget.style.borderColor = "transparent";
+            }}
           >
             Cancel
           </Button>
@@ -339,6 +358,23 @@ export default function AdminAllGroups({
               setNewHallway("");
               setShowHallwayModal(false);
               router.refresh();
+            }}
+            style = {{ 
+              backgroundColor: "var(--primaryBlue)",
+              color: "white",
+              fontFamily: "Poppins, sans-serif",
+              border: "5px solid transparent",
+              borderRadius: "10px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.color = "var(--primaryBlue)";
+              e.currentTarget.style.borderColor = "var(--primaryBlue)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
+              e.currentTarget.style.color = "white";
+              e.currentTarget.style.borderColor = "transparent";
             }}
           >
             Add

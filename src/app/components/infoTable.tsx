@@ -9,14 +9,15 @@ export default function Table({
   headers: string[];
   data: (string | number)[][];
 }) {
-  const tableContainerStyle = {
+  const tableStyle: React.CSSProperties = {
     borderCollapse: "collapse" as const,
-    width: "100%",
+    width: "85%",
     height: "300px",
     maxWidth: "85%",
     margin: "20px auto",
     border: "4px solid var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
+    tableLayout: "fixed" as const,
   };
 
   const headerCellStyle = {
@@ -39,7 +40,7 @@ export default function Table({
   };
 
   return (
-    <table style={tableContainerStyle}>
+    <table style={tableStyle}>
       <thead>
         <tr>
           {headers.map((header, index) => (

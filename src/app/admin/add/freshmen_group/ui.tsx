@@ -65,7 +65,7 @@ export default function AdminAddFreshmenGroupPage(props: {
           <div className="form-row">
             <label className="form-label">Event Order:</label>
             <select
-              className="form-select"
+              className="form-input"
               value={eventOrder}
               onChange={(e) => setEventOrder(e.target.value)}
             >

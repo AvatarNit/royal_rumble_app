@@ -88,14 +88,6 @@ async function insertData(table: string, rows: any[]) {
       }
       break;
 
-    case "group_leader_data":
-      for (const row of rows) {
-        await db.insert(groupLeaderData).values({
-          mentorId: row["mentor_id"],
-          groupId: row["group_id"],
-        }).onConflictDoNothing();
-      }
-      break;
     default:
       throw new Error("Unknown table: " + table);
   }

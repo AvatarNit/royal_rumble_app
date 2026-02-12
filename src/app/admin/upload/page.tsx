@@ -23,7 +23,7 @@ export default function AdminUpload() {
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    tableName: string
+    tableName: string,
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -177,12 +177,6 @@ export default function AdminUpload() {
                 headers:
                   "Mentor ID,	First Name,	Last Name,	Graduation Year,	Job,	Pizza,	Languages,	Training Day,	Shirt Size,	Phone Number, Email",
               },
-              {
-                label: "Mentor Group Assignments",
-                table: "group_leader_data",
-                headers:
-                  "Mentor ID, First Name(Optional), Last Name(Optional), Group ID",
-              },
             ].map((item) => (
               // Giving all of the inputs the proper elements
               <div
@@ -309,7 +303,7 @@ export default function AdminUpload() {
         onClick={async () => {
           const groupingReturn = await runGrouping();
           alert(
-            `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`
+            `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
           );
         }}
       >
@@ -328,8 +322,8 @@ export default function AdminUpload() {
           const syncResult = await syncGroups();
           alert(
             `Groups synced: ${syncResult.success} \n ${JSON.stringify(
-              syncResult.unmatched
-            )}`
+              syncResult.unmatched,
+            )}`,
           );
         }}
       >

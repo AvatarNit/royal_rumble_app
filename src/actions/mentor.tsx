@@ -29,6 +29,20 @@ export const getMentors = async () => {
   return mentors;
 };
 
+export const getGroupLeaderAssignments = async () => {
+  const groups = await db
+    .select({
+      groupId: groupLeaderData.groupId,
+      mentorId: groupLeaderData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(groupLeaderData)
+    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId))
+    .orderBy(sql`${groupLeaderData.groupId} ASC NULLS FIRST`);
+  return groups;
+};
+
 // Hallway Host queries
 export async function getAllHallways() {
   const hallways = await db
@@ -80,6 +94,19 @@ export async function getAllHallways() {
 
   return result;
 }
+
+export const getHallwayHostAssignments = async () => {
+  const hosts = await db
+    .select({
+      hallwayStopId: hallwayHostData.hallwayStopId,
+      mentorId: hallwayHostData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+    })
+    .from(hallwayHostData)
+    .innerJoin(mentorData, eq(hallwayHostData.mentorId, mentorData.mentorId));
+  return hosts;
+};
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//

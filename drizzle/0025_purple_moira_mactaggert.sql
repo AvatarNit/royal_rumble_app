@@ -1,0 +1,1 @@
+ALTER TABLE "mentor_data" DROP COLUMN "present";

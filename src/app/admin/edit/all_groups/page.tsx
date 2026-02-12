@@ -1,5 +1,5 @@
 "use client";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
@@ -7,18 +7,15 @@ import AddButton from "../../../components/addButton";
 import SaveButton from "../../../components/saveButton";
 import InfoBox from "../../../components/infoBox";
 import EditUserDropdown from "../../../components/editUserDropdown";
-import InfoTable from "../../../components/infoTable"
+import InfoTable from "../../../components/infoTable";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 
 export default function AdminEditGroups() {
-
   const router = useRouter();
   const handleLogoClick = () => {
-      router.push("/admin/all_groups");
+    router.push("/admin/all_groups");
   };
-
-  const groupOptions = ["1", "2", "3", "4"]; 
 
   return (
     <main className="admin-container">
@@ -46,212 +43,254 @@ export default function AdminEditGroups() {
         </div>
       </div>
 
-     <EditUserDropdown
+      <EditUserDropdown
         header="Freshmen Groups"
         sections={[
           {
             title: "Group 1 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Route #:</label>
-                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Route #..."
+                    />
                   </div>
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Event Order: </label>
-                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Event Order..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                <div >
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
+                <div>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Freshmen:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Freshman Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Freshman Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
+            ),
           },
           {
             title: "Group 2 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Route #:</label>
-                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Route #..."
+                    />
                   </div>
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Event Order: </label>
-                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Event Order..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Freshmen:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Freshman Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Freshman Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
+            ),
           },
           {
             title: "Group 3 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Route #:</label>
-                    <input type="text" className="edit-group-input" placeholder="Route #..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Route #..."
+                    />
                   </div>
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Event Order: </label>
-                    <input type="text" className="edit-group-input" placeholder="Event Order..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Event Order..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Freshmen:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Freshmen:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Freshman Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Freshman Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
+            ),
           },
         ]}
       />
-     <EditUserDropdown
+      <EditUserDropdown
         header="Hallway Groups"
         sections={[
           {
             title: "Hallway 1 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Location:</label>
-                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Hallway..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
                 <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
+            ),
           },
           {
             title: "Hallway 2 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Location:</label>
-                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Hallway..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                 <div style={{ width: 925 }}>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
+                <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
+            ),
           },
           {
             title: "Hallway 3 (Mentor assigned)",
-            content: 
+            content: (
               <section>
                 <div className="edit-group-row">
                   <div className="edit-group-pair">
                     <label className="edit-group-label">Location:</label>
-                    <input type="text" className="edit-group-input" placeholder="Hallway..." />
+                    <input
+                      type="text"
+                      className="edit-group-input"
+                      placeholder="Hallway..."
+                    />
                   </div>
                 </div>
 
-                <label className="edit-group-label" 
-                       style={{ marginLeft: "20px", marginBottom: "30px"}}>Mentors:</label>
-                 <div style={{ width: 925 }}>
+                <label
+                  className="edit-group-label"
+                  style={{ marginLeft: "20px", marginBottom: "30px" }}
+                >
+                  Mentors:
+                </label>
+                <div style={{ width: 925 }}>
                   <InfoTable
-                          headers={["Mentor Name"]}
-                          data={[
-                            ["Student 1"],
-                            ["Student 2"],
-                            ["Student 3"],
-                          ]}
+                    headers={["Mentor Name"]}
+                    data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                   />
                 </div>
               </section>
-          }
+            ),
+          },
         ]}
       />
     </main>

@@ -470,3 +470,39 @@ export const deleteEvent = async (eventId: number) => {
 //--------------------------------------------------------------------------------------//
 //                                    End of Delete                                     //
 //--------------------------------------------------------------------------------------//
+
+{
+  /* ====================================
+=               editable content                =
+==================================== */
+}
+import { siteContent } from "@/db/schema";
+
+export async function getContent(key: string) {
+  const result = await db
+    .select()
+    .from(siteContent)
+    .where(eq(siteContent.key, key));
+
+  return result[0]?.content ?? "";
+}
+
+export async function saveContent(key: string, content: string) {
+  const existing = await db
+    .select()
+    .from(siteContent)
+    .where(eq(siteContent.key, key));
+
+  if (existing.length > 0) {
+    await db
+      .update(siteContent)
+      .set({ content })
+      .where(eq(siteContent.key, key));
+  } else {
+    await db.insert(siteContent).values({ key, content });
+  }
+}
+
+{
+  /* ======== End of editable content ======== */
+}

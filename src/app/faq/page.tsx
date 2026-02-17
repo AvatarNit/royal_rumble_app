@@ -3,11 +3,11 @@ import LoginButton from "../components/loginButton";
 import InfoBox from "../components/infoBox";
 import "../css/about.css";
 import "../css/logo+login.css";
+import EditableContent from "../components/EditableContent";
 
 export default function FAQPage() {
-
   return (
-     <main className="about-container">
+    <main className="about-container">
       <LogoButton />
       <LoginButton />
 
@@ -15,23 +15,42 @@ export default function FAQPage() {
         <h1 className="about-title">Frequently Asked Questions</h1>
       </header>
 
+      <EditableContent contentKey="faq" />
       <section className="about-info-box">
         <InfoBox headerText="Question 1">
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
+          <div
+            style={{
+              color: "var(--textGrey)",
+              fontWeight: "normal",
+              fontSize: "16px",
+            }}
+          >
             Answer to question 1 goes here.
           </div>
         </InfoBox>
       </section>
       <section className="about-info-box">
         <InfoBox headerText="Question 2">
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
+          <div
+            style={{
+              color: "var(--textGrey)",
+              fontWeight: "normal",
+              fontSize: "16px",
+            }}
+          >
             Answer to question 2 goes here.
           </div>
         </InfoBox>
       </section>
       <section className="about-info-box">
         <InfoBox headerText="Question 3">
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
+          <div
+            style={{
+              color: "var(--textGrey)",
+              fontWeight: "normal",
+              fontSize: "16px",
+            }}
+          >
             Answer to question 3 goes here.
           </div>
         </InfoBox>

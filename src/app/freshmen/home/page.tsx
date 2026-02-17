@@ -8,6 +8,7 @@ import {
   getFreshmanById,
   getFreshmanByIdFromSchoolData,
 } from "../../../../src/actions/freshmen";
+import EditableContent from "../../components/EditableContent";
 
 export default async function FreshmenHomepage() {
   // const session = await auth();
@@ -91,7 +92,7 @@ export default async function FreshmenHomepage() {
               margin: "5px 0px 10px",
             }}
           >
-            General info about this group goes here.
+            <EditableContent contentKey="freshmen_more_details" />
           </div>
         </InfoBox>
       </section>

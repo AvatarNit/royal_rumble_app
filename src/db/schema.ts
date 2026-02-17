@@ -1,4 +1,4 @@
-import { pgTable, integer, text, boolean, date, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, integer, text, boolean, date, primaryKey, serial, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { time } from "console";
 
@@ -93,6 +93,17 @@ export const adminData = pgTable("admin_data", {
   fName: text("f_name"),
   lName: text("l_name"),
 });
+
+// ---------------- site_content ----------------
+
+export const siteContent = pgTable("site_content", {
+  id: serial("id").primaryKey(),
+  key: varchar("key", { length: 100 }).unique().notNull(),
+  content: text("content").notNull(),
+});
+
+
+
 
 // ---------------- Relations (optional) ----------------
 export const mentorRelations = relations(mentorData, ({ many }) => ({

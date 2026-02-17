@@ -3,41 +3,94 @@ import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";
 import "../../css/freshmen.css";
 import "../../css/logo+login.css";
+import { auth } from "@/auth";
+import {
+  getFreshmanById,
+  getFreshmanByIdFromSchoolData,
+} from "../../../../src/actions/freshmen";
 
-export default function FreshmenHomepage() {
+export default async function FreshmenHomepage() {
+  // const session = await auth();
+  // const studentId = session?.user?.id;
+  const studentId = "123456"; // Placeholder student ID for testing purposes
+
+  const freshmanDetails = await getFreshmanById(Number(studentId));
+
+  if (!freshmanDetails) {
+    const freshmenDetailsFromSchoolData = await getFreshmanByIdFromSchoolData(
+      Number(studentId),
+    );
+    return (
+      <main className="freshmen-container">
+        <LogoButton />
+        <LoginButton />
+
+        <header className="freshmen-header">
+          <h1 className="freshmen-title">
+            Welcome {freshmenDetailsFromSchoolData?.fName}{" "}
+            {freshmenDetailsFromSchoolData?.lName}!
+          </h1>
+          <h3 className="check-registration">
+            We couldn&apos;t find your registration details.
+            <br /> To register <a>Click Here!</a> <br />
+            If this is an error, please contact support at
+            royalrumble@university.edu
+          </h3>
+        </header>
+      </main>
+    );
+  }
 
   return (
-     <main className="freshmen-container">
+    <main className="freshmen-container">
       <LogoButton />
       <LoginButton />
 
       <header className="freshmen-header">
-        <h1 className="freshmen-title">Welcome, Freshman Name!</h1>
-        <h3 className="check-registration">You have successfully been registered for Royal Rumble.</h3>
+        <h1 className="freshmen-title">
+          Welcome, {freshmanDetails?.fName} {freshmanDetails?.lName}!
+        </h1>
+        <h3 className="check-registration">
+          You have successfully been registered for Royal Rumble.
+        </h3>
       </header>
 
       <section className="freshmen-info-box">
         <InfoBox headerText="Event Information">
-          <div  style={{
-                        display: "flex",      
-                        color: "var(--primaryBlue)",
-                        fontWeight: "bold",
-                        fontSize: "30px",
-                        gap: "10px"       
-          }}>
-          <div>
-            Group #:
+          <div
+            style={{
+              display: "flex",
+              color: "var(--primaryBlue)",
+              fontWeight: "bold",
+              fontSize: "30px",
+              gap: "10px",
+            }}
+          >
+            <div>Group #:</div>
+            <div style={{ color: "var(--textGrey)", fontWeight: "normal" }}>
+              {freshmanDetails?.groupId === null
+                ? "Unassigned"
+                : freshmanDetails?.groupId}
+            </div>
           </div>
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal",}}>
-            1
-          </div>
-          </div>
-          <div style={{ color: "var(--primaryBlue)", fontWeight: "bold",
-                        fontSize: "30px", margin: "20px 0px" }}>
+          <div
+            style={{
+              color: "var(--primaryBlue)",
+              fontWeight: "bold",
+              fontSize: "30px",
+              margin: "20px 0px",
+            }}
+          >
             General Information:
           </div>
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal",
-                        fontSize: "20px", margin: "5px 0px 10px" }}>
+          <div
+            style={{
+              color: "var(--textGrey)",
+              fontWeight: "normal",
+              fontSize: "20px",
+              margin: "5px 0px 10px",
+            }}
+          >
             General info about this group goes here.
           </div>
         </InfoBox>

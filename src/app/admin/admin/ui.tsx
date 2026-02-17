@@ -62,6 +62,7 @@ export default function AdminAdmin({
           editLink="/admin/edit/admin"
           deleteAction={(id) => deleteAdminById(Number(id))}
           idIndex={0}
+          fileName="admins-data"
         />
       </div>
     </main>

@@ -7,6 +7,7 @@ import LoginButton from "../../components/loginButton";
 import ViewDropdown from "../../components/viewDropdown";
 import InfoTable from "../../components/infoTable";
 import AddButton from "../../components/addButton";
+import ExportToExcelButton from "../../components/ExportToExcelButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import {
@@ -38,17 +39,50 @@ export default function AdminAllGroups({
   hallwayGroups: HallwayGroup[];
 }) {
   const router = useRouter();
-  const handleLogoClick = () => {
-    router.push("/admin");
-  };
+  const { showAlert } = useAlert();
 
   const [displayFreshmenGroup, setDisplayFreshmenGroup] = useState(true);
   const [selectedGroupId, setSelectedGroupId] = useState("");
-
   const [newHallway, setNewHallway] = useState("");
   const [showHallwayModal, setShowHallwayModal] = useState(false);
 
-  const { showAlert } = useAlert();
+  const handleLogoClick = () => router.push("/admin");
+
+  const formatPeople = (
+    people: { name: string; freshman_id?: string; mentor_id?: string }[],
+  ) => {
+    return people
+      .map((p) => {
+        const id = p.freshman_id ?? p.mentor_id ?? "";
+        return `${p.name}:${id}`;
+      })
+      .join(", ");
+  };
+
+  const exportHeaders = displayFreshmenGroup
+    ? ["Group Name", "Route #", "Event Order", "Freshmen", "Mentors"]
+    : ["Group Name", "Mentors"];
+
+  const exportData = displayFreshmenGroup
+    ? freshmenGroups
+        .filter(
+          (group) =>
+            selectedGroupId === "" || group.group_id === selectedGroupId,
+        )
+        .map((group) => [
+          group.group_id,
+          group.route_num,
+          group.event_order,
+          formatPeople(group.freshmen),
+          formatPeople(group.mentors),
+        ])
+    : hallwayGroups
+        .filter(
+          (group) =>
+            selectedGroupId === "" ||
+            group.hallwayStopId === Number(selectedGroupId) + 1,
+        )
+        .map((group) => [group.location, formatPeople(group.mentors)]);
 
   return (
     <main className="admin-container">
@@ -75,12 +109,14 @@ export default function AdminAllGroups({
               onChange={(e) => setSelectedGroupId(e.target.value)}
             >
               <option value="">All Groups</option>
+
               {displayFreshmenGroup &&
                 freshmenGroups.map((group) => (
                   <option key={group.group_id} value={group.group_id}>
                     {group.group_id}
                   </option>
                 ))}
+
               {!displayFreshmenGroup &&
                 hallwayGroups.map((group) => (
                   <option
@@ -94,7 +130,8 @@ export default function AdminAllGroups({
           </div>
         </div>
       </div>
-      {/* --- Group/Hallway Radio Buttons --- */}
+
+      {/* Radio Buttons */}
       <div style={{ width: "85%", marginTop: "20px" }}>
         <div className="form-container" style={{ margin: "0px" }}>
           <form className="manual-add-form">
@@ -112,11 +149,11 @@ export default function AdminAllGroups({
                 />
                 Freshmen Groups
               </label>
+
               <label className="checkbox-label">
                 <input
                   type="radio"
                   name="groupType"
-                  value="hallway"
                   className="checkbox-input"
                   checked={!displayFreshmenGroup}
                   onChange={() => {
@@ -131,6 +168,7 @@ export default function AdminAllGroups({
         </div>
       </div>
 
+      {/* Top Action Row */}
       <div
         style={{
           width: "87%",
@@ -156,8 +194,19 @@ export default function AdminAllGroups({
               <i
                 className="bi bi-plus-circle"
                 style={{ marginLeft: "30px", fontSize: "30px" }}
-              ></i>
+              />
             </AddButton>
+            <ExportToExcelButton
+              headers={exportHeaders}
+              data={exportData}
+              fileName={
+                displayFreshmenGroup
+                  ? "Freshmen_Groups_Export"
+                  : "Hallway_Groups_Export"
+              }
+              style={{ fontSize: "21px", justifyContent: "flex-center" }}
+            />
+
             <AddButton
               onClick={() => router.push("/admin/add/freshmen_group")}
               style={{ fontSize: "21px", justifyContent: "flex-end" }}
@@ -166,7 +215,7 @@ export default function AdminAllGroups({
               <i
                 className="bi bi-plus-circle"
                 style={{ marginLeft: "30px", fontSize: "30px" }}
-              ></i>
+              />
             </AddButton>
           </>
         ) : (
@@ -183,8 +232,9 @@ export default function AdminAllGroups({
               <i
                 className="bi bi-plus-circle"
                 style={{ marginLeft: "30px", fontSize: "30px" }}
-              ></i>
+              />
             </AddButton>
+
             <AddButton
               onClick={() => setShowHallwayModal(true)}
               style={{ fontSize: "21px", justifyContent: "flex-end" }}
@@ -193,11 +243,13 @@ export default function AdminAllGroups({
               <i
                 className="bi bi-plus-circle"
                 style={{ marginLeft: "30px", fontSize: "30px" }}
-              ></i>
+              />
             </AddButton>
           </>
         )}
       </div>
+
+      {/* VIEW DROPDOWN SECTION */}
       {displayFreshmenGroup ? (
         <ViewDropdown
           header={`Freshmen Group ${selectedGroupId}`}
@@ -208,11 +260,7 @@ export default function AdminAllGroups({
                 selectedGroupId === "" || group.group_id === selectedGroupId,
             )
             .map((group) => ({
-              title: `Group ${group.group_id}${
-                group.group_id !== "Unassigned"
-                  ? ` [${group.mentors.map((mentor) => mentor.name).join(", ")}]`
-                  : ""
-              }`,
+              title: `Group ${group.group_id}`,
               content: (
                 <section>
                   <div className="info-pairs">
@@ -250,7 +298,7 @@ export default function AdminAllGroups({
             return { success: result.success };
           }}
         />
-      ) : !displayFreshmenGroup && hallwayGroups.length > 0 ? (
+      ) : (
         <ViewDropdown
           header={`Hallways`}
           editLink="/admin/edit/hallwayGroup"
@@ -261,28 +309,14 @@ export default function AdminAllGroups({
                 group.hallwayStopId === Number(selectedGroupId) + 1,
             )
             .map((group) => ({
-              title: `${group.location}`,
+              title: group.location,
               content: (
                 <section>
-                  <div className="info-pairs">
-                    <div
-                      className="info-pair"
-                      style={{ marginBottom: "50px", marginTop: "30px" }}
-                    >
-                      <div className="info-label">Location:</div>
-                      <div className="info-value">{group.location}</div>
-                    </div>
-                  </div>
-
-                  <label className="info-label" style={{ marginTop: "30px" }}>
-                    Mentors:
-                  </label>
-                  <div style={{ width: "100%" }}>
-                    <InfoTable
-                      headers={["Mentor Name", "Student ID"]}
-                      data={group.mentors.map((m) => [m.name, m.mentor_id])}
-                    />
-                  </div>
+                  <label className="info-label">Mentors:</label>
+                  <InfoTable
+                    headers={["Mentor Name", "Student ID"]}
+                    data={group.mentors.map((m) => [m.name, m.mentor_id])}
+                  />
                 </section>
               ),
               sectionId: group.hallwayStopId,
@@ -292,10 +326,9 @@ export default function AdminAllGroups({
             return { success: result.success };
           }}
         />
-      ) : null}
+      )}
 
-      {/* -------- Add Hallway Modal -------- */}
-
+      {/* Add Hallway Modal (unchanged from your original) */}
       <Modal show={showHallwayModal} onHide={() => setShowHallwayModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Hallway</Modal.Title>
@@ -308,7 +341,7 @@ export default function AdminAllGroups({
               className="form-input"
               placeholder="Hallway Name"
               onChange={(e) => setNewHallway(e.target.value)}
-            ></input>
+            />
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -317,23 +350,6 @@ export default function AdminAllGroups({
             onClick={() => {
               setShowHallwayModal(false);
               setNewHallway("");
-            }}
-            style = {{ 
-              backgroundColor: "var(--primaryRed)",
-              color: "white",
-              fontFamily: "Poppins, sans-serif",
-              border: "5px solid transparent",
-              borderRadius: "10px",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "white";
-              e.currentTarget.style.color = "var(--primaryRed)";
-              e.currentTarget.style.borderColor = "var(--primaryRed)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--primaryRed)";
-              e.currentTarget.style.color = "white";
-              e.currentTarget.style.borderColor = "transparent";
             }}
           >
             Cancel
@@ -358,23 +374,6 @@ export default function AdminAllGroups({
               setNewHallway("");
               setShowHallwayModal(false);
               router.refresh();
-            }}
-            style = {{ 
-              backgroundColor: "var(--primaryBlue)",
-              color: "white",
-              fontFamily: "Poppins, sans-serif",
-              border: "5px solid transparent",
-              borderRadius: "10px",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "white";
-              e.currentTarget.style.color = "var(--primaryBlue)";
-              e.currentTarget.style.borderColor = "var(--primaryBlue)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
-              e.currentTarget.style.color = "white";
-              e.currentTarget.style.borderColor = "transparent";
             }}
           >
             Add

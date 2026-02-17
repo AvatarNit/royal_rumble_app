@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { Modal, Button } from "react-bootstrap";
 import { useAlert } from "@/app/context/AlertContext";
+import ExportToExcelButton from "./ExportToExcelButton";
 
 interface EditTableProps {
   headers: string[];
@@ -14,6 +15,7 @@ interface EditTableProps {
   deleteAction: (id: string | number) => Promise<{ success: boolean }>;
   idIndex?: number;
   visibleColumns: number[];
+  fileName?: string;
 }
 
 export default function EditTable({
@@ -23,6 +25,7 @@ export default function EditTable({
   deleteAction,
   idIndex = 0,
   visibleColumns,
+  fileName,
 }: EditTableProps) {
   const router = useRouter();
   const { showAlert } = useAlert();
@@ -95,7 +98,17 @@ export default function EditTable({
                 {headers[colIndex]}
               </th>
             ))}
-            <th style={headerCellStyle}></th>
+            <th style={headerCellStyle}>
+              {fileName ? (
+                <ExportToExcelButton
+                  headers={headers}
+                  data={data}
+                  fileName={fileName}
+                />
+              ) : (
+                ""
+              )}
+            </th>
           </tr>
         </thead>
 
@@ -164,12 +177,12 @@ export default function EditTable({
                 if (result?.success) {
                   showAlert(
                     `Successfully deleted item with ID ${modalID}`,
-                    "success"
+                    "success",
                   );
                 } else {
                   showAlert(
                     `Failed to delete item with ID ${modalID}`,
-                    "danger"
+                    "danger",
                   );
                 }
 

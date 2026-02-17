@@ -1,8 +1,16 @@
 "use server";
 
 import { db } from "@/db";
-import { eventsData, mentorAttendanceData, mentorData } from "@/db/schema";
-import { eq, asc, and } from "drizzle-orm";
+import {
+  adminData,
+  eventsData,
+  freshmenData,
+  mentorAttendanceData,
+  mentorData,
+  groupData,
+  groupLeaderData,
+} from "@/db/schema";
+import { eq, asc, and, sql } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -163,6 +171,180 @@ export const getMentorAttendanceAllEvents = async () => {
   return allEventsWithMentorsAttendance;
 };
 
+export const getUserByEmail = async (email: string) => {
+  // Check mentor
+  const mentor = await db
+    .select({
+      id: mentorData.mentorId,
+      job: mentorData.job,
+    })
+    .from(mentorData)
+    .where(eq(mentorData.email, email));
+
+  if (mentor.length > 0) {
+    return {
+      id: mentor[0].id,
+      job: mentor[0].job, // already stored in DB
+    };
+  }
+
+  // Check freshmen
+  const freshman = await db
+    .select({
+      id: freshmenData.freshmenId,
+    })
+    .from(freshmenData)
+    .where(eq(freshmenData.email, email));
+
+  if (freshman.length > 0) {
+    return {
+      id: freshman[0].id,
+      job: "FRESHMAN",
+    };
+  }
+
+  // Check admin
+  const admin = await db
+    .select({
+      id: adminData.adminId,
+    })
+    .from(adminData)
+    .where(eq(adminData.email, email));
+
+  if (admin.length > 0) {
+    return {
+      id: admin[0].id,
+      job: "ADMIN",
+    };
+  }
+  return null;
+};
+
+export const getRoyalRumbleGroupAttendance = async () => {
+  // Interfaces inside the function
+  interface Freshman {
+    freshman_id: string;
+    name: string;
+    present: boolean;
+  }
+
+  interface Mentor {
+    mentor_id: string;
+    name: string;
+    status: boolean | null;
+  }
+
+  interface GroupDetail {
+    group_id: string;
+    route_num: number;
+    event_order: string;
+    freshmen: Freshman[];
+    mentors: Mentor[];
+  }
+
+  // 1️⃣ Fetch all groups (ordered numerically then alphabetically)
+  const groups = await db
+    .select({
+      groupId: groupData.groupId,
+      routeNum: groupData.routeNum,
+      eventOrder: groupData.eventOrder,
+    })
+    .from(groupData)
+    .orderBy(
+      sql`
+        CASE
+          WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
+        END,
+        CASE
+          WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
+          ELSE NULL
+        END,
+        LOWER(${groupData.groupId})
+      `,
+    );
+
+  // 2️⃣ Fetch all freshmen
+  const freshmen = await db
+    .select({
+      groupId: freshmenData.groupId,
+      freshmenId: freshmenData.freshmenId,
+      fName: freshmenData.fName,
+      lName: freshmenData.lName,
+      present: freshmenData.present,
+    })
+    .from(freshmenData);
+
+  // 3️⃣ Get the Royal Rumble event ID
+  const royalRumbleEvent = await db
+    .select({ eventId: eventsData.eventId })
+    .from(eventsData)
+    .where(eq(eventsData.isRoyalRumble, true))
+    .limit(1);
+
+  const royalRumbleEventId = royalRumbleEvent[0]?.eventId;
+
+  // 4️⃣ Fetch mentors and their attendance for the Royal Rumble
+  const mentors = await db
+    .select({
+      groupId: groupLeaderData.groupId,
+      mentorId: mentorData.mentorId,
+      fName: mentorData.fName,
+      lName: mentorData.lName,
+      status: mentorAttendanceData.status,
+    })
+    .from(groupLeaderData)
+    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId))
+    .leftJoin(
+      mentorAttendanceData,
+      and(
+        eq(groupLeaderData.mentorId, mentorAttendanceData.mentorId),
+        eq(mentorAttendanceData.eventId, royalRumbleEventId),
+      ),
+    );
+
+  // 5️⃣ Build group map
+  const groupMap = new Map<string, GroupDetail>();
+
+  for (const g of groups) {
+    groupMap.set(g.groupId, {
+      group_id: g.groupId,
+      route_num: g.routeNum ?? 0,
+      event_order: g.eventOrder ? JSON.parse(g.eventOrder).join(", ") : "",
+      freshmen: [],
+      mentors: [],
+    });
+  }
+
+  // 6️⃣ Attach freshmen to their groups
+  for (const f of freshmen) {
+    if (!f.groupId) continue;
+    const group = groupMap.get(f.groupId);
+    if (group) {
+      group.freshmen.push({
+        freshman_id: f.freshmenId.toString(),
+        name: `${f.fName} ${f.lName}`,
+        present: f.present ?? false,
+      });
+    }
+  }
+
+  // 7️⃣ Attach mentors to their groups
+  for (const m of mentors) {
+    if (!m.groupId) continue;
+    const group = groupMap.get(m.groupId);
+    if (group) {
+      group.mentors.push({
+        mentor_id: m.mentorId.toString(),
+        name: `${m.fName} ${m.lName}`,
+        status: m.status ?? false,
+      });
+    }
+  }
+
+  // 8️⃣ Return the array of groups
+  return Array.from(groupMap.values());
+};
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -179,6 +361,7 @@ export const addEvent = async (data: {
   time: string;
   location: string;
   description: string;
+  isRoyalRumble?: boolean;
 }) => {
   const eventResult = await db
     .insert(eventsData)
@@ -189,17 +372,21 @@ export const addEvent = async (data: {
       time: data.time,
       location: data.location,
       description: data.description,
+      isRoyalRumble: data.isRoyalRumble ?? false,
     })
     .returning();
 
   await assignMentorsToEvent(Number(eventResult[0].eventId), data.job);
+
   return {
     success: true,
     name: data.name,
     job: data.job,
     date: data.date,
+    eventId: Number(eventResult[0].eventId),
   };
 };
+
 //--------------------------------------------------------------------------------------//
 //                                      End of Add                                      //
 //--------------------------------------------------------------------------------------//

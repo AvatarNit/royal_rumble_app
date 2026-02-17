@@ -10,6 +10,7 @@ import CheckBoxTable from "../../../components/checkBoxTable";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { updateFreshmanAttendanceById } from "../../../../actions/freshmen";
+import ExportToExcelButton from "@/src/app/components/ExportToExcelButton";
 
 interface Freshman {
   fName: string;
@@ -104,6 +105,16 @@ export default function AdminAttendanceFreshmenUI({
       </div>
 
       <InfoBox headerText="All Freshmen">
+        <ExportToExcelButton
+          headers={["First Name", "Last Name", "Student ID", "Status"]}
+          data={filteredFreshmen.map((student) => [
+            student.fName,
+            student.lName,
+            student.freshmenId.toString(),
+            student.present ? "Present" : "Absent",
+          ])}
+          fileName="freshmen-attendance"
+        />
         <CheckBoxTable
           headers={["Freshman Name", "Student ID"]}
           data={filteredFreshmen.map((student) => [

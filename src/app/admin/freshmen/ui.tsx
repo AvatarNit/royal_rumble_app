@@ -9,6 +9,7 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import BackButton from "@/app/components/backButton";
 import { deleteFreshmanById } from "@/actions/freshmen";
+import ExportToExcelButton from "../../components/ExportToExcelButton";
 
 export default function AdminFreshmen({
   freshmenData,
@@ -248,6 +249,7 @@ export default function AdminFreshmen({
             return { success: result.success };
           }}
           idIndex={0}
+          fileName="freshmen-data"
         />
       </div>
     </main>

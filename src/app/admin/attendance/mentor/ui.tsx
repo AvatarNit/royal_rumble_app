@@ -9,6 +9,7 @@ import CheckBoxTable from "../../../components/checkBoxTable";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { updateMentorAttendanceById } from "../../../../actions/other";
+import ExportToExcelButton from "@/src/app/components/ExportToExcelButton";
 
 interface Mentor {
   fName: string;
@@ -61,16 +62,16 @@ export default function AdminAttendanceMentorUI({
               mentors: event.mentors.map((mentor) =>
                 mentor.mentor_id === mentorId
                   ? { ...mentor, status: newStatus }
-                  : mentor
+                  : mentor,
               ),
-            }
-      )
+            },
+      ),
     );
 
     const result = await updateMentorAttendanceById(
       selectedEvent,
       mentorId,
-      newStatus
+      newStatus,
     );
 
     if (!result.success) {
@@ -85,16 +86,16 @@ export default function AdminAttendanceMentorUI({
                 mentors: event.mentors.map((mentor) =>
                   mentor.mentor_id === mentorId
                     ? { ...mentor, status: !newStatus }
-                    : mentor
+                    : mentor,
                 ),
-              }
-        )
+              },
+        ),
       );
     }
   };
 
   const selectedEventData = attendanceState.find(
-    (event) => event.eventId === selectedEvent
+    (event) => event.eventId === selectedEvent,
   );
 
   const filteredMentors = useMemo(() => {
@@ -107,10 +108,7 @@ export default function AdminAttendanceMentorUI({
       const fullName = `${mentor.fName} ${mentor.lName}`.toLowerCase();
       const mentorId = mentor.mentor_id.toString();
 
-      return (
-        fullName.includes(term) ||
-        mentorId.includes(term)
-      );
+      return fullName.includes(term) || mentorId.includes(term);
     });
   }, [selectedEventData, searchText]);
 
@@ -135,7 +133,6 @@ export default function AdminAttendanceMentorUI({
             className="search-input"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-          
           />
         </div>
         <div className="search-dropdown">
@@ -156,8 +153,18 @@ export default function AdminAttendanceMentorUI({
         </div>
       </div>
 
-
       <InfoBox headerText="Mentors">
+        <ExportToExcelButton
+          headers={["First Name", "Last Name", "Student ID", "Job", "Status"]}
+          data={filteredMentors.map((mentor) => [
+            mentor.fName,
+            mentor.lName,
+            mentor.mentor_id.toString(),
+            mentor.job,
+            mentor.status ? "Present" : "Absent",
+          ])}
+          fileName="mentor-attendance"
+        />
         <CheckBoxTable
           headers={["Mentor Name", "Student ID", "Job"]}
           data={filteredMentors.map((mentor) => [

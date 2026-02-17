@@ -20,6 +20,7 @@ export default function AdminAddEvent() {
   const [location, setLocation] = useState("");
   const [job, setJob] = useState("");
   const [description, setDescription] = useState("");
+  const [isRoyalRumble, setIsRoyalRumble] = useState(false);
 
   const handleLogoClick = () => {
     router.push("/admin/events");
@@ -34,7 +35,9 @@ export default function AdminAddEvent() {
         location,
         job,
         description,
+        isRoyalRumble,
       });
+
       if (!event_return.success) {
         throw new Error("Failed to add event");
       } else {
@@ -99,6 +102,17 @@ export default function AdminAddEvent() {
               value={location}
               onChange={(e) => setLocation(e.target.value)}
             />
+          </div>
+          <div className="form-row checkbox-row">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                className="checkbox-input"
+                checked={isRoyalRumble}
+                onChange={(e) => setIsRoyalRumble(e.target.checked)}
+              />
+              Is Actual Royal Rumble Event?
+            </label>
           </div>
           <label className="form-label">Description:</label>
           <textarea

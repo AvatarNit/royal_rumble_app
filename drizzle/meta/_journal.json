@@ -183,6 +183,13 @@
       "when": 1770732140678,
       "tag": "0025_purple_moira_mactaggert",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1771184661897,
+      "tag": "0026_known_mandrill",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { freshmenData } from "@/db/schema";
+import { freshmenData, seminarData } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
@@ -36,6 +36,15 @@ export const getFreshmenAttendance = async () => {
     .orderBy(asc(freshmenData.freshmenId));
 
   return freshmen;
+};
+
+export const getFreshmanByIdFromSchoolData = async (freshmenId: number) => {
+  const freshman = await db
+    .select()
+    .from(seminarData)
+    .where(eq(seminarData.freshmenId, freshmenId))
+    .limit(1);
+  return freshman[0];
 };
 
 //--------------------------------------------------------------------------------------//

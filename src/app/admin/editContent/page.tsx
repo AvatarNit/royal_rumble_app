@@ -10,6 +10,22 @@ export default function AdminFAQPage() {
         contentKey="freshmen_more_details"
       />
       <EditableContentBox title="FAQ Content" contentKey="faq" />
+      <EditableContentBox
+        title="Spirit Session More Details Text"
+        contentKey="spirit_session_more_details"
+      />
+      <EditableContentBox
+        title="Utility Squad More Details Text"
+        contentKey="utility_squad_more_details"
+      />
+      <EditableContentBox
+        title="Hallway Host More Details Text"
+        contentKey="hallway_host_more_details"
+      />
+      <EditableContentBox
+        title="Group Leader More Details Text"
+        contentKey="group_leader_more_details"
+      />
     </div>
   );
 }

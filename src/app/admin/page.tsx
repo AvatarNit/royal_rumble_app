@@ -66,9 +66,9 @@ export default async function AdminHomepage() {
             margin: "20px",
           }}
         >
-          {/* <AdminButtons link="/admin/add">Add New</AdminButtons> */}
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
-          <AdminButtons link="/admin/search">Search</AdminButtons>
+          <AdminButtons link="/admin/editContent">Edit Content</AdminButtons>
+          {/* <AdminButtons link="/admin/search">Search</AdminButtons> */}
         </div>
       </section>
     </main>

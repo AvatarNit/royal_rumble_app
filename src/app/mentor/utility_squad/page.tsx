@@ -1,21 +1,21 @@
-import HallwayHostHomepageUI from "./ui";
+import UtilitySquadHomepageUI from "./ui";
 import {
   getMentorById,
-  getHallwayHostEvents,
+  getUtilitySquadEvents,
 } from "../../../../src/actions/mentor";
 
-export default async function HallwayHostHomepage() {
+export default async function UtilitySquadHomepage() {
   // const session = await auth();
   // const studentId = session?.user?.id;
   const studentId = "654321"; // Placeholder student ID for testing purposes
 
   const mentorsData = await getMentorById(Number(studentId));
-  const hallwayHostEvents = await getHallwayHostEvents();
+  const utilitySquadEvents = await getUtilitySquadEvents();
 
   return (
-    <HallwayHostHomepageUI
+    <UtilitySquadHomepageUI
       mentorsData={mentorsData}
-      hallwayHostEvents={hallwayHostEvents}
+      utilitySquadEvents={utilitySquadEvents}
     />
   );
 }

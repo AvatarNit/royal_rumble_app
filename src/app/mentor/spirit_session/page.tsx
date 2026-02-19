@@ -1,21 +1,21 @@
-import HallwayHostHomepageUI from "./ui";
+import SpiritSessionHomepageUI from "./ui";
 import {
   getMentorById,
-  getHallwayHostEvents,
+  getSpiritSessionEvents,
 } from "../../../../src/actions/mentor";
 
-export default async function HallwayHostHomepage() {
+export default async function SpiritSessionHomepage() {
   // const session = await auth();
   // const studentId = session?.user?.id;
   const studentId = "654321"; // Placeholder student ID for testing purposes
 
   const mentorsData = await getMentorById(Number(studentId));
-  const hallwayHostEvents = await getHallwayHostEvents();
+  const spiritSessionEvents = await getSpiritSessionEvents();
 
   return (
-    <HallwayHostHomepageUI
+    <SpiritSessionHomepageUI
       mentorsData={mentorsData}
-      hallwayHostEvents={hallwayHostEvents}
+      spiritSessionEvents={spiritSessionEvents}
     />
   );
 }

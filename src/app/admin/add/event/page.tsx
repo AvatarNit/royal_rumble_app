@@ -111,7 +111,7 @@ export default function AdminAddEvent() {
                 checked={isRoyalRumble}
                 onChange={(e) => setIsRoyalRumble(e.target.checked)}
               />
-              Is Actual Royal Rumble Event?
+              Official Royal Rumble Event?
             </label>
           </div>
           <label className="form-label">Description:</label>

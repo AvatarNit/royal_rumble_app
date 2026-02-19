@@ -7,8 +7,11 @@ import {
   freshmenData,
   seminarData,
   groupLeaderData,
-  hallwayHostData
+  hallwayHostData,
+  mentorAttendanceData,
+  eventsData
 } from "@/db/schema";
+import { eq, sql, or } from "drizzle-orm";
 import * as XLSX from "xlsx";
 
 // normalize Excel headers to match DB column keys
@@ -54,6 +57,18 @@ async function insertData(table: string, rows: any[]) {
             hallwayStopId: null,
           }).onConflictDoNothing();
       }
+      const eventIds = await db
+          .select({ eventId: eventsData.eventId })
+          .from(eventsData)
+          .where(or(eq(eventsData.job, row["job"]), eq(eventsData.job, "ALL")));
+        // console.log("Event IDs for ALL jobs:", eventIds);
+        for (const event of eventIds) {
+          await db.insert(mentorAttendanceData).values({
+            mentorId: row["mentor_id"],
+            eventId: event.eventId,
+            status: false,
+          });
+        }
     }
       break;
 

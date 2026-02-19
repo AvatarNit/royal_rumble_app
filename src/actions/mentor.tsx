@@ -2,12 +2,14 @@
 
 import { db } from "@/db";
 import {
+  eventsData,
   groupLeaderData,
   hallwayHostData,
   hallwayStopData,
+  mentorAttendanceData,
   mentorData,
 } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, or } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -41,6 +43,20 @@ export const getGroupLeaderAssignments = async () => {
     .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId))
     .orderBy(sql`${groupLeaderData.groupId} ASC NULLS FIRST`);
   return groups;
+};
+
+export const getGroupLeaderEvents = async () => {
+  const events = await db
+    .select({
+      eventId: eventsData.eventId,
+      name: eventsData.name,
+      date: eventsData.date,
+      time: eventsData.time,
+      description: eventsData.description,
+    })
+    .from(eventsData)
+    .where(or(eq(eventsData.job, "GROUP LEADER"), eq(eventsData.job, "ALL")));
+  return events;
 };
 
 // Hallway Host queries
@@ -107,6 +123,49 @@ export const getHallwayHostAssignments = async () => {
     .innerJoin(mentorData, eq(hallwayHostData.mentorId, mentorData.mentorId));
   return hosts;
 };
+
+export const getHallwayHostEvents = async () => {
+  const events = await db
+    .select({
+      eventId: eventsData.eventId,
+      name: eventsData.name,
+      date: eventsData.date,
+      time: eventsData.time,
+      description: eventsData.description,
+    })
+    .from(eventsData)
+    .where(or(eq(eventsData.job, "HALLWAY HOST"), eq(eventsData.job, "ALL")));
+  return events;
+};
+
+// Utility / Spirit queries
+export const getUtilitySquadEvents = async () => {
+  const events = await db
+    .select({
+      eventId: eventsData.eventId,
+      name: eventsData.name,
+      date: eventsData.date,
+      time: eventsData.time,
+      description: eventsData.description,
+    })
+    .from(eventsData)
+    .where(or(eq(eventsData.job, "UTILITY SQUAD"), eq(eventsData.job, "ALL")));
+  return events;
+};
+export const getSpiritSessionEvents = async () => {
+  const events = await db
+    .select({
+      eventId: eventsData.eventId,
+      name: eventsData.name,
+      date: eventsData.date,
+      time: eventsData.time,
+      description: eventsData.description,
+    })
+    .from(eventsData)
+    .where(or(eq(eventsData.job, "SPIRIT SESSION"), eq(eventsData.job, "ALL")));
+  return events;
+};
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -144,6 +203,18 @@ export const addMentor = async (data: {
     await db.insert(hallwayHostData).values({
       mentorId: data.mentor_id,
       hallwayStopId: null,
+    });
+  }
+  const eventIds = await db
+    .select({ eventId: eventsData.eventId })
+    .from(eventsData)
+    .where(or(eq(eventsData.job, data.job), eq(eventsData.job, "ALL")));
+  console.log("Event IDs for ALL jobs:", eventIds);
+  for (const event of eventIds) {
+    await db.insert(mentorAttendanceData).values({
+      mentorId: data.mentor_id,
+      eventId: event.eventId,
+      status: false,
     });
   }
   // return to display confirmation

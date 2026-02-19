@@ -3,7 +3,6 @@ import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";
 import "../../css/freshmen.css";
 import "../../css/logo+login.css";
-import { auth } from "@/auth";
 import {
   getFreshmanById,
   getFreshmanByIdFromSchoolData,

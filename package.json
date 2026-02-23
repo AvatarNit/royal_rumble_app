@@ -26,11 +26,7 @@
     "file-saver": "^2.0.5",
     "formidable": "^3.5.4",
     "multiparty": "^4.2.3",
-<<<<<<< HEAD
     "next": "^16.1.6",
-=======
-    "next": "^15.5.12",
->>>>>>> 94ed91b76fef179825b635f9e33fdbb47bb0aff0
     "next-auth": "^5.0.0-beta.30",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",

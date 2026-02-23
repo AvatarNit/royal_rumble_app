@@ -87,13 +87,13 @@ export default function TestElementsPage() {
       /> */}
 
       <div>
-        <ExportToExcelButton
+        {/* <ExportToExcelButton
           data={sampleData}
           fileName="royal-rumble-results"
           sheetName="Results"
           buttonText="Download Results"
           className="btn btn-primary"
-        />
+        /> */}
       </div>
     </main>
   );

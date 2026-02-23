@@ -22,10 +22,12 @@ export default function HallwayHostGroupAttendancePage() {
           <CheckBoxTable
             headers={["Group Number", "Time Expected"]}
             data={[
-                    ["1", "11:00"],
-                    ["4", "11:30"],
-                    ["8", "12:00"],
-                  ]}
+              ["1", "11:00"],
+              ["4", "11:30"],
+              ["8", "12:00"],
+            ]}
+            status={[false, false, false]}
+            rowIds={[1, 2, 3]}
           />
         </InfoBox>
       </section>

@@ -5,9 +5,8 @@ import "../css/about.css";
 import "../css/logo+login.css";
 
 export default function AboutPage() {
-
   return (
-     <main className="about-container">
+    <main className="about-container">
       <LogoButton />
       <LoginButton />
 
@@ -16,11 +15,17 @@ export default function AboutPage() {
       </header>
 
       <section className="about-info-box">
-         <InfoBox headerText="Things to Know">
-          <div style={{ color: "var(--textGrey)", fontWeight: "normal", fontSize: "16px" }}>
-            Royal Rumble is Hamilton Southeastern's freshman orientation
-            event. The goal of this event is to introduce incoming students to the
-            school layout and spirit.
+        <InfoBox headerText="Things to Know">
+          <div
+            style={{
+              color: "var(--textGrey)",
+              fontWeight: "normal",
+              fontSize: "16px",
+            }}
+          >
+            Royal Rumble is Hamilton Southeastern&apos;s freshman orientation
+            event. The goal of this event is to introduce incoming students to
+            the school layout and spirit.
           </div>
         </InfoBox>
       </section>

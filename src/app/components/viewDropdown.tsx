@@ -8,7 +8,7 @@ import { useAlert } from "@/app/context/AlertContext";
 import { View } from "drizzle-orm";
 
 interface ViewDropdownProps {
-  editLink: string;
+  editLink?: string;
   deleteAction?: (id: string | number) => Promise<{ success: boolean }>;
   idIndex?: number;
   header?: string;

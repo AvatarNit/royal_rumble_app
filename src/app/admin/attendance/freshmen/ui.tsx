@@ -10,7 +10,7 @@ import CheckBoxTable from "../../../components/checkBoxTable";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { updateFreshmanAttendanceById } from "../../../../actions/freshmen";
-import ExportToExcelButton from "@/src/app/components/ExportToExcelButton";
+import ExportToExcelButton from "@/app/components/ExportToExcelButton";
 
 interface Freshman {
   fName: string;

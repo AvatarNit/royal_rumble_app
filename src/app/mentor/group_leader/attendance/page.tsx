@@ -21,11 +21,9 @@ export default function FreshmenAttendancePage() {
         <InfoBox headerText="Present?">
           <CheckBoxTable
             headers={["Student Name"]}
-            data={[
-                    ["Student 1"],
-                    ["Student 2"],
-                    ["Student 3"],
-                  ]}
+            data={[["Student 1"], ["Student 2"], ["Student 3"]]}
+            status={[false, true, false]}
+            rowIds={[1, 2, 3]}
           />
         </InfoBox>
       </section>

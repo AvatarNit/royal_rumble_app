@@ -10,12 +10,17 @@ import CheckBoxTable from "../components/checkBoxTable";
 import EditTable from "../components/editTable";
 import EditUserDropdown from "../components/editUserDropdown";
 import ViewDropdown from "../components/viewDropdown";
+import ExportToExcelButton from "../components/ExportToExcelButton";
 
 export default function TestElementsPage() {
+  const sampleData = [
+    { Name: "Roman Reigns", Wins: 25, Losses: 3 },
+    { Name: "Cody Rhodes", Wins: 20, Losses: 5 },
+  ];
   return (
     <main style={{ textAlign: "center", paddingTop: "50px" }}>
       <h1>Test Elements Page</h1>
-      <MentorButtons link="/about">Mentor button</MentorButtons>
+      {/* <MentorButtons link="/about">Mentor button</MentorButtons>
       <DeleteButton link="/about">delete button</DeleteButton>
       <LongButtons link="/about">Long button</LongButtons>
       <AdminButtons link="/about">Admin home button</AdminButtons>
@@ -79,7 +84,17 @@ export default function TestElementsPage() {
       <EditTable
         headers={["Student Name"]}
         data={[["Student 1"], ["Student 2"], ["Student 3"]]}
-      />
+      /> */}
+
+      <div>
+        <ExportToExcelButton
+          data={sampleData}
+          fileName="royal-rumble-results"
+          sheetName="Results"
+          buttonText="Download Results"
+          className="btn btn-primary"
+        />
+      </div>
     </main>
   );
 }

@@ -3,12 +3,12 @@
 import { useCallback } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
+import { signIn } from "next-auth/react";
 
 export default function LoginButton() {
-  const handleMicrosoftLogin = useCallback(() => {
-    console.log("Microsoft login triggered!");
-    // TODO: Integrate NextAuth Microsoft login here
-  }, []);
+  const handleMicrosoftLogin = async () => {
+    await signIn("microsoft-entra-id");
+  };
 
   return (
     <button className="profile-icon-button" onClick={handleMicrosoftLogin}>

@@ -47,6 +47,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Mentor Name"]}
                     data={[["Student 1"]]}
                     status={[false]}
+                    rowIds={[1, 2, 3]}
                   />
                 </div>
                 <label
@@ -61,6 +62,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Freshmen Name"]}
                     data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                     status={[false, true, false]}
+                    rowIds={[4, 5, 6]}
                   />
                 </div>
               </section>
@@ -83,6 +85,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Mentor Name"]}
                     data={[["Student 1"], ["Student 2"]]}
                     status={[false, true]}
+                    rowIds={[7, 8, 9]}
                   />
                 </div>
                 <label
@@ -97,6 +100,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Freshmen Name"]}
                     data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                     status={[false, true, false]}
+                    rowIds={[10, 11, 12]}
                   />
                 </div>
               </section>
@@ -119,6 +123,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Mentor Name"]}
                     data={[["Student 1"], ["Student 2"]]}
                     status={[false, true]}
+                    rowIds={[13, 14]}
                   />
                 </div>
                 <label
@@ -133,6 +138,7 @@ export default function AdminAttendanceAllGroups() {
                     headers={["Freshmen Name"]}
                     data={[["Student 1"], ["Student 2"], ["Student 3"]]}
                     status={[false, true, false]}
+                    rowIds={[15, 16, 17]}
                   />
                 </div>
               </section>

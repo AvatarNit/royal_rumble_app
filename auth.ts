@@ -1,6 +1,5 @@
 import NextAuth from "next-auth"
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
-import { getUserByEmail } from "@/actions/other"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -13,17 +12,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async signIn({ user }) {
-      if (!user.email) return false
+  if (!user.email) return false
 
-      const dbUser = await getUserByEmail(user.email)
+  const { getUserByEmail } = await import("@/actions/other")
 
-      if (!dbUser) return false
+  const dbUser = await getUserByEmail(user.email)
 
-      user.id = String(dbUser.id)
-      user.job = dbUser.job || ""
+  if (!dbUser) return false
 
-      return true
-    },
+  user.id = String(dbUser.id)
+  user.job = dbUser.job || ""
+
+  return true
+},
 
     async jwt({ token, user }) {
       if (user) {

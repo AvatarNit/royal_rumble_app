@@ -1,28 +1,30 @@
-import { auth } from "./auth"
-import { NextResponse } from "next/server"
+import { auth } from "./auth";
+import { NextResponse } from "next/server";
 
-export default auth(async (req) => {
+export const config = {
+  matcher: ["/admin/:path*", "/freshmen/:path*", "/mentor/:path*"],
+  runtime: "nodejs",
+};
+
+export default auth((req) => {
   const { nextUrl } = req;
   const session = req.auth;
 
   const path = nextUrl.pathname;
   const isLoggedIn = !!session;
 
-  // Protect admin
   if (path.startsWith("/admin")) {
     if (!isLoggedIn || session?.user?.job !== "ADMIN") {
       return NextResponse.redirect(new URL("/login", nextUrl));
     }
   }
 
-  // Protect freshmen
   if (path.startsWith("/freshmen")) {
     if (!isLoggedIn || session?.user?.job !== "FRESHMAN") {
       return NextResponse.redirect(new URL("/login", nextUrl));
     }
   }
 
-  // Protect mentor routes
   if (path.startsWith("/mentor")) {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/login", nextUrl));

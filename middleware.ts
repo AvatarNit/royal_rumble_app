@@ -5,16 +5,18 @@ export default auth((req) => {
   const session = req.auth;
 
   const path = nextUrl.pathname;
-  const isLoggedIn = !!session;
+  const user = session?.user;
+
+  const isLoggedIn = !!user;
 
   if (path.startsWith("/admin")) {
-    if (!isLoggedIn || session?.user?.job !== "ADMIN") {
+    if (!isLoggedIn || user.job !== "ADMIN") {
       return Response.redirect(new URL("/login", nextUrl));
     }
   }
 
   if (path.startsWith("/freshmen")) {
-    if (!isLoggedIn || session?.user?.job !== "FRESHMAN") {
+    if (!isLoggedIn || user.job !== "FRESHMAN") {
       return Response.redirect(new URL("/login", nextUrl));
     }
   }
@@ -31,12 +33,8 @@ export default auth((req) => {
       "SPIRIT SESSION",
     ];
 
-    if (!allowedMentorJobs.includes(session.user.job)) {
+    if (!allowedMentorJobs.includes(user.job ?? "")) {
       return Response.redirect(new URL("/login", nextUrl));
     }
   }
 });
-
-export const config = {
-  matcher: ["/admin/:path*", "/freshmen/:path*", "/mentor/:path*"],
-};

@@ -10,10 +10,8 @@ import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
 import "./css/logo+login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { getMentorById } from "@/actions/mentor";
 
 export default async function Home() {
-  const mentor = await getMentorById(271914);
   return (
     <main className="home-container">
       <LoginButton />
@@ -58,12 +56,6 @@ export default async function Home() {
         <WhatIsRRButton link="/about">What is Royal Rumble?</WhatIsRRButton>
         <FAQButton link="/faq">FAQs</FAQButton>
       </section>
-
-      <p>
-        {mentor
-          ? `Welcome, ${mentor.fName} ${mentor.lName}!`
-          : "Welcome, guest!"}
-      </p>
     </main>
   );
 }

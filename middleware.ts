@@ -1,10 +1,4 @@
-import { auth } from "./auth";
-import { NextResponse } from "next/server";
-
-export const config = {
-  matcher: ["/admin/:path*", "/freshmen/:path*", "/mentor/:path*"],
-  runtime: "nodejs",
-};
+import { auth } from "@/auth";
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -15,19 +9,19 @@ export default auth((req) => {
 
   if (path.startsWith("/admin")) {
     if (!isLoggedIn || session?.user?.job !== "ADMIN") {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return Response.redirect(new URL("/login", nextUrl));
     }
   }
 
   if (path.startsWith("/freshmen")) {
     if (!isLoggedIn || session?.user?.job !== "FRESHMAN") {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return Response.redirect(new URL("/login", nextUrl));
     }
   }
 
   if (path.startsWith("/mentor")) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return Response.redirect(new URL("/login", nextUrl));
     }
 
     const allowedMentorJobs = [
@@ -38,9 +32,11 @@ export default auth((req) => {
     ];
 
     if (!allowedMentorJobs.includes(session.user.job)) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return Response.redirect(new URL("/login", nextUrl));
     }
   }
-
-  return NextResponse.next();
 });
+
+export const config = {
+  matcher: ["/admin/:path*", "/freshmen/:path*", "/mentor/:path*"],
+};

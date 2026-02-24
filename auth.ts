@@ -20,7 +20,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (!dbUser) return false
 
       user.id = String(dbUser.id)
-      user.job = dbUser.job
+      user.job = dbUser.job || ""
 
       return true
     },

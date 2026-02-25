@@ -55,27 +55,51 @@ export default function GroupLeaderHomepageUI({
         </div>
       </header>
 
-      <section
-        className="mentor-info-box"
-        style={{ display: "flex", gap: "30px", alignItems: "flex-start" }}
+      <div className="mentor-info-box"
+        style={{
+          flexDirection: "row",
+          gap: "20px"
+        }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "20px",
-            margin: "30px",
-          }}
-        >
-          <MentorButtons link="/mentor/group_leader/group_details">
-            Group Details
-          </MentorButtons>
-          <MentorButtons link="/mentor/group_leader/attendance">
-            Attendance
-          </MentorButtons>
-          <MentorButtons link="/mentor/group_leader/route">Route</MentorButtons>
-        </div>
+        <MentorButtons link="/mentor/group_leader/attendance">
+          Attendance
+        </MentorButtons>
+        <MentorButtons link="/mentor/group_leader/route">Route</MentorButtons>
+      </div>
+      
+      <section className="mentor-info-box">
+        <InfoBox headerText="Group Details">
+          <div className="info-pairs">
+            <div className="info-pair">
+              <div className="info-label">Group #:</div>
+              <div className="info-value">1</div>
+            </div>
+            <div className="info-pair">
+              <div className="info-label">Partner(s):</div>
+              <div className="info-value">Nico, Nithik</div>
+            </div>
+            <div className="info-pair">
+              <div className="info-label">Route #:</div>
+              <div className="info-value">10</div>
+            </div>
+            <div className="info-pair">
+              <div className="info-label">Event Order:</div>
+              <div className="info-value">Tour - LGI - GYM</div>
+            </div>
+          </div>
 
+          <div className="freshmen-label">Freshmen:</div>
+          <InfoTable
+            headers={["Student Name", "Interest", "Prime Language", "Shirt Size"]}
+            data={[
+              ["John Doe", "Math", "English", "M"],
+              ["Jane Smith", "Science", "Spanish", "L"],
+            ]}
+          />
+        </InfoBox>
+      </section>
+
+      <section className="mentor-info-box">
         <InfoBox headerText="Event Details">
           <div
             style={{

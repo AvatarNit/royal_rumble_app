@@ -162,6 +162,52 @@ export default function AdminMentors({
         </div>
       </div>
 
+      <div className="search-container" style={{ marginLeft: "15%"}}>
+        <div className="search-row" style={{ width: "200px" }}>
+          <select
+            className="form-select"
+          >
+            <option value="">Job</option>
+            <option value="">Group Leader</option>
+            <option value="">Hallway Host</option>
+            <option value="">Spirit</option>
+            <option value="">Utility</option>
+          </select>
+        </div>
+        <div className="search-row" style={{ width: "200px" }}>
+          <select
+            className="form-select"
+          >
+            <option value="">Language</option>
+            <option value="">Spanish</option>
+            <option value="">French</option>
+            <option value="">German</option>
+            <option value="">Italian</option>
+          </select>
+        </div>
+        <div className="search-row" style={{ width: "200px" }}>
+          <select
+            className="form-select"
+          >
+            <option value="">Training Date</option>
+            <option value="">ex. date</option>
+            <option value="">ex. date</option>
+            <option value="">ex. date</option>
+          </select>
+        </div>
+        <div className="search-row" style={{ width: "250px" }}>
+          <select
+            className="form-select"
+          >
+            <option value="">Graduation Year</option>
+            <option value="">2026</option>
+            <option value="">2027</option>
+            <option value="">2028</option>
+          </select>
+        </div>
+       
+      </div>
+
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}
       <div style={{ width: "85%", marginTop: "20px" }}>
         <div className="form-container" style={{ margin: "0px" }}>

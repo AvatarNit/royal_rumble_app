@@ -344,6 +344,7 @@ const toolbarStyle = {
   marginBottom: "10px",
 };
 
+
 const editorWrapperStyle = {
   padding: "10px",
   backgroundColor: "white",

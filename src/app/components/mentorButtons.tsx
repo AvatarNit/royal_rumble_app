@@ -16,16 +16,16 @@ export default function MentorButtons({
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "1.2rem",
+    fontSize: "1.5rem",
     border: "10px solid transparent",
     borderRadius: "14px",
-    padding: "40px 20px",
-    width: "150px",
-    height: "140px",
+    padding: "25px 20px",
+    width: "270px",
+    height: "40px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    margin: "10px",
+    margin: "40px 10px 10px 10px",
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -55,26 +55,39 @@ export default function HallwayHostHomepageUI({
         </div>
       </header>
 
-      <section
-        className="mentor-info-box"
-        style={{ display: "flex", gap: "30px", alignItems: "flex-start" }}
-      >
+      <div className="mentor-info-box">
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             gap: "20px",
-            margin: "30px",
           }}
         >
-          <MentorButtons link="/mentor/hallway_host/group_details">
-            Group Details
-          </MentorButtons>
           <MentorButtons link="/mentor/hallway_host/group_attendance">
             Attendance
           </MentorButtons>
         </div>
+      </div>
 
+      <section className="mentor-info-box">
+        <InfoBox headerText="Event Details">
+          <div className="info-pairs">
+            <div className="info-pair">
+              <div className="info-label">Group #:</div>
+              <div className="info-value">1</div>
+            </div>
+            <div className="info-pair">
+              <div className="info-label">Partner(s):</div>
+              <div className="info-value">Nico, Nithik</div>
+            </div>
+            <div className="info-pair">
+              <div className="info-label">Location:</div>
+              <div className="info-value">A Hallway (World Languages)</div>
+            </div>
+          </div>
+        </InfoBox>
+      </section>
+
+      <section className="mentor-info-box">
         <InfoBox headerText="Event Details">
           <div
             style={{

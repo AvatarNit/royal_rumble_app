@@ -1,36 +1,37 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
-import { useEffect } from "react";
 import { useAlert } from "../context/AlertContext";
 
 const DEV_MODE = process.env.DEV_MODE === "true";
+const TENANT_ID = process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID;
 
 export default function LoginButtonSession() {
   const { data: session } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { showAlert } = useAlert();
 
-  // Show post-logout alert if redirected with ?signedOut=true
-  useEffect(() => {
-    if (searchParams.get("signedOut")) {
-      showAlert("Successfully signed out", "success");
-    }
-  }, [searchParams, showAlert]);
-
-  const handleClick = async () => {
-    if (DEV_MODE) return; // do nothing in dev mode
+  const handleClick = () => {
+    if (DEV_MODE) return; // do nothing in dev
 
     if (session) {
-      // Full logout: clears NextAuth + Microsoft Entra session
-      // Redirects to /?signedOut=true so we can show an alert after reload
-      await signOut({ redirect: true, callbackUrl: "/?signedOut=true" });
+      // Full Microsoft logout
+      if (!TENANT_ID) {
+        console.error("Missing Azure TENANT_ID for logout");
+        return;
+      }
+
+      // Optional: show alert before redirect (won’t persist after reload)
+      showAlert("Signing out...", "info");
+
+      // Redirect to Microsoft logout endpoint
+      const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
+      window.location.href = logoutUrl;
     } else {
-      // Go to your custom login page for special logic
+      // Not logged in → go to your custom login page
       router.push("/login");
     }
   };

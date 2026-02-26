@@ -17,5 +17,5 @@ export default async function AdminLayout({
   // Not logged in → send to login
   if (!session?.user) redirect("/login");
 
-  return { children };
+  return <>{children}</>;
 }

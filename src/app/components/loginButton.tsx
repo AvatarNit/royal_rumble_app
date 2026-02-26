@@ -4,9 +4,10 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
+import { auth } from "@/auth";
 
-export default function LoginButton() {
-  const { data: session } = useSession();
+export default async function LoginButton() {
+  const session = await auth();
   const router = useRouter();
 
   const handleClick = async () => {

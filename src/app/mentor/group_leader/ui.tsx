@@ -36,7 +36,7 @@ export default function GroupLeaderHomepageUI({
     <main className="mentor-container">
       <LogoButton />
       <LoginButton />
-
+      <p>{mentorsData.mentorId}</p>
       <header className="mentor-header">
         <h1 className="mentor-title">
           Welcome, {mentorsData?.fName} {mentorsData?.lName}!
@@ -55,10 +55,11 @@ export default function GroupLeaderHomepageUI({
         </div>
       </header>
 
-      <div className="mentor-info-box"
+      <div
+        className="mentor-info-box"
         style={{
           flexDirection: "row",
-          gap: "20px"
+          gap: "20px",
         }}
       >
         <MentorButtons link="/mentor/group_leader/attendance">
@@ -66,7 +67,7 @@ export default function GroupLeaderHomepageUI({
         </MentorButtons>
         <MentorButtons link="/mentor/group_leader/route">Route</MentorButtons>
       </div>
-      
+
       <section className="mentor-info-box">
         <InfoBox headerText="Group Details">
           <div className="info-pairs">
@@ -90,7 +91,12 @@ export default function GroupLeaderHomepageUI({
 
           <div className="freshmen-label">Freshmen:</div>
           <InfoTable
-            headers={["Student Name", "Interest", "Prime Language", "Shirt Size"]}
+            headers={[
+              "Student Name",
+              "Interest",
+              "Prime Language",
+              "Shirt Size",
+            ]}
             data={[
               ["John Doe", "Math", "English", "M"],
               ["Jane Smith", "Science", "Spanish", "L"],

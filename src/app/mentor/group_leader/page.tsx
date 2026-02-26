@@ -8,6 +8,9 @@ export default async function GroupLeaderHomepage() {
 
   const mentorsData = await getMentorById(Number(studentId));
   const groupLeaderEvents = await getGroupLeaderEvents();
+
+  alert(studentId);
+  alert(JSON.stringify(mentorsData));
   return (
     <GroupLeaderHomepageUI
       mentorsData={mentorsData}

@@ -14,6 +14,8 @@ import {
 import { eq, sql, or } from "drizzle-orm";
 import * as XLSX from "xlsx";
 
+export const runtime = "nodejs";
+
 // normalize Excel headers to match DB column keys
 function normalizeRows(rows: any[]) {
   return rows.map((row) => {
@@ -61,7 +63,6 @@ async function insertData(table: string, rows: any[]) {
           .select({ eventId: eventsData.eventId })
           .from(eventsData)
           .where(or(eq(eventsData.job, row["job"]), eq(eventsData.job, "ALL")));
-        // console.log("Event IDs for ALL jobs:", eventIds);
         for (const event of eventIds) {
           await db.insert(mentorAttendanceData).values({
             mentorId: row["mentor_id"],

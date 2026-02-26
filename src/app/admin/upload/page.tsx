@@ -85,6 +85,7 @@ export default function AdminUpload() {
 
       // Display number of inserted rows
       const fullMessage = data.message || "Upload Failed";
+      console.log(fullMessage);
       const truncatedMessage = fullMessage.includes("inserted")
         ? fullMessage.split("inserted")[0] + "inserted"
         : fullMessage;

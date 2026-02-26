@@ -12,15 +12,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   callbacks: {
     async signIn({ user }) {
-  if (!user.email) return false
+  console.log("OAuth user:", user.email)
+
+  if (!user.email) {
+    console.log("No email from provider")
+    return false
+  }
 
   const { getUserByEmail } = await import("@/actions/other")
   const dbUser = await getUserByEmail(user.email)
 
-  if (!dbUser) return false
+  console.log("DB user:", dbUser)
 
-  user.id = dbUser.id.toString()
-  user.job = dbUser.job || ""
+  if (!dbUser) {
+    console.log("User not found in DB")
+    return false
+  }
+
+  user.id = String(dbUser.id)
+  user.job = dbUser.job ?? ""
 
   return true
 },

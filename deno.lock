@@ -39,6 +39,7 @@
         "npm:multiparty@^4.2.3",
         "npm:next-auth@^5.0.0-beta.30",
         "npm:next@^16.1.6",
+        "npm:openssl@2",
         "npm:react-bootstrap@^2.10.10",
         "npm:react-dom@19.1.0",
         "npm:react@^19.1.0",

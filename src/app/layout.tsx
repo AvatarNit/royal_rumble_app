@@ -5,6 +5,8 @@ import "./css/globals.css";
 import { AlertProvider } from "./context/AlertContext";
 import AlertMessage from "./components/AlertMessage";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Royal Rumble App",
   description: "A simple Next.js app made by Nithik and Nico",

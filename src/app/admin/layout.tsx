@@ -1,6 +1,4 @@
 import { auth } from "@/auth";
-import LogoButton from "../components/logoButton";
-import LoginButton from "../components/loginButton";
 import "../css/mentor.css";
 import "../css/logo+login.css";
 import { redirect } from "next/navigation";

@@ -7,10 +7,11 @@ import { auth } from "@/auth";
 import { getAdminById } from "@/src/actions/admin";
 
 export const dynamic = "force-dynamic";
+const DEV_MODE = process.env.DEV_MODE === "true";
 
 export default async function AdminHomepage() {
   const session = await auth();
-  const adminId = session?.user?.id;
+  const adminId = !DEV_MODE ? session?.user?.id : "100000";
   const admin = await getAdminById(Number(adminId));
 
   return (

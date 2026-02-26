@@ -3,8 +3,22 @@ import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
 
 export default function SpiritSessionUI({
+  mentorsData,
   spiritSessionEvents,
 }: {
+  mentorsData: {
+    mentorId: number;
+    fName: string | null;
+    lName: string | null;
+    email: string | null;
+    job: string | null;
+    tshirtSize: string | null;
+    gradYear: number | null;
+    languages: string | null;
+    phoneNum: string | null;
+    trainingDay: string | null;
+    pizzaType: string | null;
+  };
   spiritSessionEvents: Array<{
     eventId: number;
     name: string | null;

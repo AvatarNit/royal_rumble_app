@@ -17,16 +17,13 @@ export default function LoginButtonSession() {
     if (DEV_MODE) return; // do nothing in dev mode
 
     if (session) {
-      // Disable automatic redirect so we can show the alert
-      await signOut({ redirect: false });
-
-      // Show success alert
+      // Log out
+      await signOut({ redirect: false }); // prevent auto redirect
       showAlert("Successfully signed out", "success");
-
-      // Navigate manually
-      router.push("/");
+      router.push("/"); // navigate home after logout
     } else {
-      router.push("/login"); // go to login page if not logged in
+      // Go to your custom login page
+      router.push("/login");
     }
   };
 

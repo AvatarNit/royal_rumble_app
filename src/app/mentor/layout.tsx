@@ -9,27 +9,28 @@ export const dynamic = "force-dynamic";
 
 export default async function MentorLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { slug?: string[] };
 }) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  // Redirect if user tries to access another mentor's area
-  if (session.user.job !== "GROUP LEADER")
+  if (session.user.job !== "GROUP LEADER") {
     redirect(`/mentor/${session.user.job.toLowerCase().replace(" ", "_")}`);
+  }
 
-  // Determine if we are on the home page
-  const isHomePage = !params?.slug?.length; // empty slug = home page
+  // Show welcome header only on exact /mentor/group_leader homepage
+  const showHeader = !(
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/mentor/group_leader"
+  );
 
   return (
     <main className="mentor-container">
       <LogoButton />
       <LoginButton />
 
-      {isHomePage && (
+      {showHeader && (
         <header className="mentor-header">
           <h1 className="mentor-title">
             Welcome, {session.user.name?.split(" (")[0]}!

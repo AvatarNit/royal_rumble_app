@@ -1,5 +1,5 @@
-import NextAuth from "next-auth"
-import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
+import NextAuth from "next-auth";
+import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -7,66 +7,71 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID!,
       clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET!,
       issuer: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/v2.0`,
+      authorization: {
+        params: { prompt: "login" }, // forces login screen on next login
+      },
+      // Optional: explicitly configure end session endpoint
+      // signOutUrl: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/oauth2/v2.0/logout`
     }),
   ],
 
   session: {
-    strategy: "jwt",      // JWT sessions (default for App Router)
-    maxAge: 30 * 60,      // 30 minutes in seconds
-    updateAge: 0,         // Don't auto-extend the session
+    strategy: "jwt",
+    maxAge: 30 * 60,
+    updateAge: 0,
   },
 
   callbacks: {
     async signIn({ user }) {
-  console.log("OAuth user:", user.email)
+      console.log("OAuth user:", user.email);
 
-  if (!user.email) {
-    console.log("No email from provider")
-    return false
-  }
+      if (!user.email) {
+        console.log("No email from provider");
+        return false;
+      }
 
-  const { getUserByEmail } = await import("@/actions/other")
-  const dbUser = await getUserByEmail(user.email)
+      const { getUserByEmail } = await import("@/actions/other");
+      const dbUser = await getUserByEmail(user.email);
 
-  console.log("DB user:", dbUser)
+      console.log("DB user:", dbUser);
 
-  if (!dbUser) {
-    console.log("User not found in DB")
-    return false
-  }
+      if (!dbUser) {
+        console.log("User not found in DB");
+        return false;
+      }
 
-  user.id = String(dbUser.id)
-  user.job = dbUser.job ?? ""
+      user.id = String(dbUser.id);
+      user.job = dbUser.job ?? "";
 
-  return true
-},
+      return true;
+    },
 
-async jwt({ token, user }) {
-  if (user) {
-    if (typeof user.id === "string") {
-      token.userId = user.id
-    }
+    async jwt({ token, user }) {
+      if (user) {
+        if (typeof user.id === "string") {
+          token.userId = user.id;
+        }
 
-    if (typeof user.job === "string") {
-      token.job = user.job
-    }
-  }
+        if (typeof user.job === "string") {
+          token.job = user.job;
+        }
+      }
 
-  return token
-},
+      return token;
+    },
 
-async session({ session, token }) {
-  if (session.user) {
-    if (typeof token.userId === "string") {
-      session.user.id = token.userId
-    }
+    async session({ session, token }) {
+      if (session.user) {
+        if (typeof token.userId === "string") {
+          session.user.id = token.userId;
+        }
 
-    if (typeof token.job === "string") {
-      session.user.job = token.job
-    }
-  }
+        if (typeof token.job === "string") {
+          session.user.job = token.job;
+        }
+      }
 
-  return session
-}
+      return session;
+    },
   },
-})
+});

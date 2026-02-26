@@ -15,31 +15,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   if (!user.email) return false
 
   const { getUserByEmail } = await import("@/actions/other")
-
   const dbUser = await getUserByEmail(user.email)
 
   if (!dbUser) return false
 
-  user.id = String(dbUser.id)
+  user.id = dbUser.id.toString()
   user.job = dbUser.job || ""
 
   return true
 },
 
-    async jwt({ token, user }) {
-      if (user) {
-        token.userId = user.id
-        token.job = user.job
-      }
+async jwt({ token, user }) {
+  if (user) {
+    if (typeof user.id === "string") {
+      token.userId = user.id
+    }
 
-      return token
-    },
+    if (typeof user.job === "string") {
+      token.job = user.job
+    }
+  }
 
-    async session({ session, token }) {
-      session.user.id = token.userId as string
-      session.user.job = token.job as string
+  return token
+},
 
-      return session
-    },
+async session({ session, token }) {
+  if (session.user) {
+    if (typeof token.userId === "string") {
+      session.user.id = token.userId
+    }
+
+    if (typeof token.job === "string") {
+      session.user.job = token.job
+    }
+  }
+
+  return session
+}
   },
 })

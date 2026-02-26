@@ -1,4 +1,3 @@
-import NextAuth from "next-auth"
 import { DefaultSession } from "next-auth"
 
 declare module "next-auth" {
@@ -21,3 +20,5 @@ declare module "next-auth/jwt" {
     job: string
   }
 }
+
+export {}

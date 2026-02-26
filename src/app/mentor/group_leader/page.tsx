@@ -1,6 +1,8 @@
 import { getMentorById, getGroupLeaderEvents } from "@/src/actions/mentor";
 import GroupLeaderHomepageUI from "./ui";
 
+export const dynamic = "force-dynamic";
+
 export default async function GroupLeaderHomepage() {
   // const session = await auth();
   // const studentId = session?.user?.id;

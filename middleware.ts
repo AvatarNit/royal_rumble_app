@@ -7,8 +7,13 @@ export default auth((req) => {
   const path = nextUrl.pathname;
   const user = session?.user;
 
+
   const isLoggedIn = !!user;
 
+   // If session doesn't exist (expired)
+  if (!user) {
+    return Response.redirect(new URL("/login", req.nextUrl))
+  }
   if (path.startsWith("/admin")) {
     if (!isLoggedIn || user.job !== "ADMIN") {
       return Response.redirect(new URL("/login", nextUrl));

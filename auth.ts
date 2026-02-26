@@ -10,6 +10,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
 
+  session: {
+    strategy: "jwt",      // JWT sessions (default for App Router)
+    maxAge: 30 * 60,      // 30 minutes in seconds
+    updateAge: 0,         // Don't auto-extend the session
+  },
+
   callbacks: {
     async signIn({ user }) {
   console.log("OAuth user:", user.email)

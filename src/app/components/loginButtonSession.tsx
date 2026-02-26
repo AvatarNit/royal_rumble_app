@@ -6,8 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
 import { useAlert } from "../context/AlertContext";
 
-const DEV_MODE = process.env.DEV_MODE === "true";
-const TENANT_ID = process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID;
+const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === "true"; // also client-accessible
+const TENANT_ID = process.env.NEXT_PUBLIC_MICROSOFT_ENTRA_TENANT_ID;
 
 export default function LoginButtonSession() {
   const { data: session } = useSession();
@@ -15,23 +15,19 @@ export default function LoginButtonSession() {
   const { showAlert } = useAlert();
 
   const handleClick = () => {
-    if (DEV_MODE) return; // do nothing in dev
+    if (DEV_MODE) return;
 
     if (session) {
-      // Full Microsoft logout
       if (!TENANT_ID) {
         console.error("Missing Azure TENANT_ID for logout");
         return;
       }
 
-      // Optional: show alert before redirect (won’t persist after reload)
       showAlert("Signing out...", "info");
 
-      // Redirect to Microsoft logout endpoint
       const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
       window.location.href = logoutUrl;
     } else {
-      // Not logged in → go to your custom login page
       router.push("/login");
     }
   };

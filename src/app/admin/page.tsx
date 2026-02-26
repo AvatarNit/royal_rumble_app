@@ -14,7 +14,10 @@ export default async function AdminHomepage() {
   const admin = await getAdminById(Number(adminId));
 
   return (
-    <>
+    <main className="admin-container">
+      <LogoButton />
+      <LoginButton />
+
       <header className="admin-header">
         <h1 className="admin-title">
           Welcome, {admin?.fName} {admin?.lName}!
@@ -69,6 +72,6 @@ export default async function AdminHomepage() {
           {/* <AdminButtons link="/admin/search">Search</AdminButtons> */}
         </div>
       </section>
-    </>
+    </main>
   );
 }

@@ -14,15 +14,14 @@ export default function LoginButtonSession() {
   const router = useRouter();
 
   const handleClick = async () => {
-    if (DEV_MODE) return; // do nothing in dev mode
+    if (DEV_MODE) return;
 
     if (session) {
-      // Log out
-      await signOut({ redirect: false }); // prevent auto redirect
-      showAlert("Successfully signed out", "success");
-      router.push("/"); // navigate home after logout
+      // Full redirect logout (including Azure)
+      await signOut({ redirect: true, callbackUrl: "/" });
+      // Note: showAlert may not run because page reloads after redirect
     } else {
-      // Go to your custom login page
+      // Go to your special login page
       router.push("/login");
     }
   };

@@ -23,7 +23,9 @@ export default async function MentorLayout({
       <LoginButton />
 
       <header className="mentor-header">
-        <h1 className="mentor-title">Welcome, {session.user.name}!</h1>
+        <h1 className="mentor-title">
+          Welcome, {session.user.name?.split(" (")[0]}!
+        </h1>
 
         <div
           style={{

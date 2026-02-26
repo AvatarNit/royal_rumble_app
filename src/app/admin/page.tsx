@@ -6,10 +6,11 @@ import "../css/logo+login.css";
 import { auth } from "@/auth";
 import { getAdminById } from "@/src/actions/admin";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHomepage() {
-  // const session = await auth();
-  // const studentId = session?.user?.id;
-  const adminId = "271914";
+  const session = await auth();
+  const adminId = session?.user?.id;
   const admin = await getAdminById(Number(adminId));
 
   return (

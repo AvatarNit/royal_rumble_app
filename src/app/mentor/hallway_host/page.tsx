@@ -3,11 +3,13 @@ import {
   getMentorById,
   getHallwayHostEvents,
 } from "../../../../src/actions/mentor";
+import { auth } from "@/auth";
+
+export const dynamic = "force-dynamic";
 
 export default async function HallwayHostHomepage() {
-  // const session = await auth();
-  // const studentId = session?.user?.id;
-  const studentId = "654321"; // Placeholder student ID for testing purposes
+  const session = await auth();
+  const studentId = session?.user?.id;
 
   const mentorsData = await getMentorById(Number(studentId));
   const hallwayHostEvents = await getHallwayHostEvents();

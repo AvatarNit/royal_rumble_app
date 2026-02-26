@@ -8,11 +8,13 @@ import {
   getFreshmanByIdFromSchoolData,
 } from "../../../../src/actions/freshmen";
 import EditableContent from "../../components/EditableContent";
+import { auth } from "@/auth";
+
+export const dynamic = "force-dynamic";
 
 export default async function FreshmenHomepage() {
-  // const session = await auth();
-  // const studentId = session?.user?.id;
-  const studentId = "123456"; // Placeholder student ID for testing purposes
+  const session = await auth();
+  const studentId = session?.user?.id;
 
   const freshmanDetails = await getFreshmanById(Number(studentId));
 

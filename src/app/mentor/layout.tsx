@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
+// Map user jobs to their mentor routes
 const jobRoutes: Record<string, string> = {
   "GROUP LEADER": "group_leader",
   "HALLWAY HOST": "hallway_host",
@@ -16,29 +17,29 @@ const jobRoutes: Record<string, string> = {
 
 export default async function MentorLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { slug?: string[] }; // Next.js App Router passes slug for nested routes
 }) {
   const session = await auth();
 
-  // If not logged in, redirect to login
+  // Not logged in → send to login
   if (!session?.user) redirect("/login");
 
   const userJob = session.user.job ?? "";
-  const currentRoute = params.slug?.[0]; // e.g., "group_leader"
+  const userRoute = jobRoutes[userJob];
 
-  // If user is trying to access a page that doesn't match their job, redirect
-  if (jobRoutes[userJob] && currentRoute !== jobRoutes[userJob]) {
-    redirect(`/mentor/${jobRoutes[userJob]}`);
+  // Redirect to their mentor page if accessing other mentor pages
+  if (userRoute) {
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
+    if (!path.includes(`/mentor/${userRoute}`)) {
+      redirect(`/mentor/${userRoute}`);
+    }
   }
 
   return (
     <main className="mentor-container">
       <LogoButton />
       <LoginButton />
-
       {children}
     </main>
   );

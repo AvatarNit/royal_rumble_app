@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function MentorLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export default async function MentorLayout({
   if (!session?.user) redirect("/login");
 
   return (
-    <main className="mentor-container">
+    <main className="admin-container">
       <LogoButton />
       <LoginButton />
       {children}

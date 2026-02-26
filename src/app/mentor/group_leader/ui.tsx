@@ -30,6 +30,24 @@ export default function GroupLeaderUI({
 }) {
   return (
     <>
+      <header className="mentor-header">
+        <h1 className="mentor-title">
+          Welcome, {mentorsData.fName} {mentorsData.lName}!
+        </h1>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "20px 0px 0px",
+          }}
+        >
+          <h3 className="mentor-subtitle1">Job:</h3>
+          <h3 className="mentor-subtitle2">{mentorsData.job}</h3>
+        </div>
+      </header>
       <div
         className="mentor-info-box"
         style={{ flexDirection: "row", gap: "20px" }}

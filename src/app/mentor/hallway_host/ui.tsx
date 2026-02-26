@@ -30,12 +30,29 @@ export default function HallwayHostUI({
 }) {
   return (
     <>
+      <header className="mentor-header">
+        <h1 className="mentor-title">
+          Welcome, {mentorsData.fName} {mentorsData.lName}!
+        </h1>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "20px 0px 0px",
+          }}
+        >
+          <h3 className="mentor-subtitle1">Job:</h3>
+          <h3 className="mentor-subtitle2">{mentorsData.job}</h3>
+        </div>
+      </header>{" "}
       <div className="mentor-info-box">
         <MentorButtons link="/mentor/hallway_host/group_attendance">
           Attendance
         </MentorButtons>
       </div>
-
       <section className="mentor-info-box">
         <InfoBox headerText="Event Details">
           <InfoTable
@@ -49,7 +66,6 @@ export default function HallwayHostUI({
           />
         </InfoBox>
       </section>
-
       <InfoBox headerText="Additional Instruction">
         <EditableContent contentKey="hallway_host_more_details" />
       </InfoBox>

@@ -7,49 +7,37 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
+const jobRoutes: Record<string, string> = {
+  "GROUP LEADER": "group_leader",
+  "HALLWAY HOST": "hallway_host",
+  "SPIRIT SESSION": "spirit_session",
+  "UTILITY SQUAD": "utility_squad",
+};
+
 export default async function MentorLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { slug?: string[] }; // Next.js App Router passes slug for nested routes
 }) {
   const session = await auth();
+
+  // If not logged in, redirect to login
   if (!session?.user) redirect("/login");
 
-  if (session.user.job !== "GROUP LEADER") {
-    redirect(`/mentor/${session.user.job.toLowerCase().replace(" ", "_")}`);
-  }
+  const userJob = session.user.job ?? "";
+  const currentRoute = params.slug?.[0]; // e.g., "group_leader"
 
-  // Show welcome header only on exact /mentor/group_leader homepage
-  const showHeader = !(
-    typeof window !== "undefined" &&
-    window.location.pathname !== "/mentor/group_leader"
-  );
+  // If user is trying to access a page that doesn't match their job, redirect
+  if (jobRoutes[userJob] && currentRoute !== jobRoutes[userJob]) {
+    redirect(`/mentor/${jobRoutes[userJob]}`);
+  }
 
   return (
     <main className="mentor-container">
       <LogoButton />
       <LoginButton />
-
-      {showHeader && (
-        <header className="mentor-header">
-          <h1 className="mentor-title">
-            Welcome, {session.user.name?.split(" (")[0]}!
-          </h1>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              margin: "20px 0px 0px",
-            }}
-          >
-            <h3 className="mentor-subtitle1">Job:</h3>
-            <h3 className="mentor-subtitle2">{session.user.job}</h3>
-          </div>
-        </header>
-      )}
 
       {children}
     </main>

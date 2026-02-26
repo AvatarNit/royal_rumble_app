@@ -36,5 +36,21 @@ export default auth((req) => {
     if (!allowedMentorJobs.includes(user.job ?? "")) {
       return Response.redirect(new URL("/login", nextUrl));
     }
+
+    if (path.startsWith("/mentor/group_leader") && user.job !== "GROUP LEADER") {
+      return Response.redirect(new URL(`/mentor/${user.job.toLowerCase().replace(' ', '_')}`, nextUrl));
+    }
+
+    if (path.startsWith("/mentor/hallway_host") && user.job !== "HALLWAY HOST") {
+      return Response.redirect(new URL(`/mentor/${user.job.toLowerCase().replace(' ', '_')}`, nextUrl));
+    }
+
+    if (path.startsWith("/mentor/spirit_session") && user.job !== "SPIRIT SESSION") {
+      return Response.redirect(new URL(`/mentor/${user.job.toLowerCase().replace(' ', '_')}`, nextUrl));
+    }
+
+    if (path.startsWith("/mentor/utility_squad") && user.job !== "UTILITY SQUAD") {
+      return Response.redirect(new URL(`/mentor/${user.job.toLowerCase().replace(' ', '_')}`, nextUrl));
+  }
   }
 });

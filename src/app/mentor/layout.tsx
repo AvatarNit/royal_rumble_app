@@ -13,10 +13,9 @@ export default async function MentorLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
+  if (!session?.user) redirect("/login");
+  if (session.user.job !== "GROUP LEADER")
+    redirect(`/mentor/${session.user.job.toLowerCase().replace(" ", "_")}`);
 
   return (
     <main className="mentor-container">

@@ -6,13 +6,11 @@ import "../css/homepage.css";
 import { signIn } from "next-auth/react";
 
 export default function LoginButton() {
-  const handleMicrosoftLogin = async () => {
-    await signIn("microsoft-entra-id");
-  };
-
   return (
-    <button className="profile-icon-button" onClick={handleMicrosoftLogin}>
-      <i className="bi bi-person-fill"></i>
+    <button className="profile-icon-button">
+      <a href="/login">
+        <i className="bi bi-person-fill"></i>
+      </a>
     </button>
   );
 }

@@ -10,12 +10,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
 import { Popover, OverlayTrigger } from "react-bootstrap";
+import { useAlert } from "../../context/AlertContext";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [progress, setProgress] = useState<Record<string, number>>({});
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
+
+  const { showAlert } = useAlert();
 
   const runGrouping = async () => {
     return await createSeminarGroups();
@@ -303,8 +306,9 @@ export default function AdminUpload() {
       <button
         onClick={async () => {
           const groupingReturn = await runGrouping();
-          alert(
+          showAlert(
             `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
+            "success",
           );
         }}
       >
@@ -313,7 +317,7 @@ export default function AdminUpload() {
       <button
         onClick={async () => {
           const groupTotal = await createGroups();
-          alert(`Created Groups: ${groupTotal}`);
+          showAlert(`Created Groups: ${groupTotal}`, "success");
         }}
       >
         Create Groups
@@ -321,10 +325,11 @@ export default function AdminUpload() {
       <button
         onClick={async () => {
           const syncResult = await syncGroups();
-          alert(
+          showAlert(
             `Groups synced: ${syncResult.success} \n ${JSON.stringify(
               syncResult.unmatched,
             )}`,
+            "success",
           );
         }}
       >

@@ -10,7 +10,7 @@ import {
   hallwayHostData,
   hallwayStopData,
 } from "@/db/schema";
-import { eq, sql, isNull } from "drizzle-orm";
+import { eq, sql, isNull, inArray } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -369,41 +369,66 @@ export async function addHallway(
 export async function createSeminarGroups() {
   const allStudents = await db.select().from(seminarData);
 
-  //Group by teacher, period, and semester
-  const groups = new Map();
-
-  let finalGroup = 2;
+  // Group by teacher + period + semester
+  const groups = new Map<string, typeof allStudents>();
 
   for (const student of allStudents) {
     const key = `${student.teacherFullName}-${student.period}-${student.semester}`;
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(student);
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(student);
   }
 
-  // Group ID counter
   let currentGroupA = 1;
   let currentGroupB = 2;
+  let finalGroup = 2;
 
-  // Assign group IDs per class
+  // Process each class group
   for (const [, students] of groups.entries()) {
     const total = students.length;
     const half = Math.floor(total / 2);
 
-    for (let i = 0; i < students.length; i++) {
-      const groupId = i < half ? currentGroupA : currentGroupB;
+    const groupAStudents = students.slice(0, half);
+    const groupBStudents = students.slice(half);
 
+    // ✅ Filter out null IDs (fixes your TypeScript error)
+    const groupAIds = groupAStudents
+      .map((s) => s.freshmenId)
+      .filter((id): id is number => id !== null);
+
+    const groupBIds = groupBStudents
+      .map((s) => s.freshmenId)
+      .filter((id): id is number => id !== null);
+
+    // ✅ Bulk update Group A
+    if (groupAIds.length > 0) {
       await db
         .update(seminarData)
-        .set({ groupId: groupId.toString() })
-        .where(eq(seminarData.freshmenId, students[i].freshmenId));
+        .set({ groupId: currentGroupA.toString() })
+        .where(inArray(seminarData.freshmenId, groupAIds));
     }
+
+    // ✅ Bulk update Group B
+    if (groupBIds.length > 0) {
+      await db
+        .update(seminarData)
+        .set({ groupId: currentGroupB.toString() })
+        .where(inArray(seminarData.freshmenId, groupBIds));
+    }
+
     finalGroup = currentGroupB;
-    // Next groups
+
     currentGroupA += 2;
     currentGroupB += 2;
   }
+
   console.log("Final group count:", finalGroup);
-  return { success: true, finalGroupCount: finalGroup };
+
+  return {
+    success: true,
+    finalGroupCount: finalGroup,
+  };
 }
 
 export async function syncGroups() {

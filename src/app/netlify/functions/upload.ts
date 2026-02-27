@@ -1,6 +1,4 @@
-"use server";
-
-import { NextResponse } from "next/server";
+import { Handler } from "@netlify/functions";
 import { db } from "@/db";
 import {
   mentorData,
@@ -32,9 +30,10 @@ function normalizeRows(rows: any[]) {
   });
 }
 
-// Column validation
+// Validate columns
 function validateColumns(table: string, rows: any[]) {
   if (!rows || rows.length === 0) return "The Excel file is empty.";
+
   const firstRow = rows[0];
   const missingCols = (requiredColumns[table] || []).filter((col) => !(col in firstRow));
   if (missingCols.length > 0) return `Missing required column(s): ${missingCols.join(", ")}`;
@@ -52,7 +51,6 @@ function validateRows(table: string, rows: any[]) {
   return errors.length ? errors.join("; ") : null;
 }
 
-// Insert rows
 async function insertData(table: string, rows: any[]) {
   switch (table) {
     case "mentor_data":
@@ -121,38 +119,43 @@ async function insertData(table: string, rows: any[]) {
   }
 }
 
-export async function POST(req: Request) {
+export const handler: Handler = async (event) => {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const table = formData.get("table") as string;
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed. Use POST." }) };
+    }
 
-    if (!file || !table) return NextResponse.json({ error: "File or table name missing." }, { status: 400 });
+    if (!event.body) return { statusCode: 400, body: JSON.stringify({ error: "No data sent." }) };
 
-    const arrayBuffer = await file.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, { type: "array" });
+    // Expect client to send JSON: { fileData: base64, table: "mentor_data" }
+    const { fileData, table } = JSON.parse(event.body);
 
-    if (!workbook.SheetNames.length) return NextResponse.json({ error: "Excel file has no sheets." }, { status: 400 });
+    if (!fileData || !table) return { statusCode: 400, body: JSON.stringify({ error: "File or table missing." }) };
+
+    const buffer = Buffer.from(fileData, "base64");
+    const workbook = XLSX.read(buffer, { type: "buffer" });
+
+    if (!workbook.SheetNames.length) return { statusCode: 400, body: JSON.stringify({ error: "Excel file has no sheets." }) };
 
     let rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { defval: null });
     rows = normalizeRows(rows);
 
+    // Column validation
     const colError = validateColumns(table, rows);
-    if (colError) return NextResponse.json({ error: colError }, { status: 400 });
+    if (colError) return { statusCode: 400, body: JSON.stringify({ error: colError }) };
 
+    // Row validation
     const rowError = validateRows(table, rows);
-    if (rowError) return NextResponse.json({ error: rowError }, { status: 400 });
+    if (rowError) return { statusCode: 400, body: JSON.stringify({ error: rowError }) };
 
     await insertData(table, rows);
 
-    return NextResponse.json({ message: `✅ Successfully inserted ${rows.length} rows into ${table}.` });
+    return { statusCode: 200, body: JSON.stringify({ message: `✅ Successfully inserted ${rows.length} rows into ${table}.` }) };
   } catch (err: any) {
     console.error("Upload failed:", err);
-    return NextResponse.json({ error: "Upload failed. Please check your file and try again." }, { status: 500 });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Upload failed. Please check your file and try again." }),
+    };
   }
-}
-
-// Optional: block GET requests
-export async function GET() {
-  return NextResponse.json({ error: "Method GET not allowed. Use POST." }, { status: 405 });
-}
+};

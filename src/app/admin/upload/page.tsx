@@ -12,6 +12,8 @@ import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
 
+export const runtime = "nodejs";
+
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});

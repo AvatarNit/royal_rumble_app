@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
-import { clear } from "console";
+
+export const runtime = "nodejs";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -20,10 +21,11 @@ export default function AdminUpload() {
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
 
   const { showAlert } = useAlert();
+  const router = useRouter();
 
-  const runGrouping = async () => {
-    return await createSeminarGroups();
-  };
+  const handleLogoClick = () => router.push("/admin");
+
+  const runGrouping = async () => await createSeminarGroups();
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -32,6 +34,7 @@ export default function AdminUpload() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Reset states
     setLoading((prev) => ({ ...prev, [tableName]: true }));
     setProgress((prev) => ({ ...prev, [tableName]: 0 }));
     setMessages((prev) => ({ ...prev, [tableName]: "" }));
@@ -42,14 +45,13 @@ export default function AdminUpload() {
       formData.append("file", file);
       formData.append("table", tableName);
 
-      // Smooth progress animation with funny messages
+      // Show fake progress
       let currentProgress = 0;
       const interval = setInterval(() => {
         currentProgress += Math.random() * 0.65;
         if (currentProgress > 99) currentProgress = 99;
         setProgress((prev) => ({ ...prev, [tableName]: currentProgress }));
 
-        // Funny messages at certain intervals
         if (currentProgress >= 20 && currentProgress < 40) {
           setFunnyText((prev) => ({
             ...prev,
@@ -63,64 +65,52 @@ export default function AdminUpload() {
         } else if (currentProgress >= 80 && currentProgress < 90) {
           setFunnyText((prev) => ({
             ...prev,
-            [tableName]: "Indian sweets are being cooked",
+            [tableName]: "Processing your data...",
           }));
         } else if (currentProgress >= 99) {
-          setFunnyText((prev) => ({
-            ...prev,
-            [tableName]:
-              "This is a fake progress bar... but if you are seeing this, it is still working!",
-          }));
+          setFunnyText((prev) => ({ ...prev, [tableName]: "Finalizing..." }));
         } else {
           setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
         }
       }, 100);
 
+      // Upload to API
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        const text = await res.text(); // capture HTML error
-        console.error("Upload failed. Server response:", text);
-        throw new Error(`Upload failed: ${text}`);
-      }
-
       clearInterval(interval);
 
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Unknown server error");
+      }
+
       const data = await res.json();
+
       setProgress((prev) => ({ ...prev, [tableName]: 100 }));
       setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
 
-      // Display number of inserted rows
-      const fullMessage = data.message || "Upload Failed";
-      console.log(fullMessage);
-      const truncatedMessage = fullMessage.includes("inserted")
-        ? fullMessage.split("inserted")[0] + "inserted"
-        : fullMessage;
+      if (data.error) {
+        setMessages((prev) => ({ ...prev, [tableName]: `❌ ${data.error}` }));
+      } else {
+        setMessages((prev) => ({ ...prev, [tableName]: `✅ ${data.message}` }));
+      }
+    } catch (err: any) {
+      console.error(err);
+      const errorMessage =
+        err?.message?.includes("<HTML>") || err?.message?.includes("Unexpected")
+          ? "Upload failed due to server error. Please try again or contact support."
+          : err.message || "Unknown error occurred.";
 
-      setMessages((prev) => ({
-        ...prev,
-        [tableName]: truncatedMessage,
-      }));
-    } catch (err: Error | unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      setMessages((prev) => ({
-        ...prev,
-        [tableName]: "Upload failed: " + errorMessage,
-      }));
+      setMessages((prev) => ({ ...prev, [tableName]: `❌ ${errorMessage}` }));
       setProgress((prev) => ({ ...prev, [tableName]: 0 }));
       setFunnyText((prev) => ({ ...prev, [tableName]: "" }));
     } finally {
       setLoading((prev) => ({ ...prev, [tableName]: false }));
       e.target.value = ""; // reset file input
     }
-  };
-
-  const router = useRouter();
-  const handleLogoClick = () => {
-    router.push("/admin");
   };
 
   const buttonStyle = {
@@ -152,6 +142,27 @@ export default function AdminUpload() {
     e.currentTarget.style.borderColor = "transparent";
   };
 
+  const uploadItems = [
+    {
+      label: "GoFan → Freshmen Data",
+      table: "freshmen_data",
+      headers:
+        "Freshmen ID, First Name, Last Name, Shirt Size, Email, Primary Language, Interests, Health Concerns",
+    },
+    {
+      label: "Freshman Prep Classes → Seminar Data",
+      table: "seminar_data",
+      headers:
+        "Last Name, First Name, Freshmen ID, Semester, Teacher full name, Period",
+    },
+    {
+      label: "Mentor Data",
+      table: "mentor_data",
+      headers:
+        "Mentor ID, First Name, Last Name, Graduation Year, Job, Pizza, Languages, Training Day, Shirt Size, Phone Number, Email",
+    },
+  ];
+
   return (
     <main className="admin-container">
       <LogoButton />
@@ -168,28 +179,7 @@ export default function AdminUpload() {
       <section className="upload-section">
         <InfoBox headerText="">
           <div className="upload-form">
-            {/* Inputs needed */}
-            {[
-              {
-                label: "GoFan → Freshmen Data",
-                table: "freshmen_data",
-                headers:
-                  "Freshmen ID,	First Name,	Last Name,	Shirt Size,	Email,	Primary Language,	Interests,	Health Concerns",
-              },
-              {
-                label: "Freshman Prep Classes → Seminar Data",
-                table: "seminar_data",
-                headers:
-                  "Last Name,	First Name,	Freshmen ID,	semester,	Teacher full name,	Period",
-              },
-              {
-                label: "Mentor Data",
-                table: "mentor_data",
-                headers:
-                  "Mentor ID,	First Name,	Last Name,	Graduation Year,	Job,	Pizza,	Languages,	Training Day,	Shirt Size,	Phone Number, Email",
-              },
-            ].map((item) => (
-              // Giving all of the inputs the proper elements
+            {uploadItems.map((item) => (
               <div
                 key={item.table}
                 className="upload-row"
@@ -201,7 +191,7 @@ export default function AdminUpload() {
                   marginBottom: "2rem",
                 }}
               >
-                {/* Label + upload input */}
+                {/* Label + input */}
                 <label style={{ gridColumn: "1 / 2" }}>
                   Upload {item.label}:
                 </label>
@@ -227,7 +217,7 @@ export default function AdminUpload() {
                   )}
                 </div>
 
-                {/* Popover Status Button */}
+                {/* Column details */}
                 <OverlayTrigger
                   trigger="click"
                   rootClose
@@ -250,15 +240,15 @@ export default function AdminUpload() {
                     Column Details
                   </button>
                 </OverlayTrigger>
-                {/* Success/Error message */}
+
+                {/* Status message */}
                 <p
                   style={{
                     gridColumn: "1 / 2",
                     margin: 0,
-                    color:
-                      messages[item.table] === "Upload Failed"
-                        ? "red"
-                        : "green",
+                    color: messages[item.table]?.startsWith("❌")
+                      ? "red"
+                      : "green",
                     fontWeight: "bold",
                   }}
                 >
@@ -287,7 +277,7 @@ export default function AdminUpload() {
                         aria-valuemin={0}
                         aria-valuemax={100}
                       >
-                        {Math.floor(progress[item.table])}%{" "}
+                        {Math.floor(progress[item.table])}%
                         {funnyText[item.table] && ` - ${funnyText[item.table]}`}
                       </div>
                     </div>
@@ -295,21 +285,11 @@ export default function AdminUpload() {
                 )}
               </div>
             ))}
-
-            {/* Group Itinerary placeholder */}
-            <div className="upload-row">
-              <label>Upload Group Itinerary & Event Order:</label>
-              <div className="file-input-wrapper">
-                <input type="file" className="file-input" disabled />
-              </div>
-              <button className="upload-icon" disabled>
-                <i className="bi bi-cloud-upload-fill"></i>
-              </button>
-              <p style={{ opacity: 0.5 }}>Coming soon</p>
-            </div>
           </div>
         </InfoBox>
       </section>
+
+      {/* Group buttons */}
       <button
         onClick={async () => {
           const groupingReturn = await runGrouping();
@@ -333,9 +313,7 @@ export default function AdminUpload() {
         onClick={async () => {
           const syncResult = await syncGroups();
           showAlert(
-            `Groups synced: ${syncResult.success} \n ${JSON.stringify(
-              syncResult.unmatched,
-            )}`,
+            `Groups synced: ${syncResult.success} \n ${JSON.stringify(syncResult.unmatched)}`,
             "success",
           );
         }}

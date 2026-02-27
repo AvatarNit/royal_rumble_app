@@ -16,7 +16,7 @@ export default async function Home() {
     <main className="home-container">
       <header style={{ backgroundColor: "red", color: "white" }}>
         THE IS A DEVOLPMENT SITE. FOR THE OFFICIAL ROYAL RUMBLE WEBSITE{" "}
-        <a href="https://www.royalrumble.com">CLICK HERE</a>
+        <a href="https://www.hseroyalrumble.com">CLICK HERE</a>
       </header>
       <LoginButton />
 

@@ -11,11 +11,23 @@ import EditableContent from "../../components/EditableContent";
 import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
+
 const DEV_MODE = process.env.DEV_MODE === "true";
 
 export default async function FreshmenHomepage() {
-  const session = await auth();
-  const studentId = !DEV_MODE ? session?.user?.id : "100005";
+  let studentId: string | undefined;
+
+  if (!DEV_MODE) {
+    const session = await auth();
+    studentId = session?.user?.id;
+  } else {
+    // Fake ID for development
+    studentId = "100005";
+  }
+
+  if (!studentId) {
+    return null;
+  }
 
   const freshmanDetails = await getFreshmanById(Number(studentId));
 
@@ -23,6 +35,7 @@ export default async function FreshmenHomepage() {
     const freshmenDetailsFromSchoolData = await getFreshmanByIdFromSchoolData(
       Number(studentId),
     );
+
     return (
       <main className="freshmen-container">
         <LogoButton />
@@ -76,6 +89,7 @@ export default async function FreshmenHomepage() {
                 : freshmanDetails?.groupId}
             </div>
           </div>
+
           <div
             style={{
               color: "var(--primaryBlue)",
@@ -86,6 +100,7 @@ export default async function FreshmenHomepage() {
           >
             General Information:
           </div>
+
           <div
             style={{
               color: "var(--textGrey)",

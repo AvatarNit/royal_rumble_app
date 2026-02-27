@@ -1,19 +1,21 @@
 import NextAuth from "next-auth";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 
+const isDevMode = process.env.DEV_MODE === "true";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    MicrosoftEntraID({
-      clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID!,
-      clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET!,
-      issuer: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/v2.0`,
-      authorization: {
-        params: { prompt: "login" }, // forces login screen on next login
-      },
-      // Optional: explicitly configure end session endpoint
-      // signOutUrl: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/oauth2/v2.0/logout`
-    }),
-  ],
+  providers: isDevMode
+    ? []
+    : [
+        MicrosoftEntraID({
+          clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID!,
+          clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET!,
+          issuer: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/v2.0`,
+          authorization: {
+            params: { prompt: "login" },
+          },
+        }),
+      ],
 
   session: {
     strategy: "jwt",

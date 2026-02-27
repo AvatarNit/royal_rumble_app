@@ -11,7 +11,7 @@ const DEV_MODE = process.env.DEV_MODE === "true";
 
 export default async function AdminHomepage() {
   const session = await auth();
-  const adminId = !DEV_MODE ? session?.user?.id : "100000";
+  const adminId = !DEV_MODE ? session?.user?.id : "10000";
   const admin = await getAdminById(Number(adminId));
 
   return (

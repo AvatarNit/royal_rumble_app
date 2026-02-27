@@ -121,7 +121,8 @@ export async function POST(req: Request) {
 
     // Convert Excel to JSON
     const arrayBuffer = await file.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer);
+    const buffer = Buffer.from(arrayBuffer);
+    const workbook = XLSX.read(buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     let rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: null });

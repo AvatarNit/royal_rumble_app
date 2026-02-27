@@ -270,6 +270,9 @@ export default function AdminUpload() {
       <button
         onClick={async () => {
           const groupingReturn = await createSeminarGroups();
+          console.log(
+            `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
+          );
           showAlert(
             `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
             "success",
@@ -281,6 +284,7 @@ export default function AdminUpload() {
       <button
         onClick={async () => {
           const groupTotal = await createGroups();
+          console.log(`Created Groups: ${groupTotal}`);
           showAlert(`Created Groups: ${groupTotal}`, "success");
         }}
       >

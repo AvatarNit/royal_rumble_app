@@ -251,6 +251,50 @@ export const updateMentorByID = async (
     phone_num: string;
   },
 ) => {
+  const currentJob = await db
+    .select({ job: mentorData.job })
+    .from(mentorData)
+    .where(eq(mentorData.mentorId, mentorId))
+    .limit(1);
+  if (currentJob[0].job !== data.job) {
+    if (currentJob[0].job === "GROUP LEADER") {
+      await db
+        .delete(groupLeaderData)
+        .where(eq(groupLeaderData.mentorId, mentorId));
+    } else if (currentJob[0].job === "HALLWAY HOST") {
+      await db
+        .delete(hallwayHostData)
+        .where(eq(hallwayHostData.mentorId, mentorId));
+    }
+
+    await db
+      .delete(mentorAttendanceData)
+      .where(eq(mentorAttendanceData.mentorId, mentorId));
+
+    if (data.job === "GROUP LEADER") {
+      await db.insert(groupLeaderData).values({
+        mentorId: mentorId,
+        groupId: null,
+      });
+    } else if (data.job === "HALLWAY HOST") {
+      await db.insert(hallwayHostData).values({
+        mentorId: mentorId,
+        hallwayStopId: null,
+      });
+    }
+
+    const eventIds = await db
+      .select({ eventId: eventsData.eventId })
+      .from(eventsData)
+      .where(or(eq(eventsData.job, data.job), eq(eventsData.job, "ALL")));
+    for (const event of eventIds) {
+      await db.insert(mentorAttendanceData).values({
+        mentorId: mentorId,
+        eventId: event.eventId,
+        status: false,
+      });
+    }
+  }
   await db
     .update(mentorData)
     .set({

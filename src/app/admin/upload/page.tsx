@@ -11,8 +11,7 @@ import { useRouter } from "next/navigation";
 import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
-
-export const runtime = "nodejs";
+import { clear } from "console";
 
 export default function AdminUpload() {
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -81,6 +80,12 @@ export default function AdminUpload() {
         method: "POST",
         body: formData,
       });
+
+      if (!res.ok) {
+        const text = await res.text(); // capture HTML error
+        console.error("Upload failed. Server response:", text);
+        throw new Error(`Upload failed: ${text}`);
+      }
 
       clearInterval(interval);
 

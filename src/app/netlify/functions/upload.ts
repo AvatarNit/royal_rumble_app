@@ -18,7 +18,7 @@ const requiredColumns: Record<string, string[]> = {
   seminar_data: ["freshmen_id", "first_name", "last_name", "semester", "teacher_full_name", "period"],
 };
 
-// Normalize Excel headers
+// Normalize headers
 function normalizeRows(rows: any[]) {
   return rows.map((row) => {
     const newRow: Record<string, any> = {};
@@ -33,24 +33,22 @@ function normalizeRows(rows: any[]) {
 // Validate columns
 function validateColumns(table: string, rows: any[]) {
   if (!rows || rows.length === 0) return "The Excel file is empty.";
-
-  const firstRow = rows[0];
-  const missingCols = (requiredColumns[table] || []).filter((col) => !(col in firstRow));
-  if (missingCols.length > 0) return `Missing required column(s): ${missingCols.join(", ")}`;
-  return null;
+  const missing = (requiredColumns[table] || []).filter((col) => !(col in rows[0]));
+  return missing.length ? `Missing required column(s): ${missing.join(", ")}` : null;
 }
 
-// Row-level validation
+// Validate rows
 function validateRows(table: string, rows: any[]) {
   const errors: string[] = [];
   rows.forEach((row, i) => {
-    if (table === "mentor_data" && !row["mentor_id"]) errors.push(`Row ${i + 2}: Mentor ID is missing`);
-    if (table === "freshmen_data" && !row["freshmen_id"]) errors.push(`Row ${i + 2}: Freshmen ID is missing`);
-    if (table === "seminar_data" && !row["freshmen_id"]) errors.push(`Row ${i + 2}: Freshmen ID is missing`);
+    if (table === "mentor_data" && !row["mentor_id"]) errors.push(`Row ${i + 2}: Mentor ID missing`);
+    if (table === "freshmen_data" && !row["freshmen_id"]) errors.push(`Row ${i + 2}: Freshmen ID missing`);
+    if (table === "seminar_data" && !row["freshmen_id"]) errors.push(`Row ${i + 2}: Freshmen ID missing`);
   });
   return errors.length ? errors.join("; ") : null;
 }
 
+// Insert data
 async function insertData(table: string, rows: any[]) {
   switch (table) {
     case "mentor_data":
@@ -121,41 +119,32 @@ async function insertData(table: string, rows: any[]) {
 
 export const handler: Handler = async (event) => {
   try {
-    if (event.httpMethod !== "POST") {
-      return { statusCode: 405, body: JSON.stringify({ error: "Method not allowed. Use POST." }) };
-    }
+    if (event.httpMethod !== "POST") return { statusCode: 405, body: JSON.stringify({ error: "Use POST method" }) };
+    if (!event.body) return { statusCode: 400, body: JSON.stringify({ error: "No file sent" }) };
 
-    if (!event.body) return { statusCode: 400, body: JSON.stringify({ error: "No data sent." }) };
+    const { fileData, table } = JSON.parse(event.body); // base64 + table
 
-    // Expect client to send JSON: { fileData: base64, table: "mentor_data" }
-    const { fileData, table } = JSON.parse(event.body);
-
-    if (!fileData || !table) return { statusCode: 400, body: JSON.stringify({ error: "File or table missing." }) };
+    if (!fileData || !table) return { statusCode: 400, body: JSON.stringify({ error: "Missing file or table" }) };
 
     const buffer = Buffer.from(fileData, "base64");
     const workbook = XLSX.read(buffer, { type: "buffer" });
 
-    if (!workbook.SheetNames.length) return { statusCode: 400, body: JSON.stringify({ error: "Excel file has no sheets." }) };
+    if (!workbook.SheetNames.length) return { statusCode: 400, body: JSON.stringify({ error: "Excel file has no sheets" }) };
 
     let rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { defval: null });
     rows = normalizeRows(rows);
 
-    // Column validation
     const colError = validateColumns(table, rows);
     if (colError) return { statusCode: 400, body: JSON.stringify({ error: colError }) };
 
-    // Row validation
     const rowError = validateRows(table, rows);
     if (rowError) return { statusCode: 400, body: JSON.stringify({ error: rowError }) };
 
     await insertData(table, rows);
 
-    return { statusCode: 200, body: JSON.stringify({ message: `✅ Successfully inserted ${rows.length} rows into ${table}.` }) };
+    return { statusCode: 200, body: JSON.stringify({ message: `✅ Inserted ${rows.length} rows into ${table}` }) };
   } catch (err: any) {
     console.error("Upload failed:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Upload failed. Please check your file and try again." }),
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: "Upload failed due to server error. Please try again or contact support." }) };
   }
 };

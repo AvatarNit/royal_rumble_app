@@ -18,7 +18,7 @@ export default function AboutPage() {
         <InfoBox headerText="Things to Know">
           <div
             style={{
-              color: "var(--textGrey)",
+              color: "var(--textBlack)",
               fontWeight: "normal",
               fontSize: "16px",
             }}

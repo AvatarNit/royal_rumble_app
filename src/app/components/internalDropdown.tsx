@@ -45,7 +45,7 @@ export default function EditUserDropdown({
     padding: "16px",
     margin: "10px 20px",
     height: "auto",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",
@@ -80,13 +80,12 @@ export default function EditUserDropdown({
     setOpenIndices((prevOpen) =>
       prevOpen.includes(index)
         ? prevOpen.filter((i) => i !== index)
-        : [...prevOpen, index]
+        : [...prevOpen, index],
     );
   };
 
   return (
     <div style={containerStyle}>
-
       {sections.map((section, index) => {
         const isOpen = openIndices.includes(index);
 
@@ -107,9 +106,7 @@ export default function EditUserDropdown({
 
             {isOpen && (
               <div style={contentWrapperStyle}>
-                <div style={contentBoxStyle}>
-                  {section.content}
-                </div>
+                <div style={contentBoxStyle}>{section.content}</div>
 
                 <div style={buttonRowStyle}>
                   <div style={buttonContainerStyle}>

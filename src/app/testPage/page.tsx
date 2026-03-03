@@ -29,7 +29,7 @@ export default function TestElementsPage() {
       <InfoBox headerText="Question 1">
         <div
           style={{
-            color: "var(--textGrey)",
+            color: "var(--textBlack)",
             fontWeight: "normal",
             fontSize: "16px",
           }}

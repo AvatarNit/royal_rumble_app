@@ -128,13 +128,13 @@ export default function EditFreshmenGroupUI({
   };
 
   /* ---------------- UI ---------------- */
-    const contentBoxStyle = {
+  const contentBoxStyle = {
     border: "5px solid var(--primaryRed)",
     padding: "16px",
     margin: "15px 50px",
     width: "85%",
     height: "auto",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",

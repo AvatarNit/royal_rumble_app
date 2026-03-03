@@ -83,7 +83,7 @@ export default async function FreshmenHomepage() {
             }}
           >
             <div>Group #:</div>
-            <div style={{ color: "var(--textGrey)", fontWeight: "normal" }}>
+            <div style={{ color: "var(--textBlack)", fontWeight: "normal" }}>
               {freshmanDetails?.groupId === null
                 ? "Unassigned"
                 : freshmanDetails?.groupId}
@@ -103,7 +103,7 @@ export default async function FreshmenHomepage() {
 
           <div
             style={{
-              color: "var(--textGrey)",
+              color: "var(--textBlack)",
               fontWeight: "normal",
               fontSize: "20px",
               margin: "5px 0px 10px",

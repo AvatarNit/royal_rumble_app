@@ -32,7 +32,7 @@ export default function Table({
 
   const cellStyle = {
     backgroundColor: "white",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     textAlign: "center" as const,
     verticalAlign: "middle" as const,
     padding: "12px",

@@ -8,10 +8,10 @@ export default function EditUserDropdown({
   header,
   sections = [],
   disableContentBox = false,
-  showButtons = true
+  showButtons = true,
 }: {
   header?: string;
-  sections?: { title: string; content: React.ReactNode }[]; 
+  sections?: { title: string; content: React.ReactNode }[];
   disableContentBox?: boolean;
   showButtons?: boolean;
 }) {
@@ -61,7 +61,7 @@ export default function EditUserDropdown({
     padding: "16px",
     margin: "15px 50px",
     height: "auto",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",
@@ -96,7 +96,7 @@ export default function EditUserDropdown({
     setOpenIndices((prevOpen) =>
       prevOpen.includes(index)
         ? prevOpen.filter((i) => i !== index)
-        : [...prevOpen, index]
+        : [...prevOpen, index],
     );
   };
 

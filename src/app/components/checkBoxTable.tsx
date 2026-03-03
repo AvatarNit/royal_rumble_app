@@ -38,7 +38,7 @@ export default function CheckBoxTable({
 
   const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     textAlign: "center",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",

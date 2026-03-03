@@ -57,7 +57,7 @@ export default function EditHallwayGroupUI({
     margin: "15px 50px",
     height: "auto",
     width: "85%",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",

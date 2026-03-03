@@ -142,7 +142,7 @@
   padding: 10px;
   font-size: 1.4rem;
   font-family: inherit;
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: 600;
 }
 
@@ -208,7 +208,7 @@
   width: 400px;
   font-size: 1.4rem;
   font-family: inherit;
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: 400;
 }
 
@@ -218,7 +218,7 @@
   padding: 10px;
   font-size: 1.4rem;
   font-family: inherit;
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: 400;
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -234,7 +234,7 @@
   padding: 10px;
   font-size: 1.4rem;
   font-family: inherit;
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: 600;
   width: 400px;
 }
@@ -301,7 +301,7 @@
   min-width: 200px;
   font-size: 1.4rem;
   font-family: inherit;
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: 400;
 }
 
@@ -352,7 +352,7 @@
 }
 
 .info-value {
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: normal;
   font-size: 30px;
 }

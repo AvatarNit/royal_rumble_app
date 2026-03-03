@@ -70,7 +70,7 @@
 }
 
 .info-value {
-  color: var(--textGrey);
+  color: var(--textBlack);
   font-weight: normal;
   font-size: 30px;
 }

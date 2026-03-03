@@ -76,7 +76,7 @@ export default function ViewDropdown({
     padding: "16px",
     margin: "15px 50px",
     height: "auto",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     backgroundColor: "white",
     display: "flex",
     justifyContent: "flex-start",

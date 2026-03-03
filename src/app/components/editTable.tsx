@@ -53,7 +53,7 @@ export default function EditTable({
 
   const cellStyle: React.CSSProperties = {
     backgroundColor: "white",
-    color: "var(--textGrey)",
+    color: "var(--textBlack)",
     textAlign: "left",
     padding: "12px",
     border: "2px solid var(--primaryBlue)",

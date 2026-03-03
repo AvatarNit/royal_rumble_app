@@ -92,7 +92,7 @@ export default function DropdownTable({
                     border: "2px solid var(--primaryBlue)",
                     borderRadius: "4px",
                     backgroundColor: "white",
-                    color: "var(--textGrey)",
+                    color: "var(--textBlack)",
                     cursor: "pointer",
                   }}
                   value={

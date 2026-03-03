@@ -20,7 +20,7 @@ export default function FAQPage() {
         <InfoBox headerText="Question 1">
           <div
             style={{
-              color: "var(--textGrey)",
+              color: "var(--textBlack)",
               fontWeight: "normal",
               fontSize: "16px",
             }}
@@ -33,7 +33,7 @@ export default function FAQPage() {
         <InfoBox headerText="Question 2">
           <div
             style={{
-              color: "var(--textGrey)",
+              color: "var(--textBlack)",
               fontWeight: "normal",
               fontSize: "16px",
             }}
@@ -46,7 +46,7 @@ export default function FAQPage() {
         <InfoBox headerText="Question 3">
           <div
             style={{
-              color: "var(--textGrey)",
+              color: "var(--textBlack)",
               fontWeight: "normal",
               fontSize: "16px",
             }}

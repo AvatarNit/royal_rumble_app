@@ -108,7 +108,7 @@ export default function EditableContentBox({ title, contentKey }: Props) {
   if (!editor) return null;
 
   return (
-    <section style={{ marginBottom: "20px" }}>
+    <section style={{ marginBottom: "20px", width: "80%", justifyContent: "center", display: "flex" }}>
       <InfoBox headerText={title}>
         <div style={toolbarStyle}>
           {/* Bold / Italic / Underline */}
@@ -208,6 +208,8 @@ export default function EditableContentBox({ title, contentKey }: Props) {
 
         <button
           onClick={handleSave}
+          onMouseEnter={buttonHover}
+          onMouseLeave={buttonUnhover}
           disabled={saving}
           style={{ ...saveButtonStyle, opacity: saving ? 0.6 : 1 }}
         >
@@ -356,12 +358,26 @@ const saveButtonStyle = {
   marginTop: "10px",
   padding: "8px 16px",
   borderRadius: "6px",
-  border: "none",
-  backgroundColor: "#2563eb",
+  border: "5px solid transparent",
+  transition: "all 0.3s ease",
+  backgroundColor: "var(--primaryBlue)",
   color: "white",
   fontWeight: 600,
   cursor: "pointer",
 };
+
+const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.currentTarget.style.backgroundColor = "white";
+  e.currentTarget.style.color = "var(--primaryBlue)";
+  e.currentTarget.style.borderColor = "var(--primaryBlue)";
+};
+
+const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
+  e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
+  e.currentTarget.style.color = "white";
+  e.currentTarget.style.borderColor = "transparent";
+};
+
 
 const dropdownStyle = {
   padding: "6px",

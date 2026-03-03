@@ -15,7 +15,7 @@ export default function AdminFAQPage() {
         <h1 className="admin-title">Content Editor</h1>
       </header>
 
-      <BackButton href="/admin/admin" />
+      <BackButton href="/admin" />
 
       <EditableContentBox
         title="Freshmen More Details Text"

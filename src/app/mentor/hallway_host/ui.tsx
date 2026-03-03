@@ -54,7 +54,29 @@ export default function HallwayHostUI({
         </MentorButtons>
       </div>
       <section className="mentor-info-box">
+
+        <InfoBox headerText="Group Details">
+          <section>
+            <label className="info-label">Mentors:</label>
+            {/* <InfoTable
+              headers={["Mentor Name", "Student ID"]}
+              data={group.mentors.map((m) => [m.name, m.mentor_id])}
+            /> */}
+          </section>
+        </InfoBox>
+
         <InfoBox headerText="Event Details">
+          <div
+            style={{
+              color: "var(--primaryBlue)",
+              fontWeight: "bold",
+              fontSize: "30px",
+              margin: "10px 0px",
+            }}
+          >
+            Dates:
+          </div>
+
           <InfoTable
             headers={["Event", "Date", "Time", "Description"]}
             data={hallwayHostEvents.map((event) => [

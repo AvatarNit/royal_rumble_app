@@ -48,6 +48,7 @@ export default function GroupLeaderUI({
           <h3 className="mentor-subtitle2">{mentorsData.job}</h3>
         </div>
       </header>
+
       <div
         className="mentor-info-box"
         style={{ flexDirection: "row", gap: "20px" }}
@@ -59,6 +60,49 @@ export default function GroupLeaderUI({
       </div>
 
       <section className="mentor-info-box">
+        <InfoBox headerText="Group Details">
+          <section>
+            <div className="info-pairs">
+              <div className="info-pair">
+                <div className="info-label">Route #:</div>
+                <div className="info-value">1</div>
+              </div>
+              <div className="info-pair">
+                <div className="info-label">Event Order:</div>
+                <div className="info-value">LGI, GYM, CCA</div>
+              </div>
+            </div>
+            <div className="info-pairs">
+              <div className="info-pair">
+                <div className="info-label">Mentor:</div>
+                <div className="info-value">
+                  <ol className="list-group list-group-numbered">
+                    <li className="list-group-item">
+                      {mentorsData.fName} {mentorsData.lName}
+                    </li>
+                  </ol>
+                </div>
+              </div>
+              <div className="info-pairs">
+                <div className="info-pair">
+                  <div className="info-label">Frehsmen:</div>
+                  <div className="info-value">
+                    <ol className="list-group list-group-numbered">
+                      <li className="list-group-item">
+                        Freshman 1
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </InfoBox>
+      </section>
+
+
+      <section className="mentor-info-box">
+
         <InfoBox headerText="Event Details">
           <div
             style={{

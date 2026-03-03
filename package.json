@@ -27,6 +27,7 @@
     "file-saver": "^2.0.5",
     "formidable": "^3.5.4",
     "multiparty": "^4.2.3",
+    "netlify": "^24.0.1",
     "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.30",
     "openssl": "^2.0.0",

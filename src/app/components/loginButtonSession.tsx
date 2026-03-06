@@ -84,7 +84,7 @@ export default function LoginButtonSession() {
     return (
       <div
         ref={dropdownRef}
-        style={{ position: "relative", display: "inline-block" }}
+        style={{ position: "fixed", top: "20px", right: "20px", zIndex: 100 }}
       >
         <button className="profile-icon-button" onClick={handleClick}>
           <i className="bi bi-person-fill"></i>

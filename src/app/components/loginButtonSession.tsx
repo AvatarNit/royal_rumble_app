@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
 import { useAlert } from "../context/AlertContext";
@@ -28,7 +27,7 @@ export default function LoginButtonSession() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hasRedirected = useRef(false);
 
-  // Redirect after login
+  // Redirect once after login
   useEffect(() => {
     if (status === "loading") return;
     if (
@@ -81,21 +80,40 @@ export default function LoginButtonSession() {
     }
   };
 
-  return (
-    <div ref={dropdownRef} className="dropdown">
-      <button className="profile-icon-button" onClick={handleClick}>
-        <i className="bi bi-person-fill"></i>
-      </button>
-
-      <ul
-        className={`dropdown-menu dropdown-menu-end${dropdownOpen ? " show" : ""}`}
+  if (session) {
+    return (
+      <div
+        ref={dropdownRef}
+        style={{ position: "relative", display: "inline-block" }}
       >
-        <li>
-          <button className="dropdown-item text-danger" onClick={handleLogout}>
-            <i className="bi bi-box-arrow-right me-2"></i>Log Out
-          </button>
-        </li>
-      </ul>
-    </div>
+        <button className="profile-icon-button" onClick={handleClick}>
+          <i className="bi bi-person-fill"></i>
+        </button>
+        <ul
+          className={`dropdown-menu dropdown-menu-end${dropdownOpen ? " show" : ""}`}
+          style={{
+            position: "absolute",
+            top: "100%",
+            right: 0,
+            marginTop: "0.25rem",
+          }}
+        >
+          <li>
+            <button
+              className="dropdown-item text-danger"
+              onClick={handleLogout}
+            >
+              <i className="bi bi-box-arrow-right me-2"></i>Log Out
+            </button>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
+  return (
+    <button className="profile-icon-button" onClick={handleClick}>
+      <i className="bi bi-person-fill"></i>
+    </button>
   );
 }

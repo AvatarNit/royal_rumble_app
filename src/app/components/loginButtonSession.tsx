@@ -66,8 +66,7 @@ export default function LoginButtonSession() {
     setDropdownOpen(false);
     showAlert("Signing out...", "info");
     const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
-    window.open(logoutUrl);
-    router.push("/");
+    window.location.href = logoutUrl;
   };
 
   const handleClick = () => {

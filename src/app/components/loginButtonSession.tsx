@@ -84,18 +84,23 @@ export default function LoginButtonSession() {
     return (
       <div
         ref={dropdownRef}
-        className="dropdown position-absolute top-50 end-0 translate-middle-y z-3 p-2 dropstart"
+        style={{ position: "fixed", top: "20px", right: "20px", zIndex: 100 }}
       >
         <button
-          className="btn btn-secondary p-0"
-          type="button"
-          aria-expanded={dropdownOpen}
+          className="profile-icon-button"
           onClick={handleClick}
+          style={{ position: "static" }}
         >
-          <i className="bi bi-person-fill fs-3"></i>
+          <i className="bi bi-person-fill"></i>
         </button>
         <ul
-          className={`dropdown-menu dropdown-menu-dark${dropdownOpen ? " show" : ""}`}
+          className={`dropdown-menu dropdown-menu-dark dropdown-menu-end${dropdownOpen ? " show" : ""}`}
+          style={{
+            position: "absolute",
+            top: "100%",
+            right: 0,
+            marginTop: "0.25rem",
+          }}
         >
           <li>
             <button
@@ -111,14 +116,8 @@ export default function LoginButtonSession() {
   }
 
   return (
-    <div className="position-absolute top-50 end-0 translate-middle-y z-3 p-2">
-      <button
-        className="btn btn-secondary p-0"
-        type="button"
-        onClick={handleClick}
-      >
-        <i className="bi bi-person-fill fs-3"></i>
-      </button>
-    </div>
+    <button className="profile-icon-button" onClick={handleClick}>
+      <i className="bi bi-person-fill"></i>
+    </button>
   );
 }

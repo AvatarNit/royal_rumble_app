@@ -41,8 +41,10 @@ export default function LoginButtonSession() {
     } else {
       // --- Sign in: trigger Microsoft login directly ---
       const job = session ? (session as any)?.user?.job : null;
+      console.log("User job:", job);
 
       if (job && JOB_ROUTES[job]) {
+        console.log(`Redirecting to ${JOB_ROUTES[job]} for job: ${job}`);
         router.push(JOB_ROUTES[job]);
       } else {
         signIn("microsoft-entra-id");

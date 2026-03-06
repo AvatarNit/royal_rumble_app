@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
 import { useAlert } from "../context/AlertContext";
@@ -19,29 +19,41 @@ const JOB_ROUTES: Record<string, string> = {
   "SPIRIT SESSION": "/mentor/spirit_session",
 };
 
+const JOB_BASE_PATHS: Record<string, string> = {
+  FRESHMAN: "/freshmen",
+  ADMIN: "/admin",
+  "GROUP LEADER": "/mentor",
+  "HALLWAY HOST": "/mentor",
+  "UTILITY SQUAD": "/mentor",
+  "SPIRIT SESSION": "/mentor",
+};
+
 export default function LoginButtonSession() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const { showAlert } = useAlert();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const hasRedirected = useRef(false);
 
-  // Redirect once after login
+  // Only redirect right after login (not on every page load/remount)
   useEffect(() => {
     if (status === "loading") return;
-    if (
-      status === "authenticated" &&
-      session?.user?.job &&
-      !hasRedirected.current
-    ) {
-      const route = JOB_ROUTES[session.user.job];
-      if (route) {
-        hasRedirected.current = true;
-        router.push(route);
+    if (status === "authenticated" && session?.user?.job) {
+      const justLoggedIn = sessionStorage.getItem("justLoggedIn");
+      if (justLoggedIn) {
+        sessionStorage.removeItem("justLoggedIn");
+        const route = JOB_ROUTES[session.user.job];
+        if (route) router.push(route);
       }
     }
   }, [status, session]);
+
+  // Set flag before triggering sign in
+  const handleSignIn = () => {
+    sessionStorage.setItem("justLoggedIn", "true");
+    signIn("microsoft-entra-id");
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -75,7 +87,7 @@ export default function LoginButtonSession() {
     if (session) {
       setDropdownOpen((prev) => !prev);
     } else {
-      signIn("microsoft-entra-id");
+      handleSignIn();
     }
   };
 

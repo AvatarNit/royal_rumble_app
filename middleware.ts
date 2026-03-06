@@ -18,19 +18,19 @@ function prodMiddleware(req: any) {
 
   if (path.startsWith("/admin")) {
     if (!isLoggedIn || user.job !== "ADMIN") {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/", nextUrl));
     }
   }
 
   if (path.startsWith("/freshmen")) {
     if (!isLoggedIn || user.job !== "FRESHMAN") {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/", nextUrl));
     }
   }
 
   if (path.startsWith("/mentor")) {
     if (!isLoggedIn) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/", nextUrl));
     }
 
     const allowedMentorJobs = [
@@ -41,7 +41,7 @@ function prodMiddleware(req: any) {
     ];
 
     if (!allowedMentorJobs.includes(user.job ?? "")) {
-      return NextResponse.redirect(new URL("/login", nextUrl));
+      return NextResponse.redirect(new URL("/", nextUrl));
     }
   }
 

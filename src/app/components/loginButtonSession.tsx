@@ -28,7 +28,7 @@ export default function LoginButtonSession() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const hasRedirected = useRef(false);
 
-  // Redirect once after login
+  // Redirect after login
   useEffect(() => {
     if (status === "loading") return;
     if (

@@ -94,7 +94,7 @@ export default function LoginButtonSession() {
           <i className="bi bi-person-fill"></i>
         </button>
         <ul
-          className={`dropdown-menu dropdown-menu-dark dropdown-menu-end${dropdownOpen ? " show" : ""}`}
+          className={`dropdown-menu dropdown-menu-end${dropdownOpen ? " show" : ""}`}
           style={{
             position: "absolute",
             top: "100%",

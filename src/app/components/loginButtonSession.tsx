@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../css/homepage.css";
 import { useAlert } from "../context/AlertContext";
@@ -19,42 +21,81 @@ const JOB_ROUTES: Record<string, string> = {
 };
 
 export default function LoginButtonSession() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { showAlert } = useAlert();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const hasRedirected = useRef(false);
+
+  // Redirect once after login
+  useEffect(() => {
+    if (status === "loading") return;
+    if (
+      status === "authenticated" &&
+      session?.user?.job &&
+      !hasRedirected.current
+    ) {
+      const route = JOB_ROUTES[session.user.job];
+      if (route) {
+        hasRedirected.current = true;
+        router.push(route);
+      }
+    }
+  }, [status, session]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    if (dropdownOpen)
+      document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [dropdownOpen]);
+
+  const handleLogout = () => {
+    if (!TENANT_ID) {
+      console.error("Missing Azure TENANT_ID for logout");
+      return;
+    }
+    setDropdownOpen(false);
+    showAlert("Signing out...", "info");
+    const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
+    window.open(logoutUrl, "_blank");
+    router.push("/");
+  };
 
   const handleClick = () => {
     if (DEV_MODE) return;
 
     if (session) {
-      // --- Sign out ---
-      if (!TENANT_ID) {
-        console.error("Missing Azure TENANT_ID for logout");
-        return;
-      }
-
-      showAlert("Signing out...", "info");
-
-      const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
-      window.open(logoutUrl, "_blank");
-      router.push("/");
+      setDropdownOpen((prev) => !prev);
     } else {
-      // --- Sign in: trigger Microsoft login directly ---
-      const job = session ? (session as any)?.user?.job : null;
-      console.log("User job:", job);
-
-      if (job && JOB_ROUTES[job]) {
-        console.log(`Redirecting to ${JOB_ROUTES[job]} for job: ${job}`);
-        router.push(JOB_ROUTES[job]);
-      } else {
-        signIn("microsoft-entra-id");
-      }
+      signIn("microsoft-entra-id");
     }
   };
 
   return (
-    <button className="profile-icon-button" onClick={handleClick}>
-      <i className="bi bi-person-fill"></i>
-    </button>
+    <div ref={dropdownRef} className="dropdown">
+      <button className="profile-icon-button" onClick={handleClick}>
+        <i className="bi bi-person-fill"></i>
+      </button>
+
+      <ul
+        className={`dropdown-menu dropdown-menu-end${dropdownOpen ? " show" : ""}`}
+      >
+        <li>
+          <button className="dropdown-item text-danger" onClick={handleLogout}>
+            <i className="bi bi-box-arrow-right me-2"></i>Log Out
+          </button>
+        </li>
+      </ul>
+    </div>
   );
 }

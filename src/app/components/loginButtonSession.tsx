@@ -36,7 +36,8 @@ export default function LoginButtonSession() {
       showAlert("Signing out...", "info");
 
       const logoutUrl = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/logout?post_logout_redirect_uri=${window.location.origin}`;
-      window.location.href = logoutUrl;
+      window.open(logoutUrl, "_blank");
+      router.push("/");
     } else {
       // --- Sign in: trigger Microsoft login directly ---
       const job = session ? (session as any)?.user?.job : null;

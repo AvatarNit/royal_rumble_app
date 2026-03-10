@@ -6,6 +6,9 @@ import EditableContent from "../../components/EditableContent";
 export default function GroupLeaderUI({
   mentorsData,
   groupLeaderEvents,
+  groupDetails,
+  groupMentors,
+  groupFreshmen,
 }: {
   mentorsData: {
     mentorId: number;
@@ -26,6 +29,21 @@ export default function GroupLeaderUI({
     date: string | null;
     time: string | null;
     description: string | null;
+  }>;
+  groupDetails: {
+    groupId: string;
+    routeNum: number | null;
+    eventOrder: string | null;
+  };
+  groupMentors: Array<{
+    mentorId: number;
+    fName: string | null;
+    lName: string | null;
+  }>;
+  groupFreshmen: Array<{
+    freshmenId: number;
+    fName: string | null;
+    lName: string | null;
   }>;
 }) {
   return (
@@ -65,11 +83,11 @@ export default function GroupLeaderUI({
             <div className="info-pairs">
               <div className="info-pair">
                 <div className="info-label">Route #:</div>
-                <div className="info-value">1</div>
+                <div className="info-value">{groupDetails.routeNum}</div>
               </div>
               <div className="info-pair">
                 <div className="info-label">Event Order:</div>
-                <div className="info-value">LGI, GYM, CCA</div>
+                <div className="info-value">{groupDetails.eventOrder}</div>
               </div>
             </div>
             <div className="info-pairs">
@@ -77,9 +95,11 @@ export default function GroupLeaderUI({
                 <div className="info-label">Mentor:</div>
                 <div className="info-value">
                   <ol className="list-group list-group-numbered">
-                    <li className="list-group-item">
-                      {mentorsData.fName} {mentorsData.lName}
-                    </li>
+                    {groupMentors.map((mentor) => (
+                      <li className="list-group-item" key={mentor.mentorId}>
+                        {mentor.fName} {mentor.lName}
+                      </li>
+                    ))}
                   </ol>
                 </div>
               </div>
@@ -88,9 +108,14 @@ export default function GroupLeaderUI({
                   <div className="info-label">Frehsmen:</div>
                   <div className="info-value">
                     <ol className="list-group list-group-numbered">
-                      <li className="list-group-item">
-                        Freshman 1
-                      </li>
+                      {groupFreshmen.map((freshman) => (
+                        <li
+                          className="list-group-item"
+                          key={freshman.freshmenId}
+                        >
+                          {freshman.fName} {freshman.lName}
+                        </li>
+                      ))}
                     </ol>
                   </div>
                 </div>
@@ -100,9 +125,7 @@ export default function GroupLeaderUI({
         </InfoBox>
       </section>
 
-
       <section className="mentor-info-box">
-
         <InfoBox headerText="Event Details">
           <div
             style={{

@@ -6,6 +6,8 @@ import EditableContent from "../../components/EditableContent";
 export default function HallwayHostUI({
   mentorsData,
   hallwayHostEvents,
+  hallwayData,
+  hallwayMentors,
 }: {
   mentorsData: {
     mentorId: number;
@@ -26,6 +28,15 @@ export default function HallwayHostUI({
     date: string | null;
     time: string | null;
     description: string | null;
+  }>;
+  hallwayData: {
+    hallwayStopId: number;
+    location: string | null;
+  };
+  hallwayMentors: Array<{
+    mentor_id: number;
+    fname: string | null;
+    lname: string | null;
   }>;
 }) {
   return (
@@ -54,14 +65,16 @@ export default function HallwayHostUI({
         </MentorButtons>
       </div>
       <section className="mentor-info-box">
-
         <InfoBox headerText="Group Details">
           <section>
             <label className="info-label">Mentors:</label>
-            {/* <InfoTable
-              headers={["Mentor Name", "Student ID"]}
-              data={group.mentors.map((m) => [m.name, m.mentor_id])}
-            /> */}
+            <InfoTable
+              headers={["First Name", "Last Name"]}
+              data={hallwayMentors.map((m) => [
+                String(m.fname),
+                String(m.lname),
+              ])}
+            />
           </section>
         </InfoBox>
 

@@ -146,7 +146,7 @@ export async function getMentorsByGroupId(groupId: string) {
     .from(groupLeaderData)
     .where(eq(groupLeaderData.groupId, groupId));
 
-  const mentors = Array<{ mentor_id: string; fname: string; lname: string }>();
+  const mentors = Array<{ mentor_id: number; fname: string; lname: string }>();
 
   for (const id of mentorsId) {
     if (id.mentorId === null) continue;
@@ -155,7 +155,7 @@ export async function getMentorsByGroupId(groupId: string) {
       .from(mentorData)
       .where(eq(mentorData.mentorId, id.mentorId));
     mentors.push({
-      mentor_id: mentor[0].mentorId.toString(),
+      mentor_id: mentor[0].mentorId,
       fname: mentor[0].fName ?? "",
       lname: mentor[0].lName ?? "",
     });
@@ -189,6 +189,30 @@ export async function getNullGroupMentors() {
     .where(isNull(groupLeaderData.groupId))
     .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
   return groupLeaders;
+}
+
+export async function getGroupIdByMentorId(mentorId: number) {
+  const groupLeader = await db
+    .select({
+      groupId: groupLeaderData.groupId,
+    })
+    .from(groupLeaderData)
+    .where(eq(groupLeaderData.mentorId, mentorId))
+    .limit(1);
+  return groupLeader[0]?.groupId ?? null;
+}
+
+export async function getFreshmenAttendanceByGroupId(groupId: string) {
+  const attendance = await db
+    .select({
+      freshmenId: freshmenData.freshmenId,
+      fName: freshmenData.fName,
+      lName: freshmenData.lName,
+      present: freshmenData.present,
+    })
+    .from(freshmenData)
+    .where(eq(freshmenData.groupId, groupId));
+  return attendance;
 }
 
 {
@@ -225,7 +249,7 @@ export async function getMentorsByHallwayId(hallwayId: number) {
     .from(hallwayHostData)
     .where(eq(hallwayHostData.hallwayStopId, hallwayId));
 
-  const mentors = Array<{ mentor_id: string; fname: string; lname: string }>();
+  const mentors = Array<{ mentor_id: number; fname: string; lname: string }>();
 
   for (const id of mentorsId) {
     if (id.mentorId === null) continue;
@@ -234,7 +258,7 @@ export async function getMentorsByHallwayId(hallwayId: number) {
       .from(mentorData)
       .where(eq(mentorData.mentorId, id.mentorId));
     mentors.push({
-      mentor_id: mentor[0].mentorId.toString(),
+      mentor_id: mentor[0].mentorId,
       fname: mentor[0].fName ?? "",
       lname: mentor[0].lName ?? "",
     });
@@ -249,6 +273,17 @@ export async function getAllHallways() {
     .from(hallwayStopData)
     .orderBy(hallwayStopData.hallwayStopId);
   return hallways;
+}
+
+export async function getHallwayIdByMentorId(mentorId: number) {
+  const hallwayHost = await db
+    .select({
+      hallwayStopId: hallwayHostData.hallwayStopId,
+    })
+    .from(hallwayHostData)
+    .where(eq(hallwayHostData.mentorId, mentorId))
+    .limit(1);
+  return hallwayHost[0]?.hallwayStopId ?? null;
 }
 
 {

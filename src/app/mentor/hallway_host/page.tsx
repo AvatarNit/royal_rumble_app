@@ -3,6 +3,11 @@ import {
   getMentorById,
   getHallwayHostEvents,
 } from "../../../../src/actions/mentor";
+import {
+  getHallwayIdByMentorId,
+  getHallwayByHallwayId,
+  getMentorsByHallwayId,
+} from "../../../../src/actions/group";
 import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
@@ -15,10 +20,16 @@ export default async function HallwayHostHomepage() {
   const mentorsData = await getMentorById(Number(studentId));
   const hallwayHostEvents = await getHallwayHostEvents();
 
+  const hallwayId = await getHallwayIdByMentorId(Number(studentId));
+  const hallwayData = await getHallwayByHallwayId(Number(hallwayId));
+  const hallwayMentors = await getMentorsByHallwayId(Number(hallwayId));
+
   return (
     <HallwayHostHomepageUI
       mentorsData={mentorsData}
       hallwayHostEvents={hallwayHostEvents}
+      hallwayData={hallwayData}
+      hallwayMentors={hallwayMentors}
     />
   );
 }

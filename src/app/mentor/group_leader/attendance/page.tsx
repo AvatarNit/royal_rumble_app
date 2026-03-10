@@ -1,32 +1,18 @@
-"use client";
+import FreshmenAttendancePageUI from "./ui";
+import {
+  getGroupIdByMentorId,
+  getFreshmenAttendanceByGroupId,
+} from "../../../../actions/group";
+import { auth } from "@/auth";
 
-import LogoButton from "../../../components/logoButton";
-import LoginButton from "../../../components/loginButton";
-import InfoBox from "../../../components/infoBox";
-import CheckBoxTable from "../../../components/checkBoxTable";
-import "../../../css/mentor.css";
-import "../../../css/logo+login.css";
+export const dynamic = "force-dynamic";
+const DEV_MODE = process.env.DEV_MODE === "true";
 
-export default function FreshmenAttendancePage() {
-  return (
-    <main className="mentor-container">
-      <LogoButton />
-      <LoginButton />
+export default async function FreshmenAttendancePage() {
+  const session = await auth();
+  const studentId = !DEV_MODE ? session?.user?.id : "100001";
+  const groupId = await getGroupIdByMentorId(Number(studentId));
+  const attendanceData = await getFreshmenAttendanceByGroupId(String(groupId));
 
-      <header className="mentor-header">
-        <h1 className="mentor-title">Freshmen Attendance</h1>
-      </header>
-
-      <section className="mentor-info-box">
-        <InfoBox headerText="Present?">
-          <CheckBoxTable
-            headers={["Student Name"]}
-            data={[["Student 1"], ["Student 2"], ["Student 3"]]}
-            status={[false, true, false]}
-            rowIds={[1, 2, 3]}
-          />
-        </InfoBox>
-      </section>
-    </main>
-  );
+  return <FreshmenAttendancePageUI attendanceData={attendanceData} />;
 }

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -199,11 +200,7 @@ export default function AdminAllGroups({
             <ExportToExcelButton
               headers={exportHeaders}
               data={exportData}
-              fileName={
-                displayFreshmenGroup
-                  ? "Freshmen_Groups_Export"
-                  : "Hallway_Groups_Export"
-              }
+              fileName={"Freshmen_Groups_Export"}
               style={{ fontSize: "21px", justifyContent: "flex-center" }}
             />
 
@@ -234,6 +231,13 @@ export default function AdminAllGroups({
                 style={{ marginLeft: "30px", fontSize: "30px" }}
               />
             </AddButton>
+
+            <ExportToExcelButton
+              headers={exportHeaders}
+              data={exportData}
+              fileName="Hallway_Groups_Export"
+              style={{ fontSize: "21px", justifyContent: "flex-center" }}
+            />
 
             <AddButton
               onClick={() => setShowHallwayModal(true)}

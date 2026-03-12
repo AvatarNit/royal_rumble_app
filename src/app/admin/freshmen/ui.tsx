@@ -37,8 +37,9 @@ export default function AdminFreshmen({
   const [healthConcernsSelected, setHealthConcernsSelected] = useState(false);
   const [presentSelected, setPresentSelected] = useState(false);
 
-  // Search state
+  // Search & filter state
   const [searchText, setSearchText] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
 
   // Table headers
   const ALL_HEADERS = [
@@ -66,29 +67,41 @@ export default function AdminFreshmen({
     f.present ? "Yes" : "No",
   ]);
 
-  // --- SEARCH FILTER LOGIC ---
+  // Unique languages from data (excluding English, sorted)
+  const languageOptions = [
+    ...new Set(freshmenData.map((f) => f.primaryLanguage)),
+  ]
+    .filter((lang) => Boolean(lang) && lang !== "English")
+    .sort();
+
+  // --- FILTER LOGIC ---
   const filteredData = tableData.filter((row) => {
     const id = row[0].toString();
     const fName = String(row[1]).toLowerCase();
     const lName = String(row[2]).toLowerCase();
 
+    // Search filter
     const query = searchText.trim().toLowerCase();
-    if (query === "") return true;
-
-    // If numeric → search by ID
-    if (!isNaN(Number(query))) {
-      return id.includes(query);
+    if (query !== "") {
+      if (!isNaN(Number(query))) {
+        if (!id.includes(query)) return false;
+      } else {
+        const parts = query.split(" ");
+        if (parts.length === 2) {
+          const [firstPart, lastPart] = parts;
+          if (!(fName.includes(firstPart) && lName.includes(lastPart)))
+            return false;
+        } else {
+          if (!(fName.includes(query) || lName.includes(query))) return false;
+        }
+      }
     }
 
-    // If two words → match first and last name separately
-    const parts = query.split(" ");
-    if (parts.length === 2) {
-      const [firstPart, lastPart] = parts;
-      return fName.includes(firstPart) && lName.includes(lastPart);
-    }
+    // Language filter (row[5] = primaryLanguage)
+    if (selectedLanguage !== "" && String(row[5]) !== selectedLanguage)
+      return false;
 
-    // Otherwise → match first OR last name
-    return fName.includes(query) || lName.includes(query);
+    return true;
   });
 
   // Generate visible columns
@@ -118,7 +131,10 @@ export default function AdminFreshmen({
       <BackButton href="/admin" />
 
       {/* --- SEARCH BAR --- */}
-      <div className="search-container" style={{ marginLeft: "15%", marginBottom: "0px" }}>
+      <div
+        className="search-container"
+        style={{ marginLeft: "15%", marginBottom: "0px" }}
+      >
         <div className="search-row">
           <input
             type="text"
@@ -136,29 +152,15 @@ export default function AdminFreshmen({
           <div className="form-row">
             <select
               className="form-select"
-              // value={selectedGroupId}
-              // onChange={(e) => setSelectedGroupId(e.target.value)}
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
             >
               <option value="">Language</option>
-              <option value="">Spanish</option>
-              <option value="">French</option>
-
-              {/* {displayFreshmenGroup &&
-                freshmenGroups.map((group) => (
-                  <option key={group.group_id} value={group.group_id}>
-                    {group.group_id}
-                  </option>
-                ))}
-
-              {!displayFreshmenGroup &&
-                hallwayGroups.map((group) => (
-                  <option
-                    key={group.hallwayStopId}
-                    value={group.hallwayStopId - 1}
-                  >
-                    {group.location}
-                  </option>
-                ))} */}
+              {languageOptions.map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang}
+                </option>
+              ))}
             </select>
           </div>
         </div>

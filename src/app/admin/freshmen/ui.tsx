@@ -118,7 +118,7 @@ export default function AdminFreshmen({
       <BackButton href="/admin" />
 
       {/* --- SEARCH BAR --- */}
-      <div className="search-container" style={{ marginLeft: "15%" }}>
+      <div className="search-container" style={{ marginLeft: "15%", marginBottom: "0px" }}>
         <div className="search-row">
           <input
             type="text"
@@ -128,8 +128,42 @@ export default function AdminFreshmen({
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
+      </div>
+
+      {/* --- SELECT LANGUAGE DROPDOWN --- */}
+      <div className="search-container" style={{ marginLeft: "15%" }}>
+        <div className="search-row">
+          <div className="form-row">
+            <select
+              className="form-select"
+              // value={selectedGroupId}
+              // onChange={(e) => setSelectedGroupId(e.target.value)}
+            >
+              <option value="">Language</option>
+              <option value="">Spanish</option>
+              <option value="">French</option>
+
+              {/* {displayFreshmenGroup &&
+                freshmenGroups.map((group) => (
+                  <option key={group.group_id} value={group.group_id}>
+                    {group.group_id}
+                  </option>
+                ))}
+
+              {!displayFreshmenGroup &&
+                hallwayGroups.map((group) => (
+                  <option
+                    key={group.hallwayStopId}
+                    value={group.hallwayStopId - 1}
+                  >
+                    {group.location}
+                  </option>
+                ))} */}
+            </select>
+          </div>
+        </div>
         {/* --- ADD FRESHMAN BUTTON --- */}
-        <div style={{ marginLeft: "200px" }}>
+        <div style={{ marginLeft: "14%" }}>
           <AddButton href="/admin/add/freshman">
             Add
             <i

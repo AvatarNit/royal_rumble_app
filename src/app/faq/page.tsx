@@ -1,11 +1,13 @@
 import LogoButton from "../components/logoButton";
 import LoginButton from "../components/loginButton";
+import EditableContent from "../components/EditableContent";
 import InfoBox from "../components/infoBox";
+import ViewDropdown from "../components/viewDropdown";
 import "../css/about.css";
 import "../css/logo+login.css";
-import EditableContent from "../components/EditableContent";
 
-export default function FAQPage() {
+export default function FAQPage(){
+
   return (
     <main className="about-container">
       <LogoButton />
@@ -16,45 +18,66 @@ export default function FAQPage() {
       </header>
 
       <EditableContent contentKey="faq" />
-      <section className="about-info-box">
-        <InfoBox headerText="Question 1">
-          <div
-            style={{
-              color: "var(--textBlack)",
-              fontWeight: "normal",
-              fontSize: "16px",
-            }}
-          >
-            Answer to question 1 goes here.
-          </div>
-        </InfoBox>
-      </section>
-      <section className="about-info-box">
-        <InfoBox headerText="Question 2">
-          <div
-            style={{
-              color: "var(--textBlack)",
-              fontWeight: "normal",
-              fontSize: "16px",
-            }}
-          >
-            Answer to question 2 goes here.
-          </div>
-        </InfoBox>
-      </section>
-      <section className="about-info-box">
-        <InfoBox headerText="Question 3">
-          <div
-            style={{
-              color: "var(--textBlack)",
-              fontWeight: "normal",
-              fontSize: "16px",
-            }}
-          >
-            Answer to question 3 goes here.
-          </div>
-        </InfoBox>
-      </section>
+
+      <ViewDropdown
+        header="Questions and Answers"
+        sections={[
+          {
+            title: "Question 1",
+            sectionId: "q1",
+            content: (
+              <section className="about-info-box">
+                <div
+                  style={{
+                    display: "flex",
+                    color: "var(--textBlack)",
+                    fontWeight: "normal",
+                    fontSize: "20px",
+                  }}
+                >
+                  Answer to question 1 goes here.
+                </div>
+              </section>
+            ),
+          },
+          {
+            title: "Question 2",
+            sectionId: "q2",
+            content: (
+              <section className="about-info-box">
+                <div
+                  style={{
+                    display: "flex",
+                    color: "var(--textBlack)",
+                    fontWeight: "normal",
+                    fontSize: "20px",
+                  }}
+                >
+                  Answer to question 2 goes here.
+                </div>
+              </section>
+            ),
+          },
+          {
+            title: "Question 3",
+            sectionId: "q3",
+            content: (
+              <section className="about-info-box">
+                <div
+                  style={{
+                    display: "flex",
+                    color: "var(--textBlack)",
+                    fontWeight: "normal",
+                    fontSize: "20px",
+                  }}
+                >
+                  Answer to question 3 goes here.
+                </div>
+              </section>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }

@@ -149,23 +149,25 @@ export default function ViewDropdown({
             {isOpen && (
               <div>
                 <div style={iconContainer}>
-                  <i
-                    className="bi bi-pencil"
-                    style={iconStyle}
-                    onMouseEnter={hover}
-                    onMouseLeave={unhover}
-                    onClick={() =>
-                      router.push(`${editLink}/${section.sectionId}`)
-                    }
-                  />
-                  {/* delete */}
-                  <i
-                    className="bi bi-trash"
-                    style={iconStyle}
-                    onMouseEnter={hover}
-                    onMouseLeave={unhover}
-                    onClick={() => setModalID(section.sectionId)}
-                  />
+                  {editLink && (
+                    <i
+                      className="bi bi-pencil"
+                      style={iconStyle}
+                      onMouseEnter={hover}
+                      onMouseLeave={unhover}
+                      onClick={() => router.push(`${editLink}/${section.sectionId}`)}
+                    />
+                  )}
+
+                  {deleteAction && (
+                    <i
+                      className="bi bi-trash"
+                      style={iconStyle}
+                      onMouseEnter={hover}
+                      onMouseLeave={unhover}
+                      onClick={() => setModalID(section.sectionId)}
+                    />
+                  )}
                 </div>
                 <div style={contentWrapperStyle}>
                   <div style={contentBoxStyle}>{section.content}</div>

@@ -44,6 +44,7 @@ export default function GroupLeaderUI({
     freshmenId: number;
     fName: string | null;
     lName: string | null;
+    interests: string | null;
   }>;
 }) {
   return (
@@ -92,9 +93,9 @@ export default function GroupLeaderUI({
             </div>
             <div className="info-pairs">
               <div className="info-pair">
-                <div className="info-label">Mentor:</div>
+                <div className="info-label">Mentors:</div>
                 <div className="info-value">
-                  <ol className="list-group list-group-numbered">
+                  <ol className="list-group list-group-numbered list-group-horizontal">
                     {groupMentors.map((mentor) => (
                       <li className="list-group-item" key={mentor.mentorId}>
                         {mentor.fName} {mentor.lName}
@@ -104,21 +105,14 @@ export default function GroupLeaderUI({
                 </div>
               </div>
               <div className="info-pairs">
-                <div className="info-pair">
-                  <div className="info-label">Frehsmen:</div>
-                  <div className="info-value">
-                    <ol className="list-group list-group-numbered">
-                      {groupFreshmen.map((freshman) => (
-                        <li
-                          className="list-group-item"
-                          key={freshman.freshmenId}
-                        >
-                          {freshman.fName} {freshman.lName}
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
+                <div className="info-label">Frehsmen:</div>
+                <InfoTable
+                  headers={["Name", "Interests"]}
+                  data={groupFreshmen.map((freshman) => [
+                    `${freshman.fName} ${freshman.lName}`,
+                    freshman.interests ?? "",
+                  ])}
+                />
               </div>
             </div>
           </section>

@@ -345,6 +345,15 @@ export const getRoyalRumbleGroupAttendance = async () => {
   return Array.from(groupMap.values());
 };
 
+export const getRoyalRumbleEventId = async (): Promise<number | null> => {
+  const royalRumbleEvent = await db
+    .select({ eventId: eventsData.eventId })
+    .from(eventsData)
+    .where(eq(eventsData.isRoyalRumble, true))
+    .limit(1);
+  return royalRumbleEvent[0]?.eventId ?? null;
+};
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//

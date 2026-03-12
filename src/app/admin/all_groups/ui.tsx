@@ -264,7 +264,7 @@ export default function AdminAllGroups({
                 selectedGroupId === "" || group.group_id === selectedGroupId,
             )
             .map((group) => ({
-              title: `Group ${group.group_id}`,
+              title: `Group: ${group.group_id}${group.group_id !== "Unassigned" && group.mentors.length > 0 ? ` (${group.mentors.map((m) => m.name).join(", ")})` : ""}`,
               content: (
                 <section>
                   <div className="info-pairs">
@@ -332,7 +332,7 @@ export default function AdminAllGroups({
         />
       )}
 
-      {/* Add Hallway Modal (unchanged from your original) */}
+      {/* Add Hallway Modal */}
       <Modal show={showHallwayModal} onHide={() => setShowHallwayModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Hallway</Modal.Title>

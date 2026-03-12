@@ -40,8 +40,12 @@ export default function AdminMentors({
   const [trainingSelected, setTrainingSelected] = useState(false);
   const [pizzaSelected, setPizzaSelected] = useState(false);
 
-  // Search state
+  // Search & filter state
   const [searchText, setSearchText] = useState("");
+  const [selectedJob, setSelectedJob] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedTrainingDay, setSelectedTrainingDay] = useState("");
+  const [selectedGradYear, setSelectedGradYear] = useState("");
 
   // Table headers
   const ALL_HEADERS = [
@@ -73,6 +77,24 @@ export default function AdminMentors({
     m.pizzaType,
   ]);
 
+  // Dynamic dropdown options derived from actual data
+  const EXCLUDED_LANGUAGES = ["english", "no", "none", "na", "n/a"];
+  const jobOptions = [...new Set(mentorsData.map((m) => m.job))]
+    .filter(Boolean)
+    .sort();
+  const languageOptions = [...new Set(mentorsData.map((m) => m.language))]
+    .filter(
+      (lang) =>
+        Boolean(lang) && !EXCLUDED_LANGUAGES.includes(lang.toLowerCase()),
+    )
+    .sort();
+  const trainingDayOptions = [...new Set(mentorsData.map((m) => m.trainingDay))]
+    .filter(Boolean)
+    .sort();
+  const gradYearOptions = [...new Set(mentorsData.map((m) => m.gradYear))]
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+
   // --- SEARCH FILTER LOGIC ---
   const filteredData = tableData.filter((row) => {
     const id = row[0].toString();
@@ -80,22 +102,30 @@ export default function AdminMentors({
     const lName = String(row[2]).toLowerCase();
 
     const query = searchText.trim().toLowerCase();
-    if (query === "") return true;
-
-    // If numeric → search by ID
-    if (!isNaN(Number(query))) {
-      return id.includes(query);
+    if (query !== "") {
+      if (!isNaN(Number(query))) {
+        if (!id.includes(query)) return false;
+      } else {
+        const parts = query.split(" ");
+        if (parts.length === 2) {
+          const [firstPart, lastPart] = parts;
+          if (!(fName.includes(firstPart) && lName.includes(lastPart)))
+            return false;
+        } else {
+          if (!(fName.includes(query) || lName.includes(query))) return false;
+        }
+      }
     }
 
-    // If two words → match first and last name separately
-    const parts = query.split(" ");
-    if (parts.length === 2) {
-      const [firstPart, lastPart] = parts;
-      return fName.includes(firstPart) && lName.includes(lastPart);
-    }
+    if (selectedJob !== "" && String(row[4]) !== selectedJob) return false;
+    if (selectedLanguage !== "" && String(row[7]) !== selectedLanguage)
+      return false;
+    if (selectedTrainingDay !== "" && String(row[9]) !== selectedTrainingDay)
+      return false;
+    if (selectedGradYear !== "" && String(row[6]) !== selectedGradYear)
+      return false;
 
-    // Otherwise → match first OR last name
-    return fName.includes(query) || lName.includes(query);
+    return true;
   });
 
   //   Generate visible columns
@@ -162,50 +192,68 @@ export default function AdminMentors({
         </div>
       </div>
 
-      <div className="search-container" style={{ marginLeft: "15%"}}>
-        <div className="search-row" style={{ width: "200px" }}>
+      {/* --- FILTER DROPDOWNS --- */}
+      <div className="search-container" style={{ marginLeft: "15%" }}>
+        <div className="search-row" style={{ width: "auto" }}>
           <select
             className="form-select"
+            style={{ width: "200px" }}
+            value={selectedJob}
+            onChange={(e) => setSelectedJob(e.target.value)}
           >
             <option value="">Job</option>
-            <option value="">Group Leader</option>
-            <option value="">Hallway Host</option>
-            <option value="">Spirit</option>
-            <option value="">Utility</option>
+            {jobOptions.map((job) => (
+              <option key={job} value={job}>
+                {job}
+              </option>
+            ))}
           </select>
         </div>
-        <div className="search-row" style={{ width: "200px" }}>
+        <div className="search-row" style={{ width: "auto" }}>
           <select
             className="form-select"
+            style={{ width: "200px" }}
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
           >
             <option value="">Language</option>
-            <option value="">Spanish</option>
-            <option value="">French</option>
-            <option value="">German</option>
-            <option value="">Italian</option>
+            {languageOptions.map((lang) => (
+              <option key={lang} value={lang}>
+                {lang}
+              </option>
+            ))}
           </select>
         </div>
-        <div className="search-row" style={{ width: "200px" }}>
+        <div className="search-row" style={{ width: "auto" }}>
           <select
             className="form-select"
+            style={{ width: "200px" }}
+            value={selectedTrainingDay}
+            onChange={(e) => setSelectedTrainingDay(e.target.value)}
           >
             <option value="">Training Date</option>
-            <option value="">ex. date</option>
-            <option value="">ex. date</option>
-            <option value="">ex. date</option>
+            {trainingDayOptions.map((day) => (
+              <option key={day} value={day}>
+                {day}
+              </option>
+            ))}
           </select>
         </div>
-        <div className="search-row" style={{ width: "250px" }}>
+        <div className="search-row" style={{ width: "auto" }}>
           <select
             className="form-select"
+            style={{ width: "250px" }}
+            value={selectedGradYear}
+            onChange={(e) => setSelectedGradYear(e.target.value)}
           >
             <option value="">Graduation Year</option>
-            <option value="">2026</option>
-            <option value="">2027</option>
-            <option value="">2028</option>
+            {gradYearOptions.map((year) => (
+              <option key={year} value={String(year)}>
+                {year}
+              </option>
+            ))}
           </select>
         </div>
-       
       </div>
 
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}

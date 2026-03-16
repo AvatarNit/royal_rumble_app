@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import "../css/admin.css";
 
 type backButtonProps = {
   href: string;

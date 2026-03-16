@@ -1,3 +1,5 @@
+// src/app/admin/edit/freshmenGroup/[id]/page.tsx
+
 import EditFreshmenGroupUI from "./ui";
 import {
   getGroupByGroupId,
@@ -6,6 +8,7 @@ import {
   getNullGroupFreshmen,
   getNullGroupMentors,
 } from "@/actions/group";
+import { getEventOrderPatterns } from "@/actions/routes";
 
 export default async function EditFreshmenGroupPage({
   params,
@@ -14,8 +17,9 @@ export default async function EditFreshmenGroupPage({
 }) {
   const { id } = await params;
 
-  const orders: string[][] = (await import("../../../../../event_orders.json"))
-    .default;
+  // Pull patterns from DB instead of importing event_orders.json
+  const rawPatterns = await getEventOrderPatterns();
+  const orders = rawPatterns.map((p) => p.blockOrder);
 
   if (id.toLowerCase() === "unassigned") {
     const groupData = {
@@ -48,6 +52,7 @@ export default async function EditFreshmenGroupPage({
       />
     );
   }
+
   const groupData = await getGroupByGroupId(id);
   const freshmenData = await getFreshmenByGroupId(id);
   const mentorData = await getMentorsByGroupId(id);
@@ -62,8 +67,6 @@ export default async function EditFreshmenGroupPage({
     interests: freshman.interests ?? "",
     healthConcerns: freshman.healthConcerns ?? "",
   }));
-
-  console.log("Group Data", groupData);
 
   return (
     <EditFreshmenGroupUI

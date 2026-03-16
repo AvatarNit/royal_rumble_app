@@ -4,6 +4,7 @@ import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
 import InfoBox from "../../../components/infoBox";
 import CheckBoxTable from "../../../components/checkBoxTable";
+import BackButton from "../../../components/backButton";
 import { updateFreshmanAttendanceById } from "../../../../actions/freshmen";
 import "../../../css/mentor.css";
 import "../../../css/logo+login.css";
@@ -68,6 +69,8 @@ export default function FreshmenAttendancePageUI({
       <header className="mentor-header">
         <h1 className="mentor-title">Freshmen Attendance</h1>
       </header>
+
+      <BackButton href="/mentor/group_leader" />
 
       <section className="mentor-info-box">
         <InfoBox headerText="Present?">

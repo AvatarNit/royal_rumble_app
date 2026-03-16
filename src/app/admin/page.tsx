@@ -1,3 +1,5 @@
+// src/app/admin/page.tsx
+
 import LogoButton from "../components/logoButton";
 import LoginButton from "../components/loginButton";
 import AdminButtons from "../components/adminButtons";
@@ -34,43 +36,22 @@ export default async function AdminHomepage() {
           margin: "50px",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "20px",
-            margin: "20px",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "20px" }}>
           <AdminButtons link="/admin/admin">Admin</AdminButtons>
           <AdminButtons link="/admin/mentor">Mentor</AdminButtons>
           <AdminButtons link="/admin/freshmen">Freshmen</AdminButtons>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "20px",
-            margin: "20px",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "20px" }}>
           <AdminButtons link="/admin/upload">Upload</AdminButtons>
           <AdminButtons link="/admin/attendance">Attendance</AdminButtons>
           <AdminButtons link="/admin/events">Events</AdminButtons>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "20px",
-            margin: "20px",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "row", gap: "20px", margin: "20px" }}>
           <AdminButtons link="/admin/all_groups">All Groups</AdminButtons>
+          <AdminButtons link="/admin/routes">Routes</AdminButtons>
           <AdminButtons link="/admin/editContent">Edit Content</AdminButtons>
-          {/* <AdminButtons link="/admin/search">Search</AdminButtons> */}
         </div>
       </section>
     </main>

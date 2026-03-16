@@ -20,7 +20,6 @@ const requiredColumns: Record<string, string[]> = {
   seminar_data: ["freshmen_id", "first_name", "last_name", "semester", "teacher_full_name", "period"],
 };
 
-// Normalize Excel headers
 function normalizeRows(rows: any[]) {
   return rows.map((row) => {
     const newRow: Record<string, any> = {};
@@ -32,7 +31,6 @@ function normalizeRows(rows: any[]) {
   });
 }
 
-// Column validation
 function validateColumns(table: string, rows: any[]) {
   if (!rows || rows.length === 0) return "The Excel file is empty.";
   const firstRow = rows[0];
@@ -41,7 +39,6 @@ function validateColumns(table: string, rows: any[]) {
   return null;
 }
 
-// Row-level validation
 function validateRows(table: string, rows: any[]) {
   const errors: string[] = [];
   rows.forEach((row, i) => {
@@ -52,7 +49,6 @@ function validateRows(table: string, rows: any[]) {
   return errors.length ? errors.join("; ") : null;
 }
 
-// Insert rows
 async function insertData(table: string, rows: any[]) {
   switch (table) {
     case "mentor_data":
@@ -123,16 +119,19 @@ async function insertData(table: string, rows: any[]) {
 
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-    const table = formData.get("table") as string;
+    // Client sends { fileData: base64string, table: string } as JSON
+    const { fileData, table } = await req.json();
 
-    if (!file || !table) return NextResponse.json({ error: "File or table name missing." }, { status: 400 });
+    if (!fileData || !table) {
+      return NextResponse.json({ error: "File data or table name missing." }, { status: 400 });
+    }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, { type: "array" });
+    const buffer = Buffer.from(fileData, "base64");
+    const workbook = XLSX.read(buffer, { type: "buffer" });
 
-    if (!workbook.SheetNames.length) return NextResponse.json({ error: "Excel file has no sheets." }, { status: 400 });
+    if (!workbook.SheetNames.length) {
+      return NextResponse.json({ error: "Excel file has no sheets." }, { status: 400 });
+    }
 
     let rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { defval: null });
     rows = normalizeRows(rows);
@@ -152,7 +151,6 @@ export async function POST(req: Request) {
   }
 }
 
-// Optional: block GET requests
 export async function GET() {
   return NextResponse.json({ error: "Method GET not allowed. Use POST." }, { status: 405 });
 }

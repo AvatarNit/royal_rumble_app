@@ -197,6 +197,13 @@
       "when": 1771305261641,
       "tag": "0027_gigantic_skaar",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1773637085512,
+      "tag": "0028_damp_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,106 @@
+"use client";
+
+// src/app/mentor/hallway_host/group_attendance/ui.tsx
+
+import { useState } from "react";
+import LogoButton from "../../../components/logoButton";
+import LoginButton from "../../../components/loginButton";
+import InfoBox from "../../../components/infoBox";
+import CheckBoxTable from "../../../components/checkBoxTable";
+import BackButton from "../../../components/backButton";
+import "../../../css/mentor.css";
+import "../../../css/logo+login.css";
+import { markGroupPresent } from "@/actions/routes";
+
+interface AttendanceRow {
+  groupId:  string;
+  routeNum: number | null;
+  present:  boolean;
+}
+
+export default function HallwayHostAttendanceUI({
+  hallwayStopId,
+  hallwayLocation,
+  attendanceRows,
+}: {
+  hallwayStopId:  number;
+  hallwayLocation: string;
+  attendanceRows:  AttendanceRow[];
+}) {
+  const [rows, setRows] = useState<AttendanceRow[]>(attendanceRows);
+
+  const handleStatusChange = async (rowIndex: number, newStatus: boolean) => {
+    const row = rows[rowIndex];
+
+    // Optimistic update
+    setRows((prev) =>
+      prev.map((r, i) => (i === rowIndex ? { ...r, present: newStatus } : r)),
+    );
+
+    const result = await markGroupPresent(row.groupId, hallwayStopId, newStatus);
+
+    if (!result?.success) {
+      // Rollback
+      setRows((prev) =>
+        prev.map((r, i) => (i === rowIndex ? { ...r, present: !newStatus } : r)),
+      );
+    }
+  };
+
+  if (rows.length === 0) {
+    return (
+      <main className="mentor-container">
+        <LogoButton />
+        <LoginButton />
+        <header className="mentor-header">
+          <h1 className="mentor-title">Group Attendance</h1>
+        </header>
+        <BackButton href="/mentor/hallway_host" />
+        <section className="mentor-info-box">
+          <InfoBox headerText={hallwayLocation}>
+            <p
+              style={{
+                color: "var(--textBlack)",
+                fontWeight: "normal",
+                fontSize: "20px",
+              }}
+            >
+              No groups are assigned to this stop yet. Routes must be built on
+              the admin Routes page first.
+            </p>
+          </InfoBox>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mentor-container">
+      <LogoButton />
+      <LoginButton />
+
+      <header className="mentor-header">
+        <h1 className="mentor-title">Group Attendance</h1>
+      </header>
+
+      <BackButton href="/mentor/hallway_host" />
+
+      <section className="mentor-info-box">
+        <InfoBox headerText={hallwayLocation}>
+          <CheckBoxTable
+            headers={["Group", "Route #"]}
+            data={rows.map((row) => [
+              row.groupId,
+              row.routeNum !== null ? String(row.routeNum) : "—",
+            ])}
+            status={rows.map((row) => row.present)}
+            rowIds={rows.map((_, i) => i)}
+            onStatusChange={(rowIndex, newStatus) =>
+              handleStatusChange(rowIndex, newStatus)
+            }
+          />
+        </InfoBox>
+      </section>
+    </main>
+  );
+}

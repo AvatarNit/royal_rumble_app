@@ -1,36 +1,30 @@
-"use client";
+// src/app/mentor/hallway_host/group_attendance/page.tsx
 
-import LogoButton from "../../../components/logoButton";
-import LoginButton from "../../../components/loginButton";
-import InfoBox from "../../../components/infoBox";
-import CheckBoxTable from "../../../components/checkBoxTable";
-import "../../../css/mentor.css";
-import "../../../css/logo+login.css";
+import HallwayHostAttendanceUI from "./ui";
+import { getHallwayIdByMentorId, getHallwayByHallwayId } from "@/actions/group";
+import { getAttendanceByStop } from "@/actions/routes";
+import { auth } from "@/auth";
 
-export default function HallwayHostGroupAttendancePage() {
+export const dynamic = "force-dynamic";
+const DEV_MODE = process.env.DEV_MODE === "true";
+
+export default async function HallwayHostAttendancePage() {
+  const session = await auth();
+  const studentId = !DEV_MODE ? session?.user?.id : "100002";
+
+  const hallwayStopId = await getHallwayIdByMentorId(Number(studentId));
+  const hallwayData = await getHallwayByHallwayId(Number(hallwayStopId));
+  const attendanceRows = await getAttendanceByStop(Number(hallwayStopId));
+
   return (
-    <main className="mentor-container">
-      <LogoButton />
-      <LoginButton />
-
-      <header className="mentor-header">
-        <h1 className="mentor-title">Group Attendance</h1>
-      </header>
-
-      <section className="mentor-info-box">
-        <InfoBox headerText="Itinerary">
-          <CheckBoxTable
-            headers={["Group Number", "Time Expected"]}
-            data={[
-              ["1", "11:00"],
-              ["4", "11:30"],
-              ["8", "12:00"],
-            ]}
-            status={[false, false, false]}
-            rowIds={[1, 2, 3]}
-          />
-        </InfoBox>
-      </section>
-    </main>
+    <HallwayHostAttendanceUI
+      hallwayStopId={Number(hallwayStopId)}
+      hallwayLocation={hallwayData?.location ?? "Unknown Stop"}
+      attendanceRows={attendanceRows.map((row) => ({
+        groupId:  row.groupId,
+        routeNum: row.routeNum ?? null,
+        present:  row.present,
+      }))}
+    />
   );
 }

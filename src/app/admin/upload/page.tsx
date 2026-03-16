@@ -8,7 +8,8 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createSeminarGroups, createGroups, syncGroups } from "@/actions/group";
+import { createSeminarGroups, syncGroups } from "@/actions/group";
+import { createGroupsFromDB } from "@/actions/routes";  // ← only new import
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
 
@@ -27,7 +28,7 @@ export default function AdminUpload() {
     router.push("/admin");
   };
 
-  // Upload handler
+  // Upload handler — identical to original
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     table: string,
@@ -278,15 +279,20 @@ export default function AdminUpload() {
       >
         Assign Groups
       </button>
+
+      {/* ← Only change: createGroups() replaced with createGroupsFromDB() */}
       <button
         onClick={async () => {
-          const groupTotal = await createGroups();
-          console.log(`Created Groups: ${groupTotal}`);
-          showAlert(`Created Groups: ${groupTotal}`, "success");
+          const groupTotal = await createGroupsFromDB();
+          showAlert(
+            `Created ${groupTotal} groups and seeded tour routes automatically.`,
+            "success",
+          );
         }}
       >
         Create Groups
       </button>
+
       <button
         onClick={async () => {
           const syncResult = await syncGroups();

@@ -13,9 +13,9 @@ import "../../../css/logo+login.css";
 import { markGroupPresent } from "@/actions/routes";
 
 interface AttendanceRow {
-  groupId:  string;
+  groupId: string;
   routeNum: number | null;
-  present:  boolean;
+  present: boolean;
 }
 
 export default function HallwayHostAttendanceUI({
@@ -23,9 +23,9 @@ export default function HallwayHostAttendanceUI({
   hallwayLocation,
   attendanceRows,
 }: {
-  hallwayStopId:  number;
+  hallwayStopId: number;
   hallwayLocation: string;
-  attendanceRows:  AttendanceRow[];
+  attendanceRows: AttendanceRow[];
 }) {
   const [rows, setRows] = useState<AttendanceRow[]>(attendanceRows);
 
@@ -37,12 +37,18 @@ export default function HallwayHostAttendanceUI({
       prev.map((r, i) => (i === rowIndex ? { ...r, present: newStatus } : r)),
     );
 
-    const result = await markGroupPresent(row.groupId, hallwayStopId, newStatus);
+    const result = await markGroupPresent(
+      row.groupId,
+      hallwayStopId,
+      newStatus,
+    );
 
     if (!result?.success) {
       // Rollback
       setRows((prev) =>
-        prev.map((r, i) => (i === rowIndex ? { ...r, present: !newStatus } : r)),
+        prev.map((r, i) =>
+          i === rowIndex ? { ...r, present: !newStatus } : r,
+        ),
       );
     }
   };
@@ -88,11 +94,8 @@ export default function HallwayHostAttendanceUI({
       <section className="mentor-info-box">
         <InfoBox headerText={hallwayLocation}>
           <CheckBoxTable
-            headers={["Group", "Route #"]}
-            data={rows.map((row) => [
-              row.groupId,
-              row.routeNum !== null ? String(row.routeNum) : "—",
-            ])}
+            headers={["Group"]}
+            data={rows.map((row) => [row.groupId])}
             status={rows.map((row) => row.present)}
             rowIds={rows.map((_, i) => i)}
             onStatusChange={(rowIndex, newStatus) =>

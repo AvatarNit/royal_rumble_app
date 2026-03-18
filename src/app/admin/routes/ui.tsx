@@ -1,7 +1,5 @@
 "use client";
 
-// src/app/admin/routes/ui.tsx
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -24,8 +22,6 @@ import {
   addTourRouteStop,
   deleteTourRouteStop,
 } from "@/actions/routes";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Pattern {
   patternId: number;
@@ -66,8 +62,6 @@ interface Props {
   hallways: Hallway[];
 }
 
-// ─── Shared input style — wide enough for full placeholder text ───────────────
-
 const inputStyle: React.CSSProperties = {
   border: "4px solid var(--primaryBlue)",
   padding: "10px",
@@ -94,24 +88,25 @@ const iconBtn: React.CSSProperties = {
   transition: "color 0.2s",
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
-export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Props) {
+export default function AdminRoutesUI({
+  patterns,
+  blocks,
+  routes,
+  hallways,
+}: Props) {
   const router = useRouter();
   const { showAlert } = useAlert();
 
-  // ── Section toggle ──────────────────────────────────────────────────────────
-  const [activeSection, setActiveSection] = useState<"orders" | "schedule" | "routes">("orders");
-
-  // ══════════════════════════════════════════════
-  // EVENT ORDER PATTERNS state
-  // ══════════════════════════════════════════════
+  const [activeSection, setActiveSection] = useState<
+    "orders" | "schedule" | "routes"
+  >("orders");
 
   const [patternsState, setPatternsState] = useState<Pattern[]>(patterns);
 
-  // Editable string per patternId
   const [patternEdits, setPatternEdits] = useState<Record<number, string>>(
-    Object.fromEntries(patterns.map((p) => [p.patternId, p.blockOrder.join(", ")])),
+    Object.fromEntries(
+      patterns.map((p) => [p.patternId, p.blockOrder.join(", ")]),
+    ),
   );
 
   // New pattern input
@@ -119,7 +114,10 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
 
   const handleSavePattern = async (patternId: number) => {
     const raw = patternEdits[patternId] ?? "";
-    const blockOrder = raw.split(",").map((s) => s.trim()).filter(Boolean);
+    const blockOrder = raw
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
     if (blockOrder.length === 0) {
       showAlert("Pattern cannot be empty.", "danger");
       return;
@@ -139,28 +137,35 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
   };
 
   const handleAddPattern = async () => {
-    const blockOrder = newPatternInput.split(",").map((s) => s.trim()).filter(Boolean);
+    const blockOrder = newPatternInput
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
     if (blockOrder.length === 0) {
       showAlert("Please enter at least one block name.", "danger");
       return;
     }
     const result = await addEventOrderPattern(blockOrder);
     setPatternsState((prev) => [...prev, result]);
-    setPatternEdits((prev) => ({ ...prev, [result.patternId]: blockOrder.join(", ") }));
+    setPatternEdits((prev) => ({
+      ...prev,
+      [result.patternId]: blockOrder.join(", "),
+    }));
     setNewPatternInput("");
     showAlert(`Pattern ${result.patternNum} added!`, "success");
   };
 
-  // ══════════════════════════════════════════════
-  // BLOCK SCHEDULE state
-  // ══════════════════════════════════════════════
-
   const [blocksState, setBlocksState] = useState<Block[]>(blocks);
-  const [blockEdits, setBlockEdits] = useState<Record<number, { startTime: string; durationMinutes: string }>>(
+  const [blockEdits, setBlockEdits] = useState<
+    Record<number, { startTime: string; durationMinutes: string }>
+  >(
     Object.fromEntries(
       blocks.map((b) => [
         b.blockScheduleId,
-        { startTime: b.startTime, durationMinutes: b.durationMinutes.toString() },
+        {
+          startTime: b.startTime,
+          durationMinutes: b.durationMinutes.toString(),
+        },
       ]),
     ),
   );
@@ -186,9 +191,14 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
     showAlert(`Block "${block.blockName}" saved!`, "success");
   };
 
-  const handleDeleteBlock = async (blockScheduleId: number, blockName: string) => {
+  const handleDeleteBlock = async (
+    blockScheduleId: number,
+    blockName: string,
+  ) => {
     await deleteBlockSchedule(blockScheduleId);
-    setBlocksState((prev) => prev.filter((b) => b.blockScheduleId !== blockScheduleId));
+    setBlocksState((prev) =>
+      prev.filter((b) => b.blockScheduleId !== blockScheduleId),
+    );
     showAlert(`Block "${blockName}" deleted.`, "success");
   };
 
@@ -198,7 +208,11 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
       showAlert("Please fill in all fields for the new block.", "danger");
       return;
     }
-    await upsertBlockSchedule(newBlockName.trim(), newBlockTime.trim(), duration);
+    await upsertBlockSchedule(
+      newBlockName.trim(),
+      newBlockTime.trim(),
+      duration,
+    );
     showAlert(`Block "${newBlockName}" added!`, "success");
     setNewBlockName("");
     setNewBlockTime("");
@@ -206,13 +220,13 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
     router.refresh();
   };
 
-  // ══════════════════════════════════════════════
-  // TOUR ROUTES state
-  // ══════════════════════════════════════════════
-
   const [routesState, setRoutesState] = useState<Route[]>(routes);
-  const [newStopHallway, setNewStopHallway] = useState<Record<number, string>>({});
-  const [newStopDuration, setNewStopDuration] = useState<Record<number, string>>({});
+  const [newStopHallway, setNewStopHallway] = useState<Record<number, string>>(
+    {},
+  );
+  const [newStopDuration, setNewStopDuration] = useState<
+    Record<number, string>
+  >({});
 
   const handleAddStop = async (routeId: number) => {
     const hallwayId = parseInt(newStopHallway[routeId] ?? "");
@@ -329,9 +343,18 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
               sectionId: pattern.patternId,
               content: (
                 <section>
-                  <p style={{ color: "var(--textBlack)", fontWeight: "normal", fontSize: "18px", marginBottom: "20px" }}>
-                    Enter block names separated by commas in the order groups should visit them.
-                    <br />Example: <strong>Tour, LGI, Gym</strong>
+                  <p
+                    style={{
+                      color: "var(--textBlack)",
+                      fontWeight: "normal",
+                      fontSize: "18px",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    Enter block names separated by commas in the order groups
+                    should visit them.
+                    <br />
+                    Example: <strong>Tour, LGI, Gym</strong>
                   </p>
                   <div className="form-row">
                     <label style={labelStyle}>Block Order:</label>
@@ -348,10 +371,20 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                       }
                     />
                   </div>
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "20px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginTop: "20px",
+                    }}
+                  >
                     <SaveButton
                       onClick={() => handleSavePattern(pattern.patternId)}
-                      style={{ width: "150px", fontSize: "20px", height: "50px" }}
+                      style={{
+                        width: "150px",
+                        fontSize: "20px",
+                        height: "50px",
+                      }}
                     >
                       Save
                     </SaveButton>
@@ -364,8 +397,16 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
 
           {/* Add New Pattern */}
           <InfoBox headerText="Add New Pattern">
-            <p style={{ color: "var(--textBlack)", fontWeight: "normal", fontSize: "18px", marginBottom: "20px" }}>
-              Enter block names separated by commas. Example: <strong>Gym, Tour, LGI</strong>
+            <p
+              style={{
+                color: "var(--textBlack)",
+                fontWeight: "normal",
+                fontSize: "18px",
+                marginBottom: "20px",
+              }}
+            >
+              Enter block names separated by commas. Example:{" "}
+              <strong>Gym, Tour, LGI</strong>
             </p>
             <div className="form-row" style={{ flexWrap: "wrap", gap: "20px" }}>
               <label style={labelStyle}>Block Order:</label>
@@ -381,7 +422,10 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                 style={{ width: "160px", fontSize: "20px", height: "50px" }}
               >
                 Add
-                <i className="bi bi-plus-circle" style={{ marginLeft: "10px", fontSize: "22px" }} />
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginLeft: "10px", fontSize: "22px" }}
+                />
               </AddButton>
             </div>
           </InfoBox>
@@ -393,13 +437,27 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
       ══════════════════════════════════════════════ */}
       {activeSection === "schedule" && (
         <InfoBox headerText="Block Schedule">
-          <p style={{ color: "var(--textBlack)", fontWeight: "normal", fontSize: "18px", marginBottom: "30px" }}>
-            Set the start time and duration for each block. Block names must match exactly what
-            is used in the Event Order Patterns (e.g. Tour, LGI, Gym).
+          <p
+            style={{
+              color: "var(--textBlack)",
+              fontWeight: "normal",
+              fontSize: "18px",
+              marginBottom: "30px",
+            }}
+          >
+            Set the start time and duration for each block. Block names must
+            match exactly what is used in the Event Order Patterns (e.g. Tour,
+            LGI, Gym).
           </p>
 
           {blocksState.length === 0 && (
-            <p style={{ color: "var(--textBlack)", fontWeight: "normal", fontSize: "18px" }}>
+            <p
+              style={{
+                color: "var(--textBlack)",
+                fontWeight: "normal",
+                fontSize: "18px",
+              }}
+            >
               No blocks defined yet. Add one below.
             </p>
           )}
@@ -407,12 +465,27 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
           {blocksState.map((block) => (
             <div
               key={block.blockScheduleId}
-              style={{ borderBottom: "2px solid var(--primaryBlue)", paddingBottom: "20px", marginBottom: "20px" }}
+              style={{
+                borderBottom: "2px solid var(--primaryBlue)",
+                paddingBottom: "20px",
+                marginBottom: "20px",
+              }}
             >
-              <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px" }}>
-                <span style={{ ...labelStyle, minWidth: "80px" }}>{block.blockName}</span>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <span style={{ ...labelStyle, minWidth: "80px" }}>
+                  {block.blockName}
+                </span>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
                   <label style={labelStyle}>Start Time:</label>
                   <input
                     type="text"
@@ -422,29 +495,41 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                     onChange={(e) =>
                       setBlockEdits((prev) => ({
                         ...prev,
-                        [block.blockScheduleId]: { ...prev[block.blockScheduleId], startTime: e.target.value },
+                        [block.blockScheduleId]: {
+                          ...prev[block.blockScheduleId],
+                          startTime: e.target.value,
+                        },
                       }))
                     }
                   />
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
                   <label style={labelStyle}>Duration (min):</label>
                   <input
                     type="number"
                     style={{ ...inputStyle, width: "140px" }}
                     placeholder="e.g. 45"
-                    value={blockEdits[block.blockScheduleId]?.durationMinutes ?? ""}
+                    value={
+                      blockEdits[block.blockScheduleId]?.durationMinutes ?? ""
+                    }
                     onChange={(e) =>
                       setBlockEdits((prev) => ({
                         ...prev,
-                        [block.blockScheduleId]: { ...prev[block.blockScheduleId], durationMinutes: e.target.value },
+                        [block.blockScheduleId]: {
+                          ...prev[block.blockScheduleId],
+                          durationMinutes: e.target.value,
+                        },
                       }))
                     }
                   />
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
                   <SaveButton
                     onClick={() => handleSaveBlock(block)}
                     style={{ width: "120px", fontSize: "18px", height: "48px" }}
@@ -453,9 +538,15 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                   </SaveButton>
                   <button
                     style={iconBtn}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primaryRed)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--primaryBlue)")}
-                    onClick={() => handleDeleteBlock(block.blockScheduleId, block.blockName)}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "var(--primaryRed)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "var(--primaryBlue)")
+                    }
+                    onClick={() =>
+                      handleDeleteBlock(block.blockScheduleId, block.blockName)
+                    }
                   >
                     <i className="bi bi-trash" />
                   </button>
@@ -465,12 +556,30 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
           ))}
 
           {/* Add New Block */}
-          <div style={{ marginTop: "30px", paddingTop: "20px", borderTop: "3px solid var(--primaryRed)" }}>
-            <label className="info-label" style={{ marginBottom: "20px", display: "block" }}>
+          <div
+            style={{
+              marginTop: "30px",
+              paddingTop: "20px",
+              borderTop: "3px solid var(--primaryRed)",
+            }}
+          >
+            <label
+              className="info-label"
+              style={{ marginBottom: "20px", display: "block" }}
+            >
               Add New Block:
             </label>
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                gap: "20px",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <label style={labelStyle}>Block Name:</label>
                 <input
                   type="text"
@@ -480,7 +589,9 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                   onChange={(e) => setNewBlockName(e.target.value)}
                 />
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <label style={labelStyle}>Start Time:</label>
                 <input
                   type="text"
@@ -490,7 +601,9 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                   onChange={(e) => setNewBlockTime(e.target.value)}
                 />
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 <label style={labelStyle}>Duration (min):</label>
                 <input
                   type="number"
@@ -505,7 +618,10 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                 style={{ width: "160px", fontSize: "20px", height: "50px" }}
               >
                 Add
-                <i className="bi bi-plus-circle" style={{ marginLeft: "10px", fontSize: "22px" }} />
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginLeft: "10px", fontSize: "22px" }}
+                />
               </AddButton>
             </div>
           </div>
@@ -520,7 +636,14 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
       {activeSection === "routes" && (
         <>
           {routesState.length === 0 ? (
-            <div style={{ marginTop: "60px", fontSize: "22px", color: "var(--primaryBlue)", textAlign: "center" }}>
+            <div
+              style={{
+                marginTop: "60px",
+                fontSize: "22px",
+                color: "var(--primaryBlue)",
+                textAlign: "center",
+              }}
+            >
               No routes yet. Routes are created automatically when you click
               <strong> Create Groups</strong> on the Upload page.
             </div>
@@ -534,7 +657,14 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                   <section>
                     {/* Stops table */}
                     {route.stops.length === 0 ? (
-                      <p style={{ color: "var(--textBlack)", fontWeight: "normal", fontSize: "18px", marginBottom: "20px" }}>
+                      <p
+                        style={{
+                          color: "var(--textBlack)",
+                          fontWeight: "normal",
+                          fontSize: "18px",
+                          marginBottom: "20px",
+                        }}
+                      >
                         No stops yet. Add one below.
                       </p>
                     ) : (
@@ -549,42 +679,46 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                       >
                         <thead>
                           <tr>
-                            {["#", "Location", "Duration (min)", ""].map((h, i) => (
-                              <th
-                                key={i}
-                                style={{
-                                  backgroundColor: "var(--primaryBlue)",
-                                  color: "white",
-                                  fontWeight: "bold",
-                                  textAlign: "center",
-                                  padding: "12px",
-                                  border: "2px solid var(--primaryBlue)",
-                                }}
-                              >
-                                {h}
-                              </th>
-                            ))}
+                            {["#", "Location", "Duration (min)", ""].map(
+                              (h, i) => (
+                                <th
+                                  key={i}
+                                  style={{
+                                    backgroundColor: "var(--primaryBlue)",
+                                    color: "white",
+                                    fontWeight: "bold",
+                                    textAlign: "center",
+                                    padding: "12px",
+                                    border: "2px solid var(--primaryBlue)",
+                                  }}
+                                >
+                                  {h}
+                                </th>
+                              ),
+                            )}
                           </tr>
                         </thead>
                         <tbody>
                           {route.stops.map((stop) => (
                             <tr key={stop.routeStopId}>
-                              {[stop.stopOrder, stop.location ?? "Unknown", `${stop.durationMinutes} min`].map(
-                                (val, i) => (
-                                  <td
-                                    key={i}
-                                    style={{
-                                      backgroundColor: "white",
-                                      textAlign: "center",
-                                      padding: "12px",
-                                      border: "2px solid var(--primaryBlue)",
-                                      fontSize: "20px",
-                                    }}
-                                  >
-                                    {val}
-                                  </td>
-                                ),
-                              )}
+                              {[
+                                stop.stopOrder,
+                                stop.location ?? "Unknown",
+                                `${stop.durationMinutes} min`,
+                              ].map((val, i) => (
+                                <td
+                                  key={i}
+                                  style={{
+                                    backgroundColor: "white",
+                                    textAlign: "center",
+                                    padding: "12px",
+                                    border: "2px solid var(--primaryBlue)",
+                                    fontSize: "20px",
+                                  }}
+                                >
+                                  {val}
+                                </td>
+                              ))}
                               <td
                                 style={{
                                   backgroundColor: "white",
@@ -595,9 +729,20 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                               >
                                 <button
                                   style={iconBtn}
-                                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primaryRed)")}
-                                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--primaryBlue)")}
-                                  onClick={() => handleDeleteStop(route.routeId, stop.routeStopId)}
+                                  onMouseEnter={(e) =>
+                                    (e.currentTarget.style.color =
+                                      "var(--primaryRed)")
+                                  }
+                                  onMouseLeave={(e) =>
+                                    (e.currentTarget.style.color =
+                                      "var(--primaryBlue)")
+                                  }
+                                  onClick={() =>
+                                    handleDeleteStop(
+                                      route.routeId,
+                                      stop.routeStopId,
+                                    )
+                                  }
                                 >
                                   <i className="bi bi-trash" />
                                 </button>
@@ -609,33 +754,67 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                     )}
 
                     {/* Add Stop form */}
-                    <div style={{ borderTop: "2px solid var(--primaryBlue)", paddingTop: "20px", marginTop: "10px" }}>
-                      <label className="info-label" style={{ marginBottom: "15px", display: "block" }}>
+                    <div
+                      style={{
+                        borderTop: "2px solid var(--primaryBlue)",
+                        paddingTop: "20px",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <label
+                        className="info-label"
+                        style={{ marginBottom: "15px", display: "block" }}
+                      >
                         Add Stop:
                       </label>
-                      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          gap: "20px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
                           <label style={labelStyle}>Location:</label>
                           <select
                             className="form-select"
                             style={{ width: "280px", fontSize: "18px" }}
                             value={newStopHallway[route.routeId] ?? ""}
                             onChange={(e) =>
-                              setNewStopHallway((prev) => ({ ...prev, [route.routeId]: e.target.value }))
+                              setNewStopHallway((prev) => ({
+                                ...prev,
+                                [route.routeId]: e.target.value,
+                              }))
                             }
                           >
                             <option value="" disabled>
                               Select a stop...
                             </option>
                             {hallways.map((h) => (
-                              <option key={h.hallwayStopId} value={h.hallwayStopId}>
+                              <option
+                                key={h.hallwayStopId}
+                                value={h.hallwayStopId}
+                              >
                                 {h.location}
                               </option>
                             ))}
                           </select>
                         </div>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                          }}
+                        >
                           <label style={labelStyle}>Duration (min):</label>
                           <input
                             type="number"
@@ -643,17 +822,27 @@ export default function AdminRoutesUI({ patterns, blocks, routes, hallways }: Pr
                             placeholder="e.g. 10"
                             value={newStopDuration[route.routeId] ?? ""}
                             onChange={(e) =>
-                              setNewStopDuration((prev) => ({ ...prev, [route.routeId]: e.target.value }))
+                              setNewStopDuration((prev) => ({
+                                ...prev,
+                                [route.routeId]: e.target.value,
+                              }))
                             }
                           />
                         </div>
 
                         <AddButton
                           onClick={() => handleAddStop(route.routeId)}
-                          style={{ width: "130px", fontSize: "18px", height: "50px" }}
+                          style={{
+                            width: "130px",
+                            fontSize: "18px",
+                            height: "50px",
+                          }}
                         >
                           Add
-                          <i className="bi bi-plus-circle" style={{ marginLeft: "8px", fontSize: "20px" }} />
+                          <i
+                            className="bi bi-plus-circle"
+                            style={{ marginLeft: "8px", fontSize: "20px" }}
+                          />
                         </AddButton>
                       </div>
                     </div>

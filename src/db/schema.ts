@@ -100,96 +100,65 @@ export const siteContent = pgTable("site_content", {
   content: text("content").notNull(),
 });
 
+// ---------------- FAQ_content ----------------
+export const faqContentData = pgTable("faq_content", {
+  id:      serial("id").primaryKey(),
+  question: text("question").notNull(),
+  answer: text("answer").notNull(),
+});
+
 // ============================================================
-//  NEW — ROUTE MANAGEMENT SYSTEM
+//  ROUTE MANAGEMENT SYSTEM
 // ============================================================
 
 // ---------------- event_order_pattern ----------------
-// Replaces event_orders.json. Stores the rotation patterns
-// like ["Tour","LGI","GYM"]. Admin can edit these on the site.
-// createGroups() reads from here instead of the JSON file.
 export const eventOrderPattern = pgTable("event_order_pattern", {
   patternId:  serial("pattern_id").primaryKey(),
   patternNum: integer("pattern_num").notNull().unique(),
-  // 1-indexed, matches position in the original JSON array
   blockOrder: text("block_order").notNull(),
-  // JSON string e.g. '["Tour","LGI","GYM"]'
-  // Same format as groupData.eventOrder so all existing
-  // JSON.parse(eventOrder) calls need no changes.
 });
 
 // ---------------- block_schedule ----------------
-// One row per block name (Tour, LGI, GYM, etc.).
-// Admin sets start time and duration for each block.
-// Arrival times at stops are always computed from this — never stored.
 export const blockSchedule = pgTable("block_schedule", {
   blockScheduleId: serial("block_schedule_id").primaryKey(),
   blockName:       text("block_name").notNull().unique(),
-  // Must match values used inside eventOrderPattern.blockOrder
-  // e.g. "Tour", "LGI", "GYM"
   startTime:       text("start_time").notNull(),
-  // e.g. "9:00 AM"
   durationMinutes: integer("duration_minutes").notNull(),
-  // Total length of this block in minutes
 });
 
 // ---------------- tour_route ----------------
-// One row per route number. Thin table whose only job is to
-// give tour_route_stop a proper FK target.
-// routeNum matches groupData.routeNum exactly.
 export const tourRoute = pgTable("tour_route", {
   routeId:  serial("route_id").primaryKey(),
   routeNum: integer("route_num").notNull().unique(),
-  // e.g. 1, 2, 3 — matches groupData.routeNum
 });
 
 // ---------------- tour_route_stop ----------------
-// The ordered list of hallway stops for a given route.
-// Admin builds this on the site: pick a stop, enter minutes.
-// Deleting a tourRoute cascades and removes its stops automatically.
 export const tourRouteStop = pgTable(
   "tour_route_stop",
   {
     routeStopId:     serial("route_stop_id").primaryKey(),
-    routeId:         integer("route_id")
-                       .notNull()
-                       .references(() => tourRoute.routeId, { onDelete: "cascade" }),
-    hallwayStopId:   integer("hallway_stop_id")
-                       .notNull()
-                       .references(() => hallwayStopData.hallwayStopId),
+    routeId:         integer("route_id").notNull().references(() => tourRoute.routeId, { onDelete: "cascade" }),
+    hallwayStopId:   integer("hallway_stop_id").notNull().references(() => hallwayStopData.hallwayStopId),
     stopOrder:       integer("stop_order").notNull(),
-    // 1, 2, 3 … defines the walking sequence within the route
     durationMinutes: integer("duration_minutes").notNull(),
-    // How many minutes the group spends at this stop
   },
   (t) => ({
-    // A route cannot visit the same stop twice
     uniqueRouteStop:  unique("unique_route_stop").on(t.routeId, t.hallwayStopId),
-    // A route cannot have two stops at the same position
     uniqueRouteOrder: unique("unique_route_order").on(t.routeId, t.stopOrder),
   }),
 );
 
 // ---------------- group_route_attendance ----------------
-// Hallway host marks a group as present when they arrive at their stop.
-// One row per group per stop — one time for the whole day.
-// markedAt is set server-side when present flips to true.
 export const groupRouteAttendance = pgTable(
   "group_route_attendance",
   {
     attendanceId:  serial("attendance_id").primaryKey(),
-    groupId:       text("group_id")
-                     .notNull()
-                     .references(() => groupData.groupId, { onDelete: "cascade" }),
-    hallwayStopId: integer("hallway_stop_id")
-                     .notNull()
-                     .references(() => hallwayStopData.hallwayStopId),
+    groupId:       text("group_id").notNull().references(() => groupData.groupId, { onDelete: "cascade" }),
+    hallwayStopId: integer("hallway_stop_id").notNull().references(() => hallwayStopData.hallwayStopId),
     present:       boolean("present").notNull().default(false),
     markedAt:      timestamp("marked_at"),
-    // null until the hallway host marks them present
   },
   (t) => ({
-    // One record per group per stop, enforced at DB level
     uniqueGroupStop: unique("unique_group_stop").on(t.groupId, t.hallwayStopId),
   }),
 );

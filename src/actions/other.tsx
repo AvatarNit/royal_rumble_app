@@ -9,6 +9,7 @@ import {
   mentorData,
   groupData,
   groupLeaderData,
+  faqContentData,
 } from "@/db/schema";
 import { eq, asc, and, sql } from "drizzle-orm";
 
@@ -354,6 +355,18 @@ export const getRoyalRumbleEventId = async (): Promise<number | null> => {
   return royalRumbleEvent[0]?.eventId ?? null;
 };
 
+export const getFAQContent = async () => {
+  const faqContent = await db
+    .select({
+      id: faqContentData.id,
+      question: faqContentData.question,
+      answer: faqContentData.answer,
+    })
+    .from(faqContentData)
+    .orderBy(asc(faqContentData.id));
+  return faqContent;
+};
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -393,6 +406,19 @@ export const addEvent = async (data: {
     job: data.job,
     date: data.date,
     eventId: Number(eventResult[0].eventId),
+  };
+};
+
+export const addFAQEntry = async (question: string, answer: string) => {
+  const result = await db
+    .insert(faqContentData)
+    .values({ question, answer })
+    .returning();
+  return {
+    success: true,
+    id: result[0].id,
+    question,
+    answer,
   };
 };
 
@@ -460,6 +486,24 @@ export const updateMentorAttendanceById = async (
     status: status,
   };
 };
+
+export const updateFAQEntryById = async (
+  id: number,
+  question: string,
+  answer: string,
+) => {
+  await db
+    .update(faqContentData)
+    .set({ question, answer })
+    .where(eq(faqContentData.id, id));
+  return {
+    success: true,
+    id,
+    question,
+    answer,
+  };
+};
+
 //--------------------------------------------------------------------------------------//
 //                                    End of Update                                     //
 //--------------------------------------------------------------------------------------//
@@ -476,6 +520,12 @@ export const deleteEvent = async (eventId: number) => {
     .where(eq(mentorAttendanceData.eventId, eventId));
   return { success: true, eventId: eventId };
 };
+
+export const deleteFAQEntry = async (id: number) => {
+  await db.delete(faqContentData).where(eq(faqContentData.id, id));
+  return { success: true, id };
+};
+
 //--------------------------------------------------------------------------------------//
 //                                    End of Delete                                     //
 //--------------------------------------------------------------------------------------//

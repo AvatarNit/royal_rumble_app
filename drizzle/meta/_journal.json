@@ -204,6 +204,13 @@
       "when": 1773637085512,
       "tag": "0028_damp_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1773841023689,
+      "tag": "0029_lame_snowbird",
+      "breakpoints": true
     }
   ]
 }

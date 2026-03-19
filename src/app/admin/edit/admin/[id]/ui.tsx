@@ -26,7 +26,8 @@ export default function AdminEditAdminUI({
   const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
 
-  // Load admin data
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   useEffect(() => {
     const loadAdmin = async () => {
       const admin = await getAdminById(adminId);
@@ -37,14 +38,31 @@ export default function AdminEditAdminUI({
     loadAdmin();
   }, [adminId]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!fName.trim()) newErrors.fName = "First name is required.";
+    if (!lName.trim()) newErrors.lName = "Last name is required.";
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
+
     await updateAdminByID(adminId, {
       f_name: fName,
       l_name: lName,
       email: email,
     });
     showAlert(`Admin ${fName} ${lName} updated successfully!`, "success");
-    router.push("/admin/admin"); // redirect after save
+    router.push("/admin/admin");
   };
 
   const contentBoxStyle = {
@@ -78,33 +96,48 @@ export default function AdminEditAdminUI({
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">First Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Admin First Name"
-              value={fName}
-              onChange={(e) => setFName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.fName ? " is-invalid" : ""}`}
+                placeholder="Admin First Name"
+                value={fName}
+                onChange={(e) => setFName(e.target.value)}
+              />
+              {errors.fName && (
+                <div className="invalid-feedback d-block">{errors.fName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Last Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Admin Last Name"
-              value={lName}
-              onChange={(e) => setLName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.lName ? " is-invalid" : ""}`}
+                placeholder="Admin Last Name"
+                value={lName}
+                onChange={(e) => setLName(e.target.value)}
+              />
+              {errors.lName && (
+                <div className="invalid-feedback d-block">{errors.lName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Admin Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.email ? " is-invalid" : ""}`}
+                placeholder="Admin Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
           </div>
         </div>
       </div>

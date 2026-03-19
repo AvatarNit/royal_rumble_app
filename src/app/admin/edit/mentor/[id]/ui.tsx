@@ -23,7 +23,7 @@ export default function AdminEditMentorUI({
   const [fName, setFName] = useState("");
   const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
-  const [gradYear, setGradYear] = useState(0);
+  const [gradYear, setGradYear] = useState("");
   const [job, setJob] = useState("");
   const [pizzaType, setPizzaType] = useState("");
   const [languages, setLanguages] = useState("");
@@ -31,7 +31,8 @@ export default function AdminEditMentorUI({
   const [tshirtSize, setTshirtSize] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
 
-  //   Load mentor data
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   useEffect(() => {
     const loadMentor = async () => {
       const mentor = await getMentorById(mentorId);
@@ -39,7 +40,7 @@ export default function AdminEditMentorUI({
       setLName(mentor.lName ?? "");
       setTshirtSize(mentor.tshirtSize ?? "");
       setEmail(mentor.email ?? "");
-      setGradYear(mentor.gradYear ?? 0);
+      setGradYear(mentor.gradYear?.toString() ?? "");
       setJob(mentor.job ?? "");
       setPizzaType(mentor.pizzaType ?? "");
       setLanguages(mentor.languages ?? "");
@@ -49,13 +50,41 @@ export default function AdminEditMentorUI({
     loadMentor();
   }, [mentorId]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!fName.trim()) newErrors.fName = "First name is required.";
+    if (!lName.trim()) newErrors.lName = "Last name is required.";
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+    if (!phoneNum.trim()) {
+      newErrors.phoneNum = "Phone number is required.";
+    } else if (!/^\d{10}$/.test(phoneNum)) {
+      newErrors.phoneNum = "Phone number must be exactly 10 digits.";
+    }
+    if (!gradYear.trim()) {
+      newErrors.gradYear = "Graduation year is required.";
+    } else if (!/^\d{4}$/.test(gradYear)) {
+      newErrors.gradYear = "Enter a valid 4-digit graduation year.";
+    }
+    if (!job) newErrors.job = "Please select a job.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
+
     await updateMentorByID(mentorId, {
       f_name: fName,
       l_name: lName,
       tshirt_size: tshirtSize,
       email: email,
-      grad_year: gradYear,
+      grad_year: Number(gradYear),
       job: job,
       pizza_type: pizzaType,
       languages: languages,
@@ -63,8 +92,9 @@ export default function AdminEditMentorUI({
       phone_num: phoneNum,
     });
     showAlert(`Mentor ${fName} ${lName} updated successfully!`, "success");
-    router.push("/admin/mentor"); // redirect after save
+    router.push("/admin/mentor");
   };
+
   const contentBoxStyle = {
     border: "5px solid var(--primaryRed)",
     padding: "16px",
@@ -95,73 +125,106 @@ export default function AdminEditMentorUI({
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">First Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Mentor First Name"
-              value={fName}
-              onChange={(e) => setFName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.fName ? " is-invalid" : ""}`}
+                placeholder="Mentor First Name"
+                value={fName}
+                onChange={(e) => setFName(e.target.value)}
+              />
+              {errors.fName && (
+                <div className="invalid-feedback d-block">{errors.fName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Last Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Mentor Last Name"
-              value={lName}
-              onChange={(e) => setLName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.lName ? " is-invalid" : ""}`}
+                placeholder="Mentor Last Name"
+                value={lName}
+                onChange={(e) => setLName(e.target.value)}
+              />
+              {errors.lName && (
+                <div className="invalid-feedback d-block">{errors.lName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Mentor Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.email ? " is-invalid" : ""}`}
+                placeholder="Mentor Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
           </div>
-
           <div className="form-row">
             <label className="form-label">Phone:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Mentor Phone"
-              value={phoneNum}
-              onChange={(e) => setPhoneNum(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.phoneNum ? " is-invalid" : ""}`}
+                placeholder="Mentor Phone"
+                value={phoneNum}
+                onChange={(e) => setPhoneNum(e.target.value)}
+              />
+              {errors.phoneNum && (
+                <div className="invalid-feedback d-block">
+                  {errors.phoneNum}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Grad Year:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Mentor Grad Year"
-              value={gradYear}
-              onChange={(e) => setGradYear(Number(e.target.value))}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.gradYear ? " is-invalid" : ""}`}
+                placeholder="Mentor Grad Year"
+                value={gradYear}
+                onChange={(e) => setGradYear(e.target.value)}
+              />
+              {errors.gradYear && (
+                <div className="invalid-feedback d-block">
+                  {errors.gradYear}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Job:</label>
-            <select
-              className="form-select"
-              aria-label="Default select example"
-              onChange={(e) => setJob(e.target.value)}
-              value={job || ""}
-            >
-              {job === "" ? (
-                <option disabled value="">
-                  Select Job
-                </option>
-              ) : null}
-              <option value="GROUP LEADER">GROUP LEADER</option>
-              <option value="HALLWAY HOST">HALLWAY HOST</option>
-              <option value="SPIRIT SESSION">SPIRIT SESSION</option>
-              <option value="UTILITY SQUAD">UTILITY SQUAD</option>
-            </select>
+            <div>
+              <select
+                className={`form-select${errors.job ? " is-invalid" : ""}`}
+                aria-label="Default select example"
+                onChange={(e) => setJob(e.target.value)}
+                value={job || ""}
+              >
+                {job === "" ? (
+                  <option disabled value="">
+                    Select Job
+                  </option>
+                ) : null}
+                <option value="GROUP LEADER">GROUP LEADER</option>
+                <option value="HALLWAY HOST">HALLWAY HOST</option>
+                <option value="SPIRIT SESSION">SPIRIT SESSION</option>
+                <option value="UTILITY SQUAD">UTILITY SQUAD</option>
+              </select>
+              {errors.job && (
+                <div className="invalid-feedback d-block">{errors.job}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">T-Shirt Size:</label>

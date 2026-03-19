@@ -28,7 +28,8 @@ export default function AdminEditFreshmenUI({
   const [interests, setInterests] = useState("");
   const [healthConcerns, setHealthConcerns] = useState("");
 
-  //   Load freshman data
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   useEffect(() => {
     const loadFreshman = async () => {
       const freshman = await getFreshmanById(freshmanId);
@@ -43,7 +44,26 @@ export default function AdminEditFreshmenUI({
     loadFreshman();
   }, [freshmanId]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!fName.trim()) newErrors.fName = "First name is required.";
+    if (!lName.trim()) newErrors.lName = "Last name is required.";
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+    if (!primaryLanguage.trim())
+      newErrors.primaryLanguage = "Primary language is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
+
     await updateFreshmanByID(freshmanId, {
       f_name: fName,
       l_name: lName,
@@ -54,8 +74,9 @@ export default function AdminEditFreshmenUI({
       health_concerns: healthConcerns,
     });
     showAlert(`Freshman ${fName} ${lName} updated successfully!`, "success");
-    router.push("/admin/freshmen"); // redirect after save
+    router.push("/admin/freshmen");
   };
+
   const contentBoxStyle = {
     border: "5px solid var(--primaryRed)",
     padding: "16px",
@@ -87,33 +108,48 @@ export default function AdminEditFreshmenUI({
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">First Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Freshman First Name"
-              value={fName}
-              onChange={(e) => setFName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.fName ? " is-invalid" : ""}`}
+                placeholder="Freshman First Name"
+                value={fName}
+                onChange={(e) => setFName(e.target.value)}
+              />
+              {errors.fName && (
+                <div className="invalid-feedback d-block">{errors.fName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Last Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Freshman Last Name"
-              value={lName}
-              onChange={(e) => setLName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.lName ? " is-invalid" : ""}`}
+                placeholder="Freshman Last Name"
+                value={lName}
+                onChange={(e) => setLName(e.target.value)}
+              />
+              {errors.lName && (
+                <div className="invalid-feedback d-block">{errors.lName}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Freshman Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.email ? " is-invalid" : ""}`}
+                placeholder="Freshman Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">T-Shirt Size:</label>
@@ -127,13 +163,20 @@ export default function AdminEditFreshmenUI({
           </div>
           <div className="form-row">
             <label className="form-label">Primary Language:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Freshman Primary Language"
-              value={primaryLanguage}
-              onChange={(e) => setPrimaryLanguage(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.primaryLanguage ? " is-invalid" : ""}`}
+                placeholder="Freshman Primary Language"
+                value={primaryLanguage}
+                onChange={(e) => setPrimaryLanguage(e.target.value)}
+              />
+              {errors.primaryLanguage && (
+                <div className="invalid-feedback d-block">
+                  {errors.primaryLanguage}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Interests:</label>

@@ -43,7 +43,6 @@ interface FreshmanData {
 const normalizeEventOrder = (value: string | null): string => {
   if (!value) return "";
 
-  // JSON string from DB
   if (value.trim().startsWith("[")) {
     try {
       return JSON.parse(value).join(",");
@@ -52,7 +51,6 @@ const normalizeEventOrder = (value: string | null): string => {
     }
   }
 
-  // Comma-separated string with spaces
   return value
     .split(",")
     .map((v) => v.trim())
@@ -76,11 +74,13 @@ export default function EditFreshmenGroupUI({
   const router = useRouter();
 
   const [groupId, setGroupId] = useState("");
-  const [routeNum, setRouteNum] = useState(0);
+  const [routeNum, setRouteNum] = useState<string>("");
   const [eventOrder, setEventOrder] = useState("");
   const [possibleGroups, setPossibleGroups] = useState<
-    { group_id: string; name?: string }[]
+    Array<{ group_id: string; name?: string }>
   >([]);
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   /* ---------------- SYNC GROUP DATA ---------------- */
 
@@ -88,7 +88,7 @@ export default function EditFreshmenGroupUI({
     if (!groupData) return;
 
     setGroupId(groupData.groupId.toString());
-    setRouteNum(groupData.routeNum || 0);
+    setRouteNum(groupData.routeNum?.toString() || "");
     setEventOrder(normalizeEventOrder(groupData.eventOrder));
   }, [groupData]);
 
@@ -108,14 +108,36 @@ export default function EditFreshmenGroupUI({
     fetchGroups();
   }, []);
 
+  /* ---------------- VALIDATE ---------------- */
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!groupId.trim()) newErrors.groupId = "Group ID is required.";
+    if (!routeNum.toString().trim()) {
+      newErrors.routeNum = "Route number is required.";
+    } else if (
+      !/^\d+$/.test(routeNum.toString()) ||
+      parseInt(routeNum.toString()) <= 0
+    ) {
+      newErrors.routeNum = "Route must be a positive integer.";
+    }
+    if (!eventOrder) newErrors.eventOrder = "Please select an event order.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   /* ---------------- SAVE ---------------- */
 
   const handleSave = async () => {
+    if (!validate()) return;
+
     const result = await updateGroupByGroupId(
       groupData.groupId.toString(),
       groupId,
       eventOrder.split(","),
-      routeNum,
+      Number(routeNum),
     );
 
     if (result.success) {
@@ -159,47 +181,64 @@ export default function EditFreshmenGroupUI({
           {/* GROUP ID */}
           <div className="form-row">
             <label className="form-label">Group ID:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={groupId}
-              onChange={(e) => setGroupId(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.groupId ? " is-invalid" : ""}`}
+                value={groupId}
+                onChange={(e) => setGroupId(e.target.value)}
+              />
+              {errors.groupId && (
+                <div className="invalid-feedback d-block">{errors.groupId}</div>
+              )}
+            </div>
           </div>
 
           {/* ROUTE */}
           <div className="form-row">
             <label className="form-label">Route:</label>
-            <input
-              type="number"
-              className="form-input"
-              value={routeNum}
-              onChange={(e) => setRouteNum(Number(e.target.value))}
-            />
+            <div>
+              <input
+                type="number"
+                className={`form-input${errors.routeNum ? " is-invalid" : ""}`}
+                value={routeNum}
+                onChange={(e) => setRouteNum(e.target.value)}
+              />
+              {errors.routeNum && (
+                <div className="invalid-feedback d-block">
+                  {errors.routeNum}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* EVENT ORDER */}
           <div className="form-row">
             <label className="form-label">Event Order:</label>
-            <select
-              className="form-input"
-              value={eventOrder}
-              onChange={(e) => setEventOrder(e.target.value)}
-            >
-              <option value="" disabled>
-                Select Order
-              </option>
-
-              {orders.map((order, index) => {
-                const value = order.join(",");
-
-                return (
-                  <option key={index} value={value}>
-                    {order.join(", ")}
-                  </option>
-                );
-              })}
-            </select>
+            <div>
+              <select
+                className={`form-input${errors.eventOrder ? " is-invalid" : ""}`}
+                value={eventOrder}
+                onChange={(e) => setEventOrder(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Order
+                </option>
+                {orders.map((order, index) => {
+                  const value = order.join(",");
+                  return (
+                    <option key={index} value={value}>
+                      {order.join(", ")}
+                    </option>
+                  );
+                })}
+              </select>
+              {errors.eventOrder && (
+                <div className="invalid-feedback d-block">
+                  {errors.eventOrder}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* SAVE */}

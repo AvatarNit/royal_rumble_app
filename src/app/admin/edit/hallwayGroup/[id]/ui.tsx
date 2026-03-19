@@ -39,16 +39,28 @@ export default function EditHallwayGroupUI({
   const router = useRouter();
   const [location, setLocation] = useState("");
   const hallwayId = Number(hallwayData.hallwayStopId);
-  console.log("Possible Hallways:", possibleHallways);
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setLocation(hallwayData.location ?? "");
   }, [hallwayData.location]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!location.trim()) newErrors.location = "Location is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
+    if (!validate()) return;
+
     await updateHallwayByID(hallwayId, location);
     showAlert(`Hallway ${hallwayId} updated successfully!`, "success");
-    router.push("/admin/all_groups"); // redirect after save
+    router.push("/admin/all_groups");
   };
 
   const contentBoxStyle = {
@@ -80,13 +92,20 @@ export default function EditHallwayGroupUI({
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">Location:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Location:"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.location ? " is-invalid" : ""}`}
+                placeholder="Location:"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+              {errors.location && (
+                <div className="invalid-feedback d-block">
+                  {errors.location}
+                </div>
+              )}
+            </div>
           </div>
           <div className="d-flex justify-content-center">
             <SaveButton onClick={handleSave}>Save</SaveButton>

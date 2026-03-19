@@ -22,11 +22,33 @@ export default function AdminAddEvent() {
   const [description, setDescription] = useState("");
   const [isRoyalRumble, setIsRoyalRumble] = useState(false);
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const handleLogoClick = () => {
     router.push("/admin/events");
   };
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!name.trim()) newErrors.name = "Event name is required.";
+    if (!date) newErrors.date = "Date is required.";
+    if (!time.trim()) {
+      newErrors.time = "Time is required.";
+    } else if (!/^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/i.test(time.trim())) {
+      newErrors.time = "Time must be in HH:MM AM/PM format.";
+    }
+    if (!location.trim()) newErrors.location = "Location is required.";
+    if (!job) newErrors.job = "Please select who this event is assigned to.";
+    if (!description.trim()) newErrors.description = "Description is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAddClick = async () => {
+    if (!validate()) return;
+
     try {
       const event_return = await addEvent({
         name,
@@ -69,39 +91,62 @@ export default function AdminAddEvent() {
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">Event Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.name ? " is-invalid" : ""}`}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              {errors.name && (
+                <div className="invalid-feedback d-block">{errors.name}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Date:</label>
-            <input
-              type="date"
-              className="form-input"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <div>
+              <input
+                type="date"
+                className={`form-input${errors.date ? " is-invalid" : ""}`}
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+              {errors.date && (
+                <div className="invalid-feedback d-block">{errors.date}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Time:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.time ? " is-invalid" : ""}`}
+                placeholder="HH:MM AM/PM"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
+              {errors.time && (
+                <div className="invalid-feedback d-block">{errors.time}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Location:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.location ? " is-invalid" : ""}`}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+              {errors.location && (
+                <div className="invalid-feedback d-block">
+                  {errors.location}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row checkbox-row">
             <label className="checkbox-label">
@@ -115,17 +160,24 @@ export default function AdminAddEvent() {
             </label>
           </div>
           <label className="form-label">Description:</label>
-          <textarea
-            className="form-input-large"
-            rows={2}
-            onInput={(e) => {
-              const textarea = e.currentTarget;
-              textarea.style.height = "auto";
-              textarea.style.height = textarea.scrollHeight + "px";
-            }}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <div>
+            <textarea
+              className={`form-input-large${errors.description ? " is-invalid" : ""}`}
+              rows={2}
+              onInput={(e) => {
+                const textarea = e.currentTarget;
+                textarea.style.height = "auto";
+                textarea.style.height = textarea.scrollHeight + "px";
+              }}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            {errors.description && (
+              <div className="invalid-feedback d-block">
+                {errors.description}
+              </div>
+            )}
+          </div>
           <label className="form-label">Assign To:</label>
 
           <div style={{ width: "90%", marginTop: "20px" }}>
@@ -138,7 +190,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="groupLeader"
                       className="checkbox-input"
-                      onChange={(e) => setJob("GROUP LEADER")}
+                      onChange={() => setJob("GROUP LEADER")}
                     />
                     Group Leader
                   </label>
@@ -148,7 +200,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="hallwayHost"
                       className="checkbox-input"
-                      onChange={(e) => setJob("HALLWAY HOST")}
+                      onChange={() => setJob("HALLWAY HOST")}
                     />
                     Hallway Host
                   </label>
@@ -160,7 +212,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="all"
                       className="checkbox-input"
-                      onChange={(e) => setJob("ALL")}
+                      onChange={() => setJob("ALL")}
                     />
                     All
                   </label>
@@ -170,7 +222,7 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="spirit"
                       className="checkbox-input"
-                      onChange={(e) => setJob("SPIRIT SESSION")}
+                      onChange={() => setJob("SPIRIT SESSION")}
                     />
                     Spirit
                   </label>
@@ -180,12 +232,15 @@ export default function AdminAddEvent() {
                       name="mentorType"
                       value="utility"
                       className="checkbox-input"
-                      onChange={(e) => setJob("UTILITY SQUAD")}
+                      onChange={() => setJob("UTILITY SQUAD")}
                     />
                     Utility
                   </label>
                 </div>
               </form>
+              {errors.job && (
+                <div className="invalid-feedback d-block">{errors.job}</div>
+              )}
             </div>
           </div>
         </div>

@@ -20,11 +20,37 @@ export default function AdminAddFreshman() {
   const [email, setEmail] = useState("");
   const [primaryLanguage, setPrimaryLanguage] = useState("");
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const handleLogoClick = () => {
     router.push("/admin/add");
   };
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!f_name.trim()) newErrors.f_name = "First name is required.";
+    if (!l_name.trim()) newErrors.l_name = "Last name is required.";
+    if (!freshmenId.trim()) {
+      newErrors.freshmenId = "Student ID is required.";
+    } else if (!/^\d+$/.test(freshmenId) || parseInt(freshmenId) <= 0) {
+      newErrors.freshmenId = "Student ID must be a positive integer.";
+    }
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+    if (!primaryLanguage.trim())
+      newErrors.primaryLanguage = "Primary language is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAdd = async () => {
+    if (!validate()) return;
+
     try {
       const freshmen_return = await addFreshman({
         f_name: f_name,
@@ -38,7 +64,7 @@ export default function AdminAddFreshman() {
       }
       showAlert(
         `Freshman ${freshmen_return.f_name} ${freshmen_return.l_name} added successfully!`,
-        "success"
+        "success",
       );
       router.push("/admin/add/freshman");
     } catch (error) {
@@ -65,48 +91,77 @@ export default function AdminAddFreshman() {
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">First Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={f_name}
-              onChange={(e) => setf_name(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.f_name ? " is-invalid" : ""}`}
+                value={f_name}
+                onChange={(e) => setf_name(e.target.value)}
+              />
+              {errors.f_name && (
+                <div className="invalid-feedback d-block">{errors.f_name}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Last Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={l_name}
-              onChange={(e) => setl_name(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.l_name ? " is-invalid" : ""}`}
+                value={l_name}
+                onChange={(e) => setl_name(e.target.value)}
+              />
+              {errors.l_name && (
+                <div className="invalid-feedback d-block">{errors.l_name}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Student ID:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={freshmenId}
-              onChange={(e) => setFreshmenId(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.freshmenId ? " is-invalid" : ""}`}
+                value={freshmenId}
+                onChange={(e) => setFreshmenId(e.target.value)}
+              />
+              {errors.freshmenId && (
+                <div className="invalid-feedback d-block">
+                  {errors.freshmenId}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.email ? " is-invalid" : ""}`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Primary Language:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={primaryLanguage}
-              onChange={(e) => setPrimaryLanguage(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.primaryLanguage ? " is-invalid" : ""}`}
+                value={primaryLanguage}
+                onChange={(e) => setPrimaryLanguage(e.target.value)}
+              />
+              {errors.primaryLanguage && (
+                <div className="invalid-feedback d-block">
+                  {errors.primaryLanguage}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

@@ -11,6 +11,7 @@ import AddButton from "../../components/addButton";
 import SaveButton from "../../components/saveButton";
 import ViewDropdown from "../../components/viewDropdown";
 import InfoBox from "../../components/infoBox";
+import { addHallway } from "@/actions/group";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useAlert } from "../../context/AlertContext";
@@ -101,6 +102,9 @@ export default function AdminRoutesUI({
   const [activeSection, setActiveSection] = useState<
     "orders" | "schedule" | "routes"
   >("orders");
+
+  const [newHallway, setNewHallway] = useState("");
+  const [showHallwayModal, setShowHallwayModal] = useState(false);
 
   const [patternsState, setPatternsState] = useState<Pattern[]>(patterns);
 
@@ -666,210 +670,222 @@ export default function AdminRoutesUI({
               <strong> Create Groups</strong> on the Upload page.
             </div>
           ) : (
-            <ViewDropdown
-              header="Tour Routes"
-              sections={routesState.map((route) => ({
-                title: `Route ${route.routeNum} — ${route.stops.length} stop${route.stops.length !== 1 ? "s" : ""}`,
-                sectionId: route.routeId,
-                content: (
-                  <section>
-                    {/* Stops table */}
-                    {route.stops.length === 0 ? (
-                      <p
-                        style={{
-                          color: "var(--textBlack)",
-                          fontWeight: "normal",
-                          fontSize: "18px",
-                          marginBottom: "20px",
-                        }}
-                      >
-                        No stops yet. Add one below.
-                      </p>
-                    ) : (
-                      <table
-                        style={{
-                          borderCollapse: "collapse",
-                          width: "85%",
-                          margin: "0 auto 30px",
-                          border: "4px solid var(--primaryBlue)",
-                          fontFamily: "Poppins, sans-serif",
-                        }}
-                      >
-                        <thead>
-                          <tr>
-                            {["#", "Location", "Duration (min)", ""].map(
-                              (h, i) => (
-                                <th
-                                  key={i}
-                                  style={{
-                                    backgroundColor: "var(--primaryBlue)",
-                                    color: "white",
-                                    fontWeight: "bold",
-                                    textAlign: "center",
-                                    padding: "12px",
-                                    border: "2px solid var(--primaryBlue)",
-                                  }}
-                                >
-                                  {h}
-                                </th>
-                              ),
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {route.stops.map((stop) => (
-                            <tr key={stop.routeStopId}>
-                              {[
-                                stop.stopOrder,
-                                stop.location ?? "Unknown",
-                                `${stop.durationMinutes} min`,
-                              ].map((val, i) => (
+            <>
+              <AddButton
+                onClick={() => setShowHallwayModal(true)}
+                style={{ fontSize: "21px", justifyContent: "flex-end" }}
+              >
+                Add Hallway
+                <i
+                  className="bi bi-plus-circle"
+                  style={{ marginLeft: "30px", fontSize: "30px" }}
+                />
+              </AddButton>
+              <ViewDropdown
+                header="Tour Routes"
+                sections={routesState.map((route) => ({
+                  title: `Route ${route.routeNum} — ${route.stops.length} stop${route.stops.length !== 1 ? "s" : ""}`,
+                  sectionId: route.routeId,
+                  content: (
+                    <section>
+                      {/* Stops table */}
+                      {route.stops.length === 0 ? (
+                        <p
+                          style={{
+                            color: "var(--textBlack)",
+                            fontWeight: "normal",
+                            fontSize: "18px",
+                            marginBottom: "20px",
+                          }}
+                        >
+                          No stops yet. Add one below.
+                        </p>
+                      ) : (
+                        <table
+                          style={{
+                            borderCollapse: "collapse",
+                            width: "85%",
+                            margin: "0 auto 30px",
+                            border: "4px solid var(--primaryBlue)",
+                            fontFamily: "Poppins, sans-serif",
+                          }}
+                        >
+                          <thead>
+                            <tr>
+                              {["#", "Location", "Duration (min)", ""].map(
+                                (h, i) => (
+                                  <th
+                                    key={i}
+                                    style={{
+                                      backgroundColor: "var(--primaryBlue)",
+                                      color: "white",
+                                      fontWeight: "bold",
+                                      textAlign: "center",
+                                      padding: "12px",
+                                      border: "2px solid var(--primaryBlue)",
+                                    }}
+                                  >
+                                    {h}
+                                  </th>
+                                ),
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {route.stops.map((stop) => (
+                              <tr key={stop.routeStopId}>
+                                {[
+                                  stop.stopOrder,
+                                  stop.location ?? "Unknown",
+                                  `${stop.durationMinutes} min`,
+                                ].map((val, i) => (
+                                  <td
+                                    key={i}
+                                    style={{
+                                      backgroundColor: "white",
+                                      textAlign: "center",
+                                      padding: "12px",
+                                      border: "2px solid var(--primaryBlue)",
+                                      fontSize: "20px",
+                                    }}
+                                  >
+                                    {val}
+                                  </td>
+                                ))}
                                 <td
-                                  key={i}
                                   style={{
                                     backgroundColor: "white",
                                     textAlign: "center",
                                     padding: "12px",
                                     border: "2px solid var(--primaryBlue)",
-                                    fontSize: "20px",
                                   }}
                                 >
-                                  {val}
+                                  <button
+                                    style={iconBtn}
+                                    onMouseEnter={(e) =>
+                                      (e.currentTarget.style.color =
+                                        "var(--primaryRed)")
+                                    }
+                                    onMouseLeave={(e) =>
+                                      (e.currentTarget.style.color =
+                                        "var(--primaryBlue)")
+                                    }
+                                    onClick={() =>
+                                      setStopDeleteModal({
+                                        routeId: route.routeId,
+                                        routeStopId: stop.routeStopId,
+                                        stopOrder: stop.stopOrder,
+                                        location: stop.location,
+                                      })
+                                    }
+                                  >
+                                    <i className="bi bi-trash" />
+                                  </button>
                                 </td>
-                              ))}
-                              <td
-                                style={{
-                                  backgroundColor: "white",
-                                  textAlign: "center",
-                                  padding: "12px",
-                                  border: "2px solid var(--primaryBlue)",
-                                }}
-                              >
-                                <button
-                                  style={iconBtn}
-                                  onMouseEnter={(e) =>
-                                    (e.currentTarget.style.color =
-                                      "var(--primaryRed)")
-                                  }
-                                  onMouseLeave={(e) =>
-                                    (e.currentTarget.style.color =
-                                      "var(--primaryBlue)")
-                                  }
-                                  onClick={() =>
-                                    setStopDeleteModal({
-                                      routeId: route.routeId,
-                                      routeStopId: stop.routeStopId,
-                                      stopOrder: stop.stopOrder,
-                                      location: stop.location,
-                                    })
-                                  }
-                                >
-                                  <i className="bi bi-trash" />
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    )}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      )}
 
-                    {/* Add Stop form */}
-                    <div
-                      style={{
-                        borderTop: "2px solid var(--primaryBlue)",
-                        paddingTop: "20px",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <label
-                        className="info-label"
-                        style={{ marginBottom: "15px", display: "block" }}
-                      >
-                        Add Stop:
-                      </label>
+                      {/* Add Stop form */}
                       <div
                         style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          gap: "20px",
+                          borderTop: "2px solid var(--primaryBlue)",
+                          paddingTop: "20px",
+                          marginTop: "10px",
                         }}
                       >
+                        <label
+                          className="info-label"
+                          style={{ marginBottom: "15px", display: "block" }}
+                        >
+                          Add Stop:
+                        </label>
                         <div
                           style={{
                             display: "flex",
+                            flexWrap: "wrap",
                             alignItems: "center",
-                            gap: "10px",
+                            gap: "20px",
                           }}
                         >
-                          <label style={labelStyle}>Location:</label>
-                          <select
-                            className="form-select"
-                            style={{ width: "280px", fontSize: "18px" }}
-                            value={newStopHallway[route.routeId] ?? ""}
-                            onChange={(e) =>
-                              setNewStopHallway((prev) => ({
-                                ...prev,
-                                [route.routeId]: e.target.value,
-                              }))
-                            }
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
                           >
-                            <option value="" disabled>
-                              Select a stop...
-                            </option>
-                            {hallways.map((h) => (
-                              <option
-                                key={h.hallwayStopId}
-                                value={h.hallwayStopId}
-                              >
-                                {h.location}
+                            <label style={labelStyle}>Location:</label>
+                            <select
+                              className="form-select"
+                              style={{ width: "280px", fontSize: "18px" }}
+                              value={newStopHallway[route.routeId] ?? ""}
+                              onChange={(e) =>
+                                setNewStopHallway((prev) => ({
+                                  ...prev,
+                                  [route.routeId]: e.target.value,
+                                }))
+                              }
+                            >
+                              <option value="" disabled>
+                                Select a stop...
                               </option>
-                            ))}
-                          </select>
-                        </div>
+                              {hallways.map((h) => (
+                                <option
+                                  key={h.hallwayStopId}
+                                  value={h.hallwayStopId}
+                                >
+                                  {h.location}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
 
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                          }}
-                        >
-                          <label style={labelStyle}>Duration (min):</label>
-                          <input
-                            type="number"
-                            style={{ ...inputStyle, width: "140px" }}
-                            placeholder="e.g. 10"
-                            value={newStopDuration[route.routeId] ?? ""}
-                            onChange={(e) =>
-                              setNewStopDuration((prev) => ({
-                                ...prev,
-                                [route.routeId]: e.target.value,
-                              }))
-                            }
-                          />
-                        </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <label style={labelStyle}>Duration (min):</label>
+                            <input
+                              type="number"
+                              style={{ ...inputStyle, width: "140px" }}
+                              placeholder="e.g. 10"
+                              value={newStopDuration[route.routeId] ?? ""}
+                              onChange={(e) =>
+                                setNewStopDuration((prev) => ({
+                                  ...prev,
+                                  [route.routeId]: e.target.value,
+                                }))
+                              }
+                            />
+                          </div>
 
-                        <AddButton
-                          onClick={() => handleAddStop(route.routeId)}
-                          style={{
-                            width: "130px",
-                            fontSize: "18px",
-                            height: "50px",
-                          }}
-                        >
-                          Add
-                          <i
-                            className="bi bi-plus-circle"
-                            style={{ marginLeft: "8px", fontSize: "20px" }}
-                          />
-                        </AddButton>
+                          <AddButton
+                            onClick={() => handleAddStop(route.routeId)}
+                            style={{
+                              width: "130px",
+                              fontSize: "18px",
+                              height: "50px",
+                            }}
+                          >
+                            Add
+                            <i
+                              className="bi bi-plus-circle"
+                              style={{ marginLeft: "8px", fontSize: "20px" }}
+                            />
+                          </AddButton>
+                        </div>
                       </div>
-                    </div>
-                  </section>
-                ),
-              }))}
-            />
+                    </section>
+                  ),
+                }))}
+              />
+            </>
           )}
         </>
       )}
@@ -944,6 +960,58 @@ export default function AdminRoutesUI({
             }}
           >
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Add Hallway Modal */}
+      <Modal show={showHallwayModal} onHide={() => setShowHallwayModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create New Hallway</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="form-row">
+            <label className="form-label">New Hallway:</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Hallway Name"
+              onChange={(e) => setNewHallway(e.target.value)}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowHallwayModal(false);
+              setNewHallway("");
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="success"
+            onClick={async () => {
+              const result = await addHallway(newHallway);
+
+              if (result?.success) {
+                showAlert(
+                  `Successfully added hallway with ID ${newHallway}`,
+                  "success",
+                );
+              } else {
+                showAlert(
+                  `Failed to add hallway with ID ${newHallway}`,
+                  "danger",
+                );
+              }
+
+              setNewHallway("");
+              setShowHallwayModal(false);
+              router.refresh();
+            }}
+          >
+            Add
           </Button>
         </Modal.Footer>
       </Modal>

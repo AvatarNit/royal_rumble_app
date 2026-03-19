@@ -15,24 +15,39 @@ export default function AdminAddFreshmenGroupPage(props: {
 }) {
   const router = useRouter();
   const { showAlert } = useAlert();
+
   const handleLogoClick = () => {
     router.push("/admin/all_groups");
   };
 
   const [groupName, setGroupName] = useState("");
   const [eventOrder, setEventOrder] = useState("");
-  const [routeNumber, setRouteNumber] = useState(1);
+  const [routeNumber, setRouteNumber] = useState("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!groupName.trim()) newErrors.groupName = "Group name is required.";
+    if (!eventOrder) newErrors.eventOrder = "Please select an event order.";
+    if (!routeNumber.trim()) {
+      newErrors.routeNumber = "Route number is required.";
+    } else if (!/^\d+$/.test(routeNumber) || parseInt(routeNumber) <= 0) {
+      newErrors.routeNumber = "Route number must be a positive integer.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleAddGroup = async () => {
-    if (!groupName || !eventOrder || !routeNumber) {
-      alert("Please fill in all fields.");
-      return;
-    }
+    if (!validate()) return;
 
     const result = await addCustomGroup(
       groupName,
       eventOrder.split(", "),
-      routeNumber,
+      parseInt(routeNumber),
     );
     showAlert(`Group ${result[0].groupId} added successfully!`, "success");
     router.push("/admin/all_groups");
@@ -55,37 +70,58 @@ export default function AdminAddFreshmenGroupPage(props: {
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">Group Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="ex. ENL: Spaish"
-              onChange={(e) => setGroupName(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.groupName ? " is-invalid" : ""}`}
+                placeholder="ex. ENL: Spanish"
+                onChange={(e) => setGroupName(e.target.value)}
+              />
+              {errors.groupName && (
+                <div className="invalid-feedback d-block">
+                  {errors.groupName}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Event Order:</label>
-            <select
-              className="form-input"
-              value={eventOrder}
-              onChange={(e) => setEventOrder(e.target.value)}
-            >
-              <option value="" disabled>
-                Select Order
-              </option>
-              {props.orders.map((order, index) => (
-                <option key={index} value={order}>
-                  {order.join(", ")}
+            <div>
+              <select
+                className={`form-input${errors.eventOrder ? " is-invalid" : ""}`}
+                value={eventOrder}
+                onChange={(e) => setEventOrder(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Order
                 </option>
-              ))}
-            </select>
+                {props.orders.map((order, index) => (
+                  <option key={index} value={order}>
+                    {order.join(", ")}
+                  </option>
+                ))}
+              </select>
+              {errors.eventOrder && (
+                <div className="invalid-feedback d-block">
+                  {errors.eventOrder}
+                </div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Route #:</label>
-            <input
-              type="number"
-              className="form-input"
-              onChange={(e) => setRouteNumber(parseInt(e.target.value))}
-            />
+            <div>
+              <input
+                type="number"
+                className={`form-input${errors.routeNumber ? " is-invalid" : ""}`}
+                onChange={(e) => setRouteNumber(e.target.value)}
+              />
+              {errors.routeNumber && (
+                <div className="invalid-feedback d-block">
+                  {errors.routeNumber}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

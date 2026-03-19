@@ -20,7 +20,31 @@ export default function AdminAddAdmin() {
   const [email, setEmail] = useState("");
   const [adminId, setAdminId] = useState("");
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!f_name.trim()) newErrors.f_name = "First name is required.";
+    if (!l_name.trim()) newErrors.l_name = "Last name is required.";
+    if (!email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address.";
+    }
+    if (!adminId.trim()) {
+      newErrors.adminId = "Admin ID is required.";
+    } else if (!/^\d+$/.test(adminId) || parseInt(adminId) <= 0) {
+      newErrors.adminId = "Admin ID must be a positive integer.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAdd = async () => {
+    if (!validate()) return;
+
     try {
       const admin_return = await addAdmin({
         f_name,
@@ -36,7 +60,7 @@ export default function AdminAddAdmin() {
 
       showAlert(
         `Admin ${admin_return.f_name} ${admin_return.l_name} added successfully!`,
-        "success"
+        "success",
       );
 
       router.push("/admin/admin");
@@ -60,39 +84,59 @@ export default function AdminAddAdmin() {
         <div className="edit-user-form">
           <div className="form-row">
             <label className="form-label">First Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={f_name}
-              onChange={(e) => setf_name(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.f_name ? " is-invalid" : ""}`}
+                value={f_name}
+                onChange={(e) => setf_name(e.target.value)}
+              />
+              {errors.f_name && (
+                <div className="invalid-feedback d-block">{errors.f_name}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Last Name:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={l_name}
-              onChange={(e) => setl_name(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.l_name ? " is-invalid" : ""}`}
+                value={l_name}
+                onChange={(e) => setl_name(e.target.value)}
+              />
+              {errors.l_name && (
+                <div className="invalid-feedback d-block">{errors.l_name}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Email:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.email ? " is-invalid" : ""}`}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              {errors.email && (
+                <div className="invalid-feedback d-block">{errors.email}</div>
+              )}
+            </div>
           </div>
           <div className="form-row">
             <label className="form-label">Admin ID:</label>
-            <input
-              type="text"
-              className="form-input"
-              value={adminId}
-              onChange={(e) => setAdminId(e.target.value)}
-            />
+            <div>
+              <input
+                type="text"
+                className={`form-input${errors.adminId ? " is-invalid" : ""}`}
+                value={adminId}
+                onChange={(e) => setAdminId(e.target.value)}
+              />
+              {errors.adminId && (
+                <div className="invalid-feedback d-block">{errors.adminId}</div>
+              )}
+            </div>
           </div>
         </div>
       </section>

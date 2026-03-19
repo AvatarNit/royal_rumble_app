@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { Modal, Button } from "react-bootstrap";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import BackButton from "../../components/backButton";
@@ -172,6 +173,20 @@ export default function AdminRoutesUI({
   const [newBlockName, setNewBlockName] = useState("");
   const [newBlockTime, setNewBlockTime] = useState("");
   const [newBlockDuration, setNewBlockDuration] = useState("");
+
+  // Block delete modal state
+  const [blockDeleteModal, setBlockDeleteModal] = useState<{
+    blockScheduleId: number;
+    blockName: string;
+  } | null>(null);
+
+  // Stop delete modal state
+  const [stopDeleteModal, setStopDeleteModal] = useState<{
+    routeId: number;
+    routeStopId: number;
+    stopOrder: number;
+    location: string | null;
+  } | null>(null);
 
   const handleSaveBlock = async (block: Block) => {
     const edit = blockEdits[block.blockScheduleId];
@@ -545,7 +560,10 @@ export default function AdminRoutesUI({
                       (e.currentTarget.style.color = "var(--primaryBlue)")
                     }
                     onClick={() =>
-                      handleDeleteBlock(block.blockScheduleId, block.blockName)
+                      setBlockDeleteModal({
+                        blockScheduleId: block.blockScheduleId,
+                        blockName: block.blockName,
+                      })
                     }
                   >
                     <i className="bi bi-trash" />
@@ -738,10 +756,12 @@ export default function AdminRoutesUI({
                                       "var(--primaryBlue)")
                                   }
                                   onClick={() =>
-                                    handleDeleteStop(
-                                      route.routeId,
-                                      stop.routeStopId,
-                                    )
+                                    setStopDeleteModal({
+                                      routeId: route.routeId,
+                                      routeStopId: stop.routeStopId,
+                                      stopOrder: stop.stopOrder,
+                                      location: stop.location,
+                                    })
                                   }
                                 >
                                   <i className="bi bi-trash" />
@@ -853,6 +873,80 @@ export default function AdminRoutesUI({
           )}
         </>
       )}
+
+      {/* ══════════════════════════════════════════════
+          BLOCK DELETE MODAL
+      ══════════════════════════════════════════════ */}
+      <Modal
+        show={blockDeleteModal !== null}
+        onHide={() => setBlockDeleteModal(null)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Block</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete block{" "}
+          <strong>"{blockDeleteModal?.blockName}"</strong>?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setBlockDeleteModal(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              if (blockDeleteModal !== null) {
+                await handleDeleteBlock(
+                  blockDeleteModal.blockScheduleId,
+                  blockDeleteModal.blockName,
+                );
+                setBlockDeleteModal(null);
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* ══════════════════════════════════════════════
+          STOP DELETE MODAL
+      ══════════════════════════════════════════════ */}
+      <Modal
+        show={stopDeleteModal !== null}
+        onHide={() => setStopDeleteModal(null)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Stop</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete stop{" "}
+          <strong>
+            #{stopDeleteModal?.stopOrder} (
+            {stopDeleteModal?.location ?? "Unknown"})
+          </strong>
+          ?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setStopDeleteModal(null)}>
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={async () => {
+              if (stopDeleteModal !== null) {
+                await handleDeleteStop(
+                  stopDeleteModal.routeId,
+                  stopDeleteModal.routeStopId,
+                );
+                setStopDeleteModal(null);
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </main>
   );
 }

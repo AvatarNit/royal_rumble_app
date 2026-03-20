@@ -367,6 +367,15 @@ export const getFAQContent = async () => {
   return faqContent;
 };
 
+export const getRoyalRumbleTicketLink = async (): Promise<string> => {
+  const royalRumbleEvent = await db
+    .select({ content: siteContent.content })
+    .from(siteContent)
+    .where(eq(siteContent.key, "royalRumbleTicketLink"))
+    .limit(1);
+  return royalRumbleEvent[0]?.content ?? "";
+};
+
 //--------------------------------------------------------------------------------------//
 //                                     End of Read                                      //
 //--------------------------------------------------------------------------------------//
@@ -501,6 +510,28 @@ export const updateFAQEntryById = async (
     id,
     question,
     answer,
+  };
+};
+
+export const updateRoyalRumbleTicketLink = async (link: string) => {
+  const existing = await db
+    .select()
+    .from(siteContent)
+    .where(eq(siteContent.key, "royalRumbleTicketLink"));
+
+  if (existing.length > 0) {
+    await db
+      .update(siteContent)
+      .set({ content: link })
+      .where(eq(siteContent.key, "royalRumbleTicketLink"));
+  } else {
+    await db
+      .insert(siteContent)
+      .values({ key: "royalRumbleTicketLink", content: link });
+  }
+  return {
+    success: true,
+    link,
   };
 };
 

@@ -7,25 +7,32 @@ import BackButton from "@/app/components/backButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { deleteFAQEntry } from "@/src/actions/other";
-import { updateFAQEntryById, addFAQEntry } from "@/src/actions/other";
+import {
+  updateFAQEntryById,
+  addFAQEntry,
+  updateRoyalRumbleTicketLink,
+} from "@/src/actions/other";
 import ViewDropdown from "../../components/viewDropdown";
 import SaveButton from "../../components/saveButton";
 import AddButton from "../../components/addButton";
 import { useAlert } from "@/app/context/AlertContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { text } from "stream/consumers";
 
 export default function AdminEditContentPageUI({
   faqData,
+  royalRumbleTicketLinkCurrent,
 }: {
   faqData: Array<{ id: number; question: string; answer: string }>;
+  royalRumbleTicketLinkCurrent: string;
 }) {
   const router = useRouter();
   const { showAlert } = useAlert();
 
-  const [activeSection, setActiveSection] = useState<"FAQ" | "Text Content">(
-    "FAQ",
-  );
+  const [activeSection, setActiveSection] = useState<
+    "FAQ" | "Text Content" | "External Links"
+  >("FAQ");
   const [faqState, setFaqState] = useState(
     faqData.map((item) => ({ ...item })),
   );
@@ -33,6 +40,9 @@ export default function AdminEditContentPageUI({
   const [showFAQModal, setShowFAQModal] = useState(false);
   const [newFAQ, setNewFAQ] = useState("");
   const [newFAQAnswer, setNewFAQAnswer] = useState("");
+  const [royalRumbleTicketLink, setRoyalRumbleTicketLink] = useState(
+    royalRumbleTicketLinkCurrent,
+  );
 
   const handleFieldChange = (
     id: number,
@@ -81,6 +91,37 @@ export default function AdminEditContentPageUI({
     setShowFAQModal(false);
   };
 
+  const handleRoyalRumbleLinkSave = async (link: string) => {
+    const result = await updateRoyalRumbleTicketLink(link);
+
+    if (result.success) {
+      router.refresh();
+      showAlert("Royal Rumble ticket link updated successfully!", "success");
+    } else {
+      showAlert("Failed to update Royal Rumble ticket link.", "danger");
+    }
+  };
+
+  const contentWrapperStyle = {
+    padding: "16px",
+    backgroundColor: "white",
+    borderTop: "none",
+  };
+
+  const contentBoxStyle = {
+    border: "5px solid var(--primaryRed)",
+    padding: "16px",
+    margin: "15px 50px",
+    height: "auto",
+    color: "var(--textBlack)",
+    backgroundColor: "white",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    textAlign: "left" as const,
+    overflow: "auto" as const,
+  };
+
   return (
     <main className="admin-container">
       <LogoButton />
@@ -116,6 +157,16 @@ export default function AdminEditContentPageUI({
                   onChange={() => setActiveSection("Text Content")}
                 />
                 Text Content
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="radio"
+                  name="routeSection"
+                  className="checkbox-input"
+                  checked={activeSection === "External Links"}
+                  onChange={() => setActiveSection("External Links")}
+                />
+                External Links
               </label>
             </div>
           </form>
@@ -236,6 +287,50 @@ export default function AdminEditContentPageUI({
             contentKey="group_leader_more_details"
           />
         </>
+      )}
+
+      {activeSection === "External Links" && (
+        <div style={{ width: "85%", marginTop: "20px" }}>
+          <section className="about-info-box">
+            <div
+              style={{
+                display: "flex",
+                color: "var(--textBlack)",
+                fontWeight: "normal",
+                fontSize: "20px",
+              }}
+            >
+              <div style={contentWrapperStyle}>
+                <div style={contentBoxStyle}>
+                  <div className="edit-user-form">
+                    <div className="form-row">
+                      <label className="form-label">
+                        Royal Rumble Ticket Link:
+                      </label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        style={{ width: "100%" }}
+                        value={royalRumbleTicketLink}
+                        placeholder="https://..."
+                        onChange={(e) =>
+                          setRoyalRumbleTicketLink(e.target.value)
+                        }
+                      />
+                      <SaveButton
+                        onClick={() =>
+                          handleRoyalRumbleLinkSave(royalRumbleTicketLink)
+                        }
+                      >
+                        Save
+                      </SaveButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       )}
 
       {/* ── Add FAQ Modal ───────────────────────────────────────── */}

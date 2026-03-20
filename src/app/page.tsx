@@ -10,8 +10,11 @@ import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
 import "./css/logo+login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { getRoyalRumbleTicketLink } from "../actions/other";
 
 export default async function Home() {
+  const ticketLink = await getRoyalRumbleTicketLink();
+
   return (
     <main className="home-container">
       <header style={{ backgroundColor: "red", color: "white" }}>
@@ -52,9 +55,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <div className="home-ticket-button">
-        <TicketButton link="/buy">Buy your ticket now!</TicketButton>
-      </div>
+      {ticketLink && (
+        <div className="home-ticket-button">
+          <TicketButton link={ticketLink}>Buy your ticket now!</TicketButton>
+        </div>
+      )}
 
       <section className="home-bottom-buttons">
         <WhatIsRRButton link="/about">What is Royal Rumble?</WhatIsRRButton>

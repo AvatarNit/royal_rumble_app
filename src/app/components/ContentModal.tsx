@@ -111,15 +111,17 @@ export default function ModalStyle({
                 >
                   Cancel
                 </SaveButton>
-                <SaveButton
-                  onClick={() => {
-                    saveAction();
-                    setShowModal(false);
-                  }}
-                  style={{ width: "150px", fontSize: "20px", height: "55px" }}
-                >
-                  {addBtnText || "Add"}
-                </SaveButton>
+                {addBtnText != "" && saveAction && (
+                  <SaveButton
+                    onClick={() => {
+                      saveAction();
+                      setShowModal(false);
+                    }}
+                    style={{ width: "150px", fontSize: "20px", height: "55px" }}
+                  >
+                    {addBtnText}
+                  </SaveButton>
+                )}
               </div>
             </div>
           </div>

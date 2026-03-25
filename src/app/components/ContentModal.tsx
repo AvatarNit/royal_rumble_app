@@ -48,6 +48,7 @@ export default function ModalStyle({
           <div
             style={{
               border: "5px solid var(--primaryBlue)",
+              borderRadius: "12px",
               fontFamily: "Poppins, sans-serif",
               backgroundColor: "white",
               overflow: "hidden",

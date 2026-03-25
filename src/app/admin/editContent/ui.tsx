@@ -3,6 +3,7 @@
 import EditableContentBox from "../../components/editableContentBox";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
+import ContentModal from "../../components/ContentModal";
 import BackButton from "@/app/components/backButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
@@ -14,11 +15,9 @@ import {
 } from "@/src/actions/other";
 import ViewDropdown from "../../components/viewDropdown";
 import SaveButton from "../../components/saveButton";
-import AddButton from "../../components/addButton";
 import { useAlert } from "@/app/context/AlertContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { text } from "stream/consumers";
 
 export default function AdminEditContentPageUI({
   faqData,
@@ -37,7 +36,6 @@ export default function AdminEditContentPageUI({
     faqData.map((item) => ({ ...item })),
   );
 
-  const [showFAQModal, setShowFAQModal] = useState(false);
   const [newFAQ, setNewFAQ] = useState("");
   const [newFAQAnswer, setNewFAQAnswer] = useState("");
   const [royalRumbleTicketLink, setRoyalRumbleTicketLink] = useState(
@@ -88,7 +86,6 @@ export default function AdminEditContentPageUI({
 
     setNewFAQ("");
     setNewFAQAnswer("");
-    setShowFAQModal(false);
   };
 
   const handleRoyalRumbleLinkSave = async (link: string) => {
@@ -184,16 +181,34 @@ export default function AdminEditContentPageUI({
               marginTop: "20px",
             }}
           >
-            <AddButton
-              onClick={() => setShowFAQModal(true)}
-              style={{ fontSize: "21px", justifyContent: "flex-end" }}
+            <ContentModal
+              title="Add FAQ"
+              saveAction={handleAdd}
+              addBtnText="Add FAQ"
             >
-              Add FAQ
-              <i
-                className="bi bi-question-circle"
-                style={{ marginLeft: "30px", fontSize: "30px" }}
-              />
-            </AddButton>
+              <div className="edit-user-form">
+                <div className="form-row">
+                  <label className="form-label">Question:</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Enter the question"
+                    value={newFAQ}
+                    onChange={(e) => setNewFAQ(e.target.value)}
+                  />
+                </div>
+                <div className="form-row">
+                  <label className="form-label">Answer:</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Enter the answer"
+                    value={newFAQAnswer}
+                    onChange={(e) => setNewFAQAnswer(e.target.value)}
+                  />
+                </div>
+              </div>
+            </ContentModal>
           </div>
 
           <ViewDropdown
@@ -330,123 +345,6 @@ export default function AdminEditContentPageUI({
               </div>
             </div>
           </section>
-        </div>
-      )}
-
-      {/* ── Add FAQ Modal ───────────────────────────────────────── */}
-      {showFAQModal && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1050,
-          }}
-          onClick={() => setShowFAQModal(false)}
-        >
-          <div
-            style={{
-              border: "5px solid var(--primaryBlue)",
-              fontFamily: "Poppins, sans-serif",
-              backgroundColor: "white",
-              overflow: "hidden",
-              width: "75%",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Blue header */}
-            <div
-              style={{
-                backgroundColor: "var(--primaryBlue)",
-                color: "white",
-                padding: "20px 16px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                fontSize: "24px",
-                fontWeight: "bold",
-              }}
-            >
-              <span>New FAQ Entry</span>
-              <i
-                className="bi bi-x-lg"
-                style={{ cursor: "pointer", fontSize: "22px" }}
-                onClick={() => setShowFAQModal(false)}
-              />
-            </div>
-
-            {/* Content — red border box like ViewDropdown */}
-            <div style={{ padding: "16px" }}>
-              <div
-                style={{
-                  border: "5px solid var(--primaryRed)",
-                  padding: "16px",
-                  margin: "15px 30px",
-                  backgroundColor: "white",
-                  color: "var(--textBlack)",
-                }}
-              >
-                <div className="edit-user-form">
-                  <div className="form-row">
-                    <label className="form-label">Question:</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Enter the question"
-                      value={newFAQ}
-                      onChange={(e) => setNewFAQ(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-row">
-                    <label className="form-label">Answer:</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Enter the answer"
-                      value={newFAQAnswer}
-                      onChange={(e) => setNewFAQAnswer(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer buttons */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  padding: "0 30px 10px",
-                  gap: "8px",
-                }}
-              >
-                <SaveButton
-                  onClick={() => {
-                    setShowFAQModal(false);
-                    setNewFAQ("");
-                    setNewFAQAnswer("");
-                  }}
-                  style={{
-                    width: "150px",
-                    fontSize: "20px",
-                    height: "55px",
-                    backgroundColor: "var(--primaryRed)",
-                  }}
-                >
-                  Cancel
-                </SaveButton>
-                <SaveButton
-                  onClick={handleAdd}
-                  style={{ width: "150px", fontSize: "20px", height: "55px" }}
-                >
-                  Add FAQ
-                </SaveButton>
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </main>

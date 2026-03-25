@@ -10,9 +10,11 @@ export default function ModalStyle({
   title = "Modal Title",
   saveAction = () => {},
   addBtnText = "",
+  btnText = "",
 }: {
   children: React.ReactNode;
   title?: string;
+  btnText?: string;
   saveAction?: () => void;
   addBtnText?: string;
 }) {
@@ -24,7 +26,7 @@ export default function ModalStyle({
         onClick={() => setShowModal(true)}
         style={{ fontSize: "21px", justifyContent: "flex-end" }}
       >
-        {addBtnText || "Add"}
+        {btnText || ""}
         <i
           className="bi bi-question-circle"
           style={{ marginLeft: "30px", fontSize: "30px" }}

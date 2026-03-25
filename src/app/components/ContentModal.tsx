@@ -8,15 +8,15 @@ import AddButton from "./addButton";
 export default function ModalStyle({
   children,
   title = "Modal Title",
-  saveAction = () => {},
-  addBtnText = "",
   btnText = "",
+  saveAction = () => {},
+  icon = "bi bi-question-circle",
 }: {
   children: React.ReactNode;
   title?: string;
   btnText?: string;
   saveAction?: () => void;
-  addBtnText?: string;
+  icon?: string;
 }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -27,10 +27,7 @@ export default function ModalStyle({
         style={{ fontSize: "21px", justifyContent: "flex-end" }}
       >
         {btnText || ""}
-        <i
-          className="bi bi-question-circle"
-          style={{ marginLeft: "30px", fontSize: "30px" }}
-        />
+        <i className={icon} style={{ marginLeft: "30px", fontSize: "30px" }} />
       </AddButton>
       {showModal && (
         <div
@@ -114,7 +111,7 @@ export default function ModalStyle({
                 >
                   Cancel
                 </SaveButton>
-                {addBtnText != "" && saveAction && (
+                {saveAction && (
                   <SaveButton
                     onClick={() => {
                       saveAction();
@@ -122,7 +119,7 @@ export default function ModalStyle({
                     }}
                     style={{ width: "150px", fontSize: "20px", height: "55px" }}
                   >
-                    {addBtnText}
+                    {btnText}
                   </SaveButton>
                 )}
               </div>

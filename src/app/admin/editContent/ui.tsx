@@ -183,8 +183,9 @@ export default function AdminEditContentPageUI({
           >
             <ContentModal
               title="Add FAQ"
+              btnText="Add FAQ"
+              icon="bi bi-plus-circle"
               saveAction={handleAdd}
-              addBtnText="Add FAQ"
             >
               <div className="edit-user-form">
                 <div className="form-row">

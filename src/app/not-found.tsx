@@ -10,6 +10,9 @@ export default function NotFound() {
       <LogoButton />
       <LoginButton />
 
+      <div style={{ marginTop: "20px" }}>
+        <BackButton href="/" />
+      </div>
       <div
         style={{
           display: "flex",
@@ -17,7 +20,7 @@ export default function NotFound() {
           alignItems: "center",
           justifyContent: "center",
           flex: 1,
-          marginTop: "120px",
+          marginTop: "1%",
           gap: "20px",
           fontFamily: "Poppins, sans-serif",
           textAlign: "center",
@@ -66,10 +69,6 @@ export default function NotFound() {
         >
           The page you are looking for does not exist or may have been moved.
         </p>
-
-        <div style={{ marginTop: "20px" }}>
-          <BackButton href="/" />
-        </div>
       </div>
     </main>
   );

@@ -21,6 +21,9 @@ export default function Error({
       <LogoButton />
       <LoginButton />
 
+      <div style={{ marginTop: "20px" }}>
+        <BackButton href="/" />
+      </div>
       <div
         style={{
           display: "flex",
@@ -28,7 +31,7 @@ export default function Error({
           alignItems: "center",
           justifyContent: "center",
           flex: 1,
-          marginTop: "120px",
+          marginTop: "1%",
           gap: "20px",
           fontFamily: "Poppins, sans-serif",
           textAlign: "center",
@@ -117,10 +120,6 @@ export default function Error({
             </p>
           </div>
         )}
-
-        <div style={{ marginTop: "20px" }}>
-          <BackButton href="/" />
-        </div>
       </div>
     </main>
   );

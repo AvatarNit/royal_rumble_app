@@ -175,6 +175,7 @@ export default function AdminUpload() {
       <button className="back-button" onClick={handleLogoClick}>
         <i className="bi bi-arrow-left"></i>
       </button>
+      
 
       <div
         style={{

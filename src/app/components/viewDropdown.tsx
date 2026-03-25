@@ -122,6 +122,66 @@ export default function ViewDropdown({
     margin: "20px 60px 10px 10px",
   };
 
+  const buttonStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "var(--primaryBlue)",
+    color: "white",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "bold",
+    fontSize: "15px",
+    border: "5px solid transparent",
+    borderRadius: "14px",
+    padding: "5px 5px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    width: "100px"
+  };
+
+  const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--primaryBlue)";
+    e.currentTarget.style.borderColor = "var(--primaryBlue)";
+  };
+
+  const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
+  };
+
+  const buttonStyle2 = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "var(--primaryRed)",
+    color: "white",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "bold",
+    fontSize: "15px",
+    border: "5px solid transparent",
+    borderRadius: "14px",
+    padding: "5px 5px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    width: "100px"
+  };
+
+  const buttonHover2 = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--primaryRed)";
+    e.currentTarget.style.borderColor = "var(--primaryRed)";
+  };
+
+  const buttonUnhover2 = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "var(--primaryRed)";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
+  };
+
   return (
     <div style={containerStyle}>
       {/* Top blue header */}
@@ -180,14 +240,27 @@ export default function ViewDropdown({
 
       {/* -------- Modal OUTSIDE map (only one) -------- */}
       <Modal show={modalID !== null} onHide={() => setModalID(null)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Group</Modal.Title>
+        <Modal.Header
+          style={{ backgroundColor: "var(--primaryBlue)", color: "white",
+            fontFamily: "Poppins, sans-serif", fontWeight: "bold",
+            fontSize: "15px", justifyContent:"space-between"}}
+        >
+          <Modal.Title style={{ color: "white",fontFamily: "Poppins, sans-serif",
+                                fontWeight: "bold", fontSize: "20px" }}>
+            Delete Group
+          </Modal.Title>
+          <i className="bi bi-x-lg" data-bs-dismiss="modal" 
+            style={{fontSize:"22px", }} />
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete this item (ID: {modalID})?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setModalID(null)}>
+          <Button variant="secondary" onClick={() => setModalID(null)}
+            style={buttonStyle}
+            onMouseEnter={buttonHover}
+            onMouseLeave={buttonUnhover}>
+            
             Cancel
           </Button>
           <Button
@@ -213,6 +286,9 @@ export default function ViewDropdown({
                 router.refresh();
               }
             }}
+            style={buttonStyle2}
+            onMouseEnter={buttonHover2}
+            onMouseLeave={buttonUnhover2}
           >
             Delete
           </Button>

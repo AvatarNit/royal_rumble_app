@@ -4,6 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";
+import AddButton from "../../components/addButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
@@ -110,13 +111,14 @@ export default function AdminUpload() {
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "20px",
+    fontSize: "21px",
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "5px 5px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
+    width: "270px"
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -127,6 +129,36 @@ export default function AdminUpload() {
 
   const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.currentTarget.style.backgroundColor = "var(--primaryBlue)";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
+  };
+
+  const buttonStyle2 = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "var(--primaryRed)",
+    color: "white",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "bold",
+    fontSize: "21px",
+    border: "5px solid transparent",
+    borderRadius: "14px",
+    padding: "5px 5px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    width: "270px"
+  };
+
+  const buttonHover2 = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--primaryRed)";
+    e.currentTarget.style.borderColor = "var(--primaryRed)";
+  };
+
+  const buttonUnhover2 = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "var(--primaryRed)";
     e.currentTarget.style.color = "white";
     e.currentTarget.style.borderColor = "transparent";
   };
@@ -143,6 +175,45 @@ export default function AdminUpload() {
       <button className="back-button" onClick={handleLogoClick}>
         <i className="bi bi-arrow-left"></i>
       </button>
+
+      <div
+        style={{
+          width: "85%",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: "20px",
+          fontSize: "15px",
+        }}
+      >
+        <>
+        <button
+          style={buttonStyle2}
+          onMouseEnter={buttonHover2}
+          onMouseLeave={buttonUnhover2}
+          type="button"
+        >
+          Reset Tables
+          <i
+            className="bi bi-trash"
+            style={{ marginLeft: "30px", fontSize: "30px" }}
+          />
+        </button>
+
+        <button
+          style={buttonStyle}
+          onMouseEnter={buttonHover}
+          onMouseLeave={buttonUnhover}
+          type="button"
+        >
+          Group Actions
+          <i
+            className="bi bi-plus-circle"
+            style={{ marginLeft: "30px", fontSize: "30px" }}
+          />
+        </button>
+        </>
+      </div>
 
       <section className="upload-section">
         <InfoBox headerText="">

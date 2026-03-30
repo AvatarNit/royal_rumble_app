@@ -31,7 +31,7 @@ export default function AddButton({
     border: "5px solid transparent",
     borderRadius: "14px",
     padding: "20px 20px",
-    width: style?.width || "250px",
+    width: style?.width || "85%",
     height: "70px",
     textAlign: "center" as const,
     cursor: "pointer",

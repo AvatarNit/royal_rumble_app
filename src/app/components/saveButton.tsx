@@ -21,7 +21,7 @@ export default function SaveButton({
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "var(--primaryBlue)",
+    backgroundColor: style?.backgroundColor || "var(--primaryBlue)",
     color: "white",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",

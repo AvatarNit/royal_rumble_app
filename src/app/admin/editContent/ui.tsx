@@ -5,6 +5,8 @@ import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import ContentModal from "../../components/ContentModal";
 import BackButton from "@/app/components/backButton";
+import ViewDropdown from "../../components/viewDropdown";
+import SaveButton from "../../components/saveButton";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { deleteFAQEntry } from "@/src/actions/other";
@@ -13,8 +15,6 @@ import {
   addFAQEntry,
   updateRoyalRumbleTicketLink,
 } from "@/src/actions/other";
-import ViewDropdown from "../../components/viewDropdown";
-import SaveButton from "../../components/saveButton";
 import { useAlert } from "@/app/context/AlertContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

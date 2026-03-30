@@ -20,13 +20,44 @@ export default function ModalStyle({
 }) {
   const [showModal, setShowModal] = useState(false);
 
+  const greyButtonStyle = {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "var(--secondarySilver)",
+      color: "white",
+      fontFamily: "Poppins, sans-serif",
+      fontWeight: "bold",
+      fontSize: "21px",
+      border: "5px solid transparent",
+      borderRadius: "14px",
+      padding: "7px 7px",
+      margin: "10px",
+      textAlign: "center" as const,
+      cursor: "pointer",
+      transition: "background-color 0.3s",
+      width: "160px"
+    };
+  
+    const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.currentTarget.style.backgroundColor = "white";
+      e.currentTarget.style.color = "var(--secondarySilver)";
+      e.currentTarget.style.borderColor = "var(--secondarySilver)";
+    };
+    
+    const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.currentTarget.style.backgroundColor = "var(--secondarySilver)";
+      e.currentTarget.style.color = "white";
+      e.currentTarget.style.borderColor = "transparent";
+    };
+
   return (
     <>
       <AddButton
         onClick={() => setShowModal(true)}
-        style={{ fontSize: "21px", justifyContent: "flex-end" }}
+        style={{ fontSize: "21px", justifyContent: "flex-end", width: "265px"}}
       >
-        {btnText || ""}
+        {title || ""}
         <i className={icon} style={{ marginLeft: "30px", fontSize: "30px" }} />
       </AddButton>
       {showModal && (
@@ -98,26 +129,24 @@ export default function ModalStyle({
                   gap: "8px",
                 }}
               >
-                <SaveButton
+                <button
+                  style={greyButtonStyle}
+                  onMouseEnter={buttonHover}
+                  onMouseLeave={buttonUnhover}
                   onClick={() => {
                     setShowModal(false);
                   }}
-                  style={{
-                    width: "150px",
-                    fontSize: "20px",
-                    height: "55px",
-                    backgroundColor: "var(--primaryRed)",
-                  }}
+                  type="button"
                 >
                   Cancel
-                </SaveButton>
+                </button>
                 {saveAction && (
                   <SaveButton
                     onClick={() => {
                       saveAction();
                       setShowModal(false);
                     }}
-                    style={{ width: "150px", fontSize: "20px", height: "55px" }}
+                    style={{ width: "160px", fontSize: "20px", height: "55px" }}
                   >
                     {btnText}
                   </SaveButton>

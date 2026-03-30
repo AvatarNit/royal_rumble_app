@@ -4,7 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";
-import AddButton from "../../components/addButton";
+import ContentModal from "../../components/ContentModal";
 import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
@@ -144,7 +144,8 @@ export default function AdminUpload() {
     fontSize: "21px",
     border: "5px solid transparent",
     borderRadius: "14px",
-    padding: "5px 5px",
+    padding: "7px 7px",
+    margin: "10px",
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
@@ -179,12 +180,12 @@ export default function AdminUpload() {
 
       <div
         style={{
-          width: "85%",
+          width: "87%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           marginTop: "20px",
-          fontSize: "15px",
+          fontSize: "21px",
         }}
       >
         <>
@@ -200,20 +201,97 @@ export default function AdminUpload() {
             style={{ marginLeft: "30px", fontSize: "30px" }}
           />
         </button>
-
-        <button
-          style={buttonStyle}
-          onMouseEnter={buttonHover}
-          onMouseLeave={buttonUnhover}
-          type="button"
-        >
-          Group Actions
-          <i
-            className="bi bi-plus-circle"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          />
-        </button>
         </>
+        <div
+          style={{
+            width: "85%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <ContentModal
+            title="Group Actions"
+            btnText="Save"
+            icon="bi bi-plus-circle"
+          >
+            <label className="form-label" 
+                   style={{ fontWeight: "bold", width: "100%", textAlign: "center",
+                            marginTop: "30px", marginBottom: "50px" }}>
+              * Actions must be completed in top to bottom order *
+            </label>
+            <div style={{ display: "flex", flexDirection: "column", 
+                          alignItems: "flex-start", gap: "50px", marginLeft: "15px", 
+                          marginBottom: "50px" }}>
+              <div style={{ display: "flex", flexDirection: "row", 
+                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+                <button
+                  style={buttonStyle}
+                  onMouseEnter={buttonHover}
+                  onMouseLeave={buttonUnhover}
+                  type="button"
+                >
+                  Assign Groups
+                </button>
+                  <div className="info-pair">
+                    <i className="bi bi-info-circle" 
+                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
+                                color: "var(--primaryBlue)", fontWeight: "bold"
+                              }}>         
+                    </i>
+                    <div className="info-value" 
+                        style = {{fontSize: "18px",marginBottom: "5px"}}> 
+                      assign groups description
+                    </div>
+                  </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "row", 
+                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+                <button
+                  style={buttonStyle}
+                  onMouseEnter={buttonHover}
+                  onMouseLeave={buttonUnhover}
+                  type="button"
+                >
+                  Create Groups
+                </button>
+                  <div className="info-pair">
+                    <i className="bi bi-info-circle" 
+                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
+                                color: "var(--primaryBlue)", fontWeight: "bold"
+                              }}>         
+                    </i>
+                    <div className="info-value" 
+                        style = {{fontSize: "18px", marginBottom: "5px"}}> 
+                      create groups description
+                    </div>
+                  </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "row", 
+                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+                <button
+                  style={buttonStyle}
+                  onMouseEnter={buttonHover}
+                  onMouseLeave={buttonUnhover}
+                  type="button"
+                >
+                  Sync Groups
+                </button>
+                  <div className="info-pair">
+                    <i className="bi bi-info-circle" 
+                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
+                                color: "var(--primaryBlue)", fontWeight: "bold"
+                              }}>         
+                    </i>
+                    <div className="info-value" 
+                        style = {{fontSize: "18px", marginBottom: "5px"}}> 
+                      sync groups description
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </ContentModal>
+        </div>
       </div>
 
       <section className="upload-section">

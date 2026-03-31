@@ -10,7 +10,7 @@ import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSeminarGroups, syncGroups } from "@/actions/group";
-import { createGroupsFromDB } from "@/actions/routes";  // ← only new import
+import { createGroupsFromDB } from "@/actions/routes"; // ← only new import
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
 
@@ -118,7 +118,7 @@ export default function AdminUpload() {
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    width: "270px"
+    width: "270px",
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -149,7 +149,7 @@ export default function AdminUpload() {
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    width: "270px"
+    width: "270px",
   };
 
   const buttonHover2 = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -176,7 +176,6 @@ export default function AdminUpload() {
       <button className="back-button" onClick={handleLogoClick}>
         <i className="bi bi-arrow-left"></i>
       </button>
-      
 
       <div
         style={{
@@ -189,18 +188,18 @@ export default function AdminUpload() {
         }}
       >
         <>
-        <button
-          style={buttonStyle2}
-          onMouseEnter={buttonHover2}
-          onMouseLeave={buttonUnhover2}
-          type="button"
-        >
-          Reset Tables
-          <i
-            className="bi bi-trash"
-            style={{ marginLeft: "30px", fontSize: "30px" }}
-          />
-        </button>
+          <button
+            style={buttonStyle2}
+            onMouseEnter={buttonHover2}
+            onMouseLeave={buttonUnhover2}
+            type="button"
+          >
+            Reset Tables
+            <i
+              className="bi bi-trash"
+              style={{ marginLeft: "30px", fontSize: "30px" }}
+            />
+          </button>
         </>
         <div
           style={{
@@ -210,84 +209,157 @@ export default function AdminUpload() {
             alignItems: "center",
           }}
         >
-          <ContentModal
-            title="Group Actions"
-            btnText="Save"
-            icon="bi bi-plus-circle"
-          >
-            <label className="form-label" 
-                   style={{ fontWeight: "bold", width: "100%", textAlign: "center",
-                            marginTop: "30px", marginBottom: "50px" }}>
+          <ContentModal title="Group Actions" icon="bi bi-plus-circle">
+            <label
+              className="form-label"
+              style={{
+                fontWeight: "bold",
+                width: "100%",
+                textAlign: "center",
+                marginTop: "30px",
+                marginBottom: "50px",
+              }}
+            >
               * Actions must be completed in top to bottom order *
             </label>
-            <div style={{ display: "flex", flexDirection: "column", 
-                          alignItems: "flex-start", gap: "50px", marginLeft: "15px", 
-                          marginBottom: "50px" }}>
-              <div style={{ display: "flex", flexDirection: "row", 
-                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "50px",
+                marginLeft: "15px",
+                marginBottom: "50px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "30px",
+                  justifyContent: "center",
+                }}
+              >
                 <button
                   style={buttonStyle}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  onClick={async () => {
+                    const groupingReturn = await createSeminarGroups();
+                    showAlert(
+                      `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
+                      "success",
+                    );
+                  }}
                 >
                   Assign Groups
                 </button>
-                  <div className="info-pair">
-                    <i className="bi bi-info-circle" 
-                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
-                                color: "var(--primaryBlue)", fontWeight: "bold"
-                              }}>         
-                    </i>
-                    <div className="info-value" 
-                        style = {{fontSize: "18px",marginBottom: "5px"}}> 
-                      assign groups description
-                    </div>
+                <div className="info-pair">
+                  <i
+                    className="bi bi-info-circle"
+                    style={{
+                      marginLeft: "30px",
+                      fontSize: "30px",
+                      marginBottom: "5px",
+                      color: "var(--primaryBlue)",
+                      fontWeight: "bold",
+                    }}
+                  ></i>
+                  <div
+                    className="info-value"
+                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                  >
+                    Splits each seminar class in half and assigns each half a group number. Run this first after uploading seminar data.
                   </div>
+                </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "row", 
-                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "30px",
+                  justifyContent: "center",
+                }}
+              >
                 <button
                   style={buttonStyle}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  onClick={async () => {
+                    const groupTotal = await createGroupsFromDB();
+                    showAlert(
+                      `Created ${groupTotal} groups and seeded tour routes automatically.`,
+                      "success",
+                    );
+                  }}
                 >
                   Create Groups
                 </button>
-                  <div className="info-pair">
-                    <i className="bi bi-info-circle" 
-                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
-                                color: "var(--primaryBlue)", fontWeight: "bold"
-                              }}>         
-                    </i>
-                    <div className="info-value" 
-                        style = {{fontSize: "18px", marginBottom: "5px"}}> 
-                      create groups description
-                    </div>
+                <div className="info-pair">
+                  <i
+                    className="bi bi-info-circle"
+                    style={{
+                      marginLeft: "30px",
+                      fontSize: "30px",
+                      marginBottom: "5px",
+                      color: "var(--primaryBlue)",
+                      fontWeight: "bold",
+                    }}
+                  ></i>
+                  <div
+                    className="info-value"
+                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                  >
+                    Builds the official groups in the system and automatically sets their tour routes and event schedules.
                   </div>
+                </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "row", 
-                          alignItems: "center", gap: "30px", justifyContent: "center" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "30px",
+                  justifyContent: "center",
+                }}
+              >
                 <button
                   style={buttonStyle}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  onClick={async () => {
+                    const syncResult = await syncGroups();
+                    showAlert(
+                      `Groups synced: ${syncResult.success}\n${JSON.stringify(syncResult.unmatched)}`,
+                      "success",
+                    );
+                  }}
                 >
                   Sync Groups
                 </button>
-                  <div className="info-pair">
-                    <i className="bi bi-info-circle" 
-                       style={{ marginLeft: "30px", fontSize: "30px", marginBottom: "5px",
-                                color: "var(--primaryBlue)", fontWeight: "bold"
-                              }}>         
-                    </i>
-                    <div className="info-value" 
-                        style = {{fontSize: "18px", marginBottom: "5px"}}> 
-                      sync groups description
-                    </div>
+                <div className="info-pair">
+                  <i
+                    className="bi bi-info-circle"
+                    style={{
+                      marginLeft: "30px",
+                      fontSize: "30px",
+                      marginBottom: "5px",
+                      color: "var(--primaryBlue)",
+                      fontWeight: "bold",
+                    }}
+                  ></i>
+                  <div
+                    className="info-value"
+                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                  >
+                    Matches each freshman from GoFan to their seminar group by ID or name, and updates their group assignment.
                   </div>
+                </div>
               </div>
             </div>
           </ContentModal>
@@ -417,43 +489,6 @@ export default function AdminUpload() {
           </div>
         </InfoBox>
       </section>
-
-      <button
-        onClick={async () => {
-          const groupingReturn = await createSeminarGroups();
-          showAlert(
-            `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
-            "success",
-          );
-        }}
-      >
-        Assign Groups
-      </button>
-
-      {/* ← Only change: createGroups() replaced with createGroupsFromDB() */}
-      <button
-        onClick={async () => {
-          const groupTotal = await createGroupsFromDB();
-          showAlert(
-            `Created ${groupTotal} groups and seeded tour routes automatically.`,
-            "success",
-          );
-        }}
-      >
-        Create Groups
-      </button>
-
-      <button
-        onClick={async () => {
-          const syncResult = await syncGroups();
-          showAlert(
-            `Groups synced: ${syncResult.success}\n${JSON.stringify(syncResult.unmatched)}`,
-            "success",
-          );
-        }}
-      >
-        Sync Groups
-      </button>
     </main>
   );
 }

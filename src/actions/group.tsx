@@ -9,8 +9,9 @@ import {
   mentorData,
   hallwayHostData,
   hallwayStopData,
+  eventOrderPattern,
 } from "@/db/schema";
-import { eq, sql, isNull, inArray } from "drizzle-orm";
+import { eq, sql, isNull, inArray, asc } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -301,7 +302,20 @@ export async function getHallwayIdByMentorId(mentorId: number) {
 //--------------------------------------------------------------------------------------//
 
 export async function createGroups() {
-  const orders: string[][] = (await import("../event_orders.json")).default;
+  const patternRows = await db
+    .select()
+    .from(eventOrderPattern)
+    .orderBy(asc(eventOrderPattern.patternNum));
+
+  if (patternRows.length === 0) {
+    throw new Error(
+      "No event order patterns found. Please seed the event_order_pattern table first.",
+    );
+  }
+
+  const orders: string[][] = patternRows.map(
+    (p) => JSON.parse(p.blockOrder) as string[],
+  );
 
   // get IDs
   const groupRows = await db

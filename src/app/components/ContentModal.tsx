@@ -9,7 +9,7 @@ export default function ModalStyle({
   children,
   title = "Modal Title",
   btnText = "",
-  saveAction = () => {},
+  saveAction = undefined,
   icon = "bi bi-question-circle",
 }: {
   children: React.ReactNode;
@@ -21,41 +21,41 @@ export default function ModalStyle({
   const [showModal, setShowModal] = useState(false);
 
   const greyButtonStyle = {
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "var(--secondarySilver)",
-      color: "white",
-      fontFamily: "Poppins, sans-serif",
-      fontWeight: "bold",
-      fontSize: "21px",
-      border: "5px solid transparent",
-      borderRadius: "14px",
-      padding: "7px 7px",
-      margin: "10px",
-      textAlign: "center" as const,
-      cursor: "pointer",
-      transition: "background-color 0.3s",
-      width: "160px"
-    };
-  
-    const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = "white";
-      e.currentTarget.style.color = "var(--secondarySilver)";
-      e.currentTarget.style.borderColor = "var(--secondarySilver)";
-    };
-    
-    const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.currentTarget.style.backgroundColor = "var(--secondarySilver)";
-      e.currentTarget.style.color = "white";
-      e.currentTarget.style.borderColor = "transparent";
-    };
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "var(--secondarySilver)",
+    color: "white",
+    fontFamily: "Poppins, sans-serif",
+    fontWeight: "bold",
+    fontSize: "21px",
+    border: "5px solid transparent",
+    borderRadius: "14px",
+    padding: "7px 7px",
+    margin: "10px",
+    textAlign: "center" as const,
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+    width: "160px",
+  };
+
+  const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "white";
+    e.currentTarget.style.color = "var(--secondarySilver)";
+    e.currentTarget.style.borderColor = "var(--secondarySilver)";
+  };
+
+  const buttonUnhover = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.style.backgroundColor = "var(--secondarySilver)";
+    e.currentTarget.style.color = "white";
+    e.currentTarget.style.borderColor = "transparent";
+  };
 
   return (
     <>
       <AddButton
         onClick={() => setShowModal(true)}
-        style={{ fontSize: "21px", justifyContent: "flex-end", width: "265px"}}
+        style={{ fontSize: "21px", justifyContent: "flex-end", width: "265px" }}
       >
         {title || ""}
         <i className={icon} style={{ marginLeft: "30px", fontSize: "30px" }} />

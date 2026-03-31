@@ -103,12 +103,13 @@ export default function AdminEditContentPageUI({
     padding: "16px",
     backgroundColor: "white",
     borderTop: "none",
+    marginLeft: "-2%"
   };
 
   const contentBoxStyle = {
     border: "5px solid var(--primaryRed)",
     padding: "16px",
-    margin: "15px 50px",
+    marginBottom: "20px",
     height: "auto",
     color: "var(--textBlack)",
     backgroundColor: "white",
@@ -117,6 +118,7 @@ export default function AdminEditContentPageUI({
     alignItems: "flex-start",
     textAlign: "left" as const,
     overflow: "auto" as const,
+    width: "180%"
   };
 
   return (
@@ -319,14 +321,14 @@ export default function AdminEditContentPageUI({
               <div style={contentWrapperStyle}>
                 <div style={contentBoxStyle}>
                   <div className="edit-user-form">
+                    <label className="form-label" style={{ width: "100%" }}>
+                      Royal Rumble Ticket Link:
+                    </label>
                     <div className="form-row">
-                      <label className="form-label">
-                        Royal Rumble Ticket Link:
-                      </label>
                       <input
                         type="text"
                         className="form-input"
-                        style={{ width: "100%" }}
+                        style={{ width: "90%" }}
                         value={royalRumbleTicketLink}
                         placeholder="https://..."
                         onChange={(e) =>
@@ -337,6 +339,7 @@ export default function AdminEditContentPageUI({
                         onClick={() =>
                           handleRoyalRumbleLinkSave(royalRumbleTicketLink)
                         }
+                        style={{fontSize: "25px", width: "190px"}}
                       >
                         Save
                       </SaveButton>

@@ -141,7 +141,7 @@ export default function AdminEventsUI({
         style={{
           width: "87%",
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "center",
           marginTop: "20px",
           fontSize: "15px",
@@ -149,7 +149,7 @@ export default function AdminEventsUI({
       >
         <AddButton
           onClick={() => router.push("/admin/add/event")}
-          style={{ fontSize: "21px", justifyContent: "flex-start" }}
+          style={{ fontSize: "25px" }}
         >
           Add Event
           <i

@@ -165,8 +165,9 @@ export default function AdminFreshmen({
           </div>
         </div>
         {/* --- ADD FRESHMAN BUTTON --- */}
-        <div style={{ marginLeft: "14%" }}>
-          <AddButton href="/admin/add/freshman">
+        <div style={{ marginLeft: "16%" }}>
+          <AddButton href="/admin/add/freshman"
+            style={{ fontSize: "30px", width: "230px" }}>
             Add
             <i
               className="bi bi-plus-circle"

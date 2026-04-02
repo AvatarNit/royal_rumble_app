@@ -105,16 +105,21 @@ export default function AdminAttendanceFreshmenUI({
       </div>
 
       <InfoBox headerText="All Freshmen">
-        <ExportToExcelButton
-          headers={["First Name", "Last Name", "Student ID", "Status"]}
-          data={filteredFreshmen.map((student) => [
-            student.fName,
-            student.lName,
-            student.freshmenId.toString(),
-            student.present ? "Present" : "Absent",
-          ])}
-          fileName="freshmen-attendance"
-        />
+        <section style = {{display: "flex", justifyContent: "right", 
+                           marginBottom: "10px", width: "92%"}}
+        >
+          <ExportToExcelButton
+            headers={["First Name", "Last Name", "Student ID", "Status"]}
+            data={filteredFreshmen.map((student) => [
+              student.fName,
+              student.lName,
+              student.freshmenId.toString(),
+              student.present ? "Present" : "Absent",
+            ])}
+            fileName="freshmen-attendance"
+            style = {{width: "150px"}}
+          />
+        </section>
         <CheckBoxTable
           headers={["Freshman Name", "Student ID"]}
           data={filteredFreshmen.map((student) => [

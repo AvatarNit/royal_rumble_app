@@ -214,7 +214,7 @@ export default function AdminAddMentor() {
         </div>
       </section>
       <div className="add-button-align">
-        <AddButton onClick={handleAdd}>
+        <AddButton onClick={handleAdd} style={{ fontSize: "30px" }}>
           Add
           <i
             className="bi bi-plus-circle"

@@ -249,8 +249,8 @@ export default function ViewDropdown({
                                 fontWeight: "bold", fontSize: "20px" }}>
             Delete Group
           </Modal.Title>
-          <i className="bi bi-x-lg" data-bs-dismiss="modal" 
-            style={{fontSize:"22px", }} />
+          <i className="bi bi-x-lg" data-bs-dismiss="modal" onClick={() => setModalID(null)}
+            style={{fontSize:"22px", cursor: "pointer"}} />
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete this item (ID: {modalID})?

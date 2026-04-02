@@ -246,7 +246,7 @@ export default function AdminAddEvent() {
         </div>
       </section>
       <div className="add-button-align">
-        <AddButton onClick={handleAddClick}>
+        <AddButton onClick={handleAddClick} style={{ fontSize: "30px" }}>
           Add
           <i
             className="bi bi-plus-circle"

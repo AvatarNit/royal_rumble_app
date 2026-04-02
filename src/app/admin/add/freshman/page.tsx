@@ -23,7 +23,7 @@ export default function AdminAddFreshman() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleLogoClick = () => {
-    router.push("/admin/add");
+    router.push("/admin/freshmen");
   };
 
   const validate = () => {
@@ -166,7 +166,7 @@ export default function AdminAddFreshman() {
         </div>
       </section>
       <div className="add-button-align">
-        <AddButton onClick={handleAdd}>
+        <AddButton onClick={handleAdd} style={{ fontSize: "30px" }}>
           Add
           <i
             className="bi bi-plus-circle"

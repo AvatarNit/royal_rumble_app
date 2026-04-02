@@ -326,9 +326,10 @@ export async function createGroups() {
   const groupIds = groupRows.map((g) => g.id);
   const groupCount = groupIds.length;
 
-  // divide evenly into 6 orders distribution
-  const countPerOrder = Math.floor(groupCount / 6);
-  const remainder = groupCount % 6;
+  // divide evenly across all patterns
+  const patternCount = orders.length;
+  const countPerOrder = Math.floor(groupCount / patternCount);
+  const remainder = groupCount % patternCount;
 
   const distribution = orders.map((order, index) => ({
     order: order,

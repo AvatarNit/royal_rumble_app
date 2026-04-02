@@ -94,6 +94,17 @@ async function insertData(table: string, rows: any[]) {
           interests: row["interests"],
           healthConcerns: row["health_concerns"],
           present: false,
+        }).onConflictDoUpdate({
+          target: freshmenData.freshmenId,
+          set: {
+            fName: row["first_name"] ?? row["f_name"],
+            lName: row["last_name"] ?? row["l_name"],
+            tshirtSize: row["shirt_size"] ?? row["shirtsize"],
+            email: row["email"],
+            primaryLanguage: row["primary_language"] || "English",
+            interests: row["interests"],
+            healthConcerns: row["health_concerns"],
+          },
         });
       }
       break;

@@ -88,7 +88,9 @@ export default function GroupLeaderUI({
               </div>
               <div className="info-pair">
                 <div className="info-label">Event Order:</div>
-                <div className="info-value">{groupDetails.eventOrder}</div>
+                <div className="info-value">
+                  {JSON.parse(groupDetails.eventOrder || "[]").join(", ")}
+                </div>
               </div>
             </div>
             <div className="info-pairs">

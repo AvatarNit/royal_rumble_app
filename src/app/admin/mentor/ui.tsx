@@ -160,7 +160,7 @@ export default function AdminMentors({
       <div
         style={{ display: "flex", justifyContent: "center", margin: "20px" }}
       >
-        <AddButton href="/admin/add/mentor">
+        <AddButton href="/admin/add/mentor" >
           Add
           <i
             className="bi bi-plus-circle"

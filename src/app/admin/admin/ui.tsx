@@ -40,7 +40,9 @@ export default function AdminAdmin({
           marginTop: "20px",
         }}
       >
-        <AddButton href="/admin/add/admin">
+        <AddButton href="/admin/add/admin"
+          style={{ fontSize: "30px" }}
+        >
           Add
           <i
             className="bi bi-plus-circle"

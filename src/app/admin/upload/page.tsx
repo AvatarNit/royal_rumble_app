@@ -118,7 +118,7 @@ export default function AdminUpload() {
     textAlign: "center" as const,
     cursor: "pointer",
     transition: "background-color 0.3s",
-    width: "270px",
+    width: "300px",
   };
 
   const buttonHover = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -242,7 +242,7 @@ export default function AdminUpload() {
                 }}
               >
                 <button
-                  style={buttonStyle}
+                  style={{ ...buttonStyle, paddingLeft: "10px", paddingRight: "10px", width: "340px" }}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
@@ -269,7 +269,7 @@ export default function AdminUpload() {
                   ></i>
                   <div
                     className="info-value"
-                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                    style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Splits each seminar class in half and assigns each half a group number. Run this first after uploading seminar data.
                   </div>
@@ -312,7 +312,7 @@ export default function AdminUpload() {
                   ></i>
                   <div
                     className="info-value"
-                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                    style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Builds the official groups in the system and automatically sets their tour routes and event schedules.
                   </div>
@@ -328,7 +328,7 @@ export default function AdminUpload() {
                 }}
               >
                 <button
-                  style={buttonStyle}
+                  style={{ ...buttonStyle, width: "340px" }}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
@@ -355,7 +355,7 @@ export default function AdminUpload() {
                   ></i>
                   <div
                     className="info-value"
-                    style={{ fontSize: "18px", marginBottom: "5px" }}
+                    style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Matches each freshman from GoFan to their seminar group by ID or name, and updates their group assignment.
                   </div>

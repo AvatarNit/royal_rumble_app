@@ -97,10 +97,11 @@ export async function upsertBlockSchedule(
       .where(eq(blockSchedule.blockName, blockName));
     return { success: true, action: "updated", blockName };
   } else {
-    await db
+    const [inserted] = await db
       .insert(blockSchedule)
-      .values({ blockName, startTime, durationMinutes });
-    return { success: true, action: "created", blockName };
+      .values({ blockName, startTime, durationMinutes })
+      .returning();
+    return { success: true, action: "created", blockName, inserted };
   }
 }
 

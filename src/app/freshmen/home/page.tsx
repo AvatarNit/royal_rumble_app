@@ -7,6 +7,7 @@ import {
   getFreshmanById,
   getFreshmanByIdFromSchoolData,
 } from "../../../../src/actions/freshmen";
+import { getMentorsByGroupId } from "@/src/actions/group";
 import EditableContent from "../../components/EditableContent";
 import { auth } from "@/auth";
 
@@ -30,6 +31,9 @@ export default async function FreshmenHomepage() {
   }
 
   const freshmanDetails = await getFreshmanById(Number(studentId));
+  const groupMentors = await getMentorsByGroupId(
+    String(freshmanDetails?.groupId),
+  );
 
   if (!freshmanDetails) {
     const freshmenDetailsFromSchoolData = await getFreshmanByIdFromSchoolData(
@@ -87,6 +91,28 @@ export default async function FreshmenHomepage() {
               {freshmanDetails?.groupId === null
                 ? "Unassigned"
                 : freshmanDetails?.groupId}
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              color: "var(--primaryBlue)",
+              fontWeight: "bold",
+              fontSize: "30px",
+              gap: "10px",
+            }}
+          >
+            <div className="info-pair">
+              <div className="info-label">Mentors:</div>
+              <div className="info-value">
+                <ol className="list-group  list-group-horizontal">
+                  {groupMentors.map((mentor) => (
+                    <li className="list-group-item" key={mentor.mentor_id}>
+                      {mentor.fname} {mentor.lname}
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
           </div>
 

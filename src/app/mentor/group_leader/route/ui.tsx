@@ -140,12 +140,11 @@ export default function GroupLeaderRouteUI({
                       Stops:
                     </div>
                     <InfoTable
-                      headers={["#", "Location", "Arrival Time", "Duration"]}
+                      headers={["#", "Location", "Arrival Time"]}
                       data={block.stops.map((stop) => [
                         stop.stopOrder,
                         stop.location ?? "Unknown",
                         stop.arrivalTime,
-                        `${stop.durationMinutes} min`,
                       ])}
                     />
                   </>

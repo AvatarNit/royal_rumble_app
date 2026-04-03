@@ -55,6 +55,7 @@ export const getGroupLeaderEvents = async () => {
       description: eventsData.description,
     })
     .from(eventsData)
+    .orderBy(sql`${eventsData.date} ASC, ${eventsData.time} ASC`)
     .where(or(eq(eventsData.job, "GROUP LEADER"), eq(eventsData.job, "ALL")));
   return events;
 };
@@ -134,6 +135,7 @@ export const getHallwayHostEvents = async () => {
       description: eventsData.description,
     })
     .from(eventsData)
+    .orderBy(sql`${eventsData.date} ASC, ${eventsData.time} ASC`)
     .where(or(eq(eventsData.job, "HALLWAY HOST"), eq(eventsData.job, "ALL")));
   return events;
 };
@@ -149,6 +151,7 @@ export const getUtilitySquadEvents = async () => {
       description: eventsData.description,
     })
     .from(eventsData)
+    .orderBy(sql`${eventsData.date} ASC, ${eventsData.time} ASC`)
     .where(or(eq(eventsData.job, "UTILITY SQUAD"), eq(eventsData.job, "ALL")));
   return events;
 };
@@ -162,6 +165,7 @@ export const getSpiritSessionEvents = async () => {
       description: eventsData.description,
     })
     .from(eventsData)
+    .orderBy(sql`${eventsData.date} ASC, ${eventsData.time} ASC`)
     .where(or(eq(eventsData.job, "SPIRIT SESSION"), eq(eventsData.job, "ALL")));
   return events;
 };

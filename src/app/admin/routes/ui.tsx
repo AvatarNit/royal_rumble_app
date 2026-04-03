@@ -227,16 +227,25 @@ export default function AdminRoutesUI({
       showAlert("Please fill in all fields for the new block.", "danger");
       return;
     }
-    await upsertBlockSchedule(
+    const result = await upsertBlockSchedule(
       newBlockName.trim(),
       newBlockTime.trim(),
       duration,
     );
+    if (result.action === "created" && result.inserted) {
+      setBlocksState((prev) => [...prev, result.inserted]);
+      setBlockEdits((prev) => ({
+        ...prev,
+        [result.inserted.blockScheduleId]: {
+          startTime: result.inserted.startTime,
+          durationMinutes: result.inserted.durationMinutes.toString(),
+        },
+      }));
+    }
     showAlert(`Block "${newBlockName}" added!`, "success");
     setNewBlockName("");
     setNewBlockTime("");
     setNewBlockDuration("");
-    router.refresh();
   };
 
   const [routesState, setRoutesState] = useState<Route[]>(routes);

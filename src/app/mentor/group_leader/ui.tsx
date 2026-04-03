@@ -45,6 +45,7 @@ export default function GroupLeaderUI({
     fName: string | null;
     lName: string | null;
     interests: string | null;
+    tshirtSize: string | null;
   }>;
 }) {
   return (
@@ -68,58 +69,65 @@ export default function GroupLeaderUI({
         </div>
       </header>
 
-      <div
-        className="mentor-info-box"
-        style={{ flexDirection: "row", gap: "20px" }}
-      >
-        <MentorButtons link="/mentor/group_leader/attendance">
-          Attendance
-        </MentorButtons>
-        <MentorButtons link="/mentor/group_leader/route">Route</MentorButtons>
-      </div>
+      {groupDetails != null && (
+        <>
+          <div
+            className="mentor-info-box"
+            style={{ flexDirection: "row", gap: "20px" }}
+          >
+            <MentorButtons link="/mentor/group_leader/attendance">
+              Attendance
+            </MentorButtons>
+            <MentorButtons link="/mentor/group_leader/route">
+              Route
+            </MentorButtons>
+          </div>
 
-      <section className="mentor-info-box">
-        <InfoBox headerText="Group Details">
-          <section>
-            <div className="info-pairs">
-              <div className="info-pair">
-                <div className="info-label">Route #:</div>
-                <div className="info-value">{groupDetails.routeNum}</div>
-              </div>
-              <div className="info-pair">
-                <div className="info-label">Event Order:</div>
-                <div className="info-value">
-                  {JSON.parse(groupDetails.eventOrder || "[]").join(", ")}
+          <section className="mentor-info-box">
+            <InfoBox headerText="Group Details">
+              <section>
+                <div className="info-pairs">
+                  <div className="info-pair">
+                    <div className="info-label">Route #:</div>
+                    <div className="info-value">{groupDetails.routeNum}</div>
+                  </div>
+                  <div className="info-pair">
+                    <div className="info-label">Event Order:</div>
+                    <div className="info-value">
+                      {JSON.parse(groupDetails.eventOrder || "[]").join(", ")}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="info-pairs">
-              <div className="info-pair">
-                <div className="info-label">Mentors:</div>
-                <div className="info-value">
-                  <ol className="list-group list-group-numbered list-group-horizontal">
-                    {groupMentors.map((mentor) => (
-                      <li className="list-group-item" key={mentor.mentorId}>
-                        {mentor.fName} {mentor.lName}
-                      </li>
-                    ))}
-                  </ol>
+                <div className="info-pairs">
+                  <div className="info-pair">
+                    <div className="info-label">Mentors:</div>
+                    <div className="info-value">
+                      <ol className="list-group list-group-numbered list-group-horizontal">
+                        {groupMentors.map((mentor) => (
+                          <li className="list-group-item" key={mentor.mentorId}>
+                            {mentor.fName} {mentor.lName}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </div>
+                  <div className="info-pairs">
+                    <div className="info-label">Freshmen:</div>
+                    <InfoTable
+                      headers={["Name", "Interests", "T-Shirt Size"]}
+                      data={groupFreshmen.map((freshman) => [
+                        `${freshman.fName} ${freshman.lName}`,
+                        freshman.interests ?? "",
+                        freshman.tshirtSize ?? "",
+                      ])}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="info-pairs">
-                <div className="info-label">Frehsmen:</div>
-                <InfoTable
-                  headers={["Name", "Interests"]}
-                  data={groupFreshmen.map((freshman) => [
-                    `${freshman.fName} ${freshman.lName}`,
-                    freshman.interests ?? "",
-                  ])}
-                />
-              </div>
-            </div>
+              </section>
+            </InfoBox>
           </section>
-        </InfoBox>
-      </section>
+        </>
+      )}
 
       <section className="mentor-info-box">
         <InfoBox headerText="Event Details">

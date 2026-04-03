@@ -126,7 +126,7 @@ export default function AdminAddFreshmenGroupPage(props: {
         </div>
       </section>
       <div className="add-button-align">
-        <AddButton onClick={handleAddGroup}>
+        <AddButton onClick={handleAddGroup} style={{ fontSize: "30px" }}>
           Add
           <i
             className="bi bi-plus-circle"

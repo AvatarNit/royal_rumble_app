@@ -125,7 +125,9 @@ export default function AdminAttendanceMentorUI({
         <i className="bi bi-arrow-left"></i>
       </button>
 
-      <div className="search-container">
+      <div className="search-container" 
+           style = {{width: "100%", display: "flex", alignItems: "center", gap: "100px"}}
+      >
         <div className="search-row">
           <input
             type="text"
@@ -154,17 +156,20 @@ export default function AdminAttendanceMentorUI({
       </div>
 
       <InfoBox headerText="Mentors">
-        <ExportToExcelButton
-          headers={["First Name", "Last Name", "Student ID", "Job", "Status"]}
-          data={filteredMentors.map((mentor) => [
-            mentor.fName,
-            mentor.lName,
-            mentor.mentor_id.toString(),
-            mentor.job,
-            mentor.status ? "Present" : "Absent",
-          ])}
-          fileName="mentor-attendance"
-        />
+        <section style = {{display: "flex", justifyContent: "right", marginBottom: "10px", width: "92%"}}>
+          <ExportToExcelButton
+            headers={["First Name", "Last Name", "Student ID", "Job", "Status"]}
+            data={filteredMentors.map((mentor) => [
+              mentor.fName,
+              mentor.lName,
+              mentor.mentor_id.toString(),
+              mentor.job,
+              mentor.status ? "Present" : "Absent",
+            ])}
+            fileName="mentor-attendance"
+            style = {{width: "150px"}}
+          />
+        </section>
         <CheckBoxTable
           headers={["Mentor Name", "Student ID", "Job"]}
           data={filteredMentors.map((mentor) => [

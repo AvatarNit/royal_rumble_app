@@ -228,7 +228,9 @@ export default function EditTable({
             Delete Row
           </Modal.Title>
           <i className="bi bi-x-lg" data-bs-dismiss="modal" 
-            style={{fontSize:"22px", }} />
+            style={{fontSize:"22px", cursor: "pointer"}}
+            onClick={() => setModalID(null)} 
+          />
         </Modal.Header>
         <Modal.Body>
           Are you sure you want to delete this item (ID: {modalID})?

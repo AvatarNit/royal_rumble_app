@@ -12,6 +12,7 @@ const TENANT_ID = process.env.NEXT_PUBLIC_MICROSOFT_ENTRA_TENANT_ID;
 
 const JOB_ROUTES: Record<string, string> = {
   FRESHMAN: "/freshmen/home",
+  UNREGISTERED: "/freshmen/home",
   ADMIN: "/admin",
   "GROUP LEADER": "/mentor/group_leader",
   "HALLWAY HOST": "/mentor/hallway_host",

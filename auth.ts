@@ -39,7 +39,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (!dbUser) {
         console.log("User not found in DB");
-        return false;
+        user.job = "UNREGISTERED";
+        return true;
       }
 
       user.id = String(dbUser.id);

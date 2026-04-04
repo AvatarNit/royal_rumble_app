@@ -45,9 +45,9 @@ export default async function FreshmenHomepage() {
   }
 
   const freshmanDetails = await getFreshmanById(Number(studentId));
-  const groupMentors = await getMentorsByGroupId(
-    String(freshmanDetails?.groupId),
-  );
+  const groupMentors = freshmanDetails
+    ? await getMentorsByGroupId(String(freshmanDetails.groupId))
+    : [];
 
   if (!freshmanDetails) {
     const freshmenDetailsFromSchoolData = await getFreshmanByIdFromSchoolData(

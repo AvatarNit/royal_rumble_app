@@ -20,6 +20,24 @@ export default async function FreshmenHomepage() {
 
   if (!DEV_MODE) {
     const session = await auth();
+    const job = session?.user?.job;
+    if (job === "UNREGISTERED" || !job) {
+      return (
+        <main className="freshmen-container">
+          <LogoButton />
+          <LoginButton />
+          <header className="freshmen-header">
+            <h1 className="freshmen-title">Welcome!</h1>
+            <h3 className="check-registration">
+              We couldn&apos;t find your registration details.
+              <br /> To register <a>Click Here!</a> <br />
+              If this is an error, please contact support at
+              royalrumble@university.edu
+            </h3>
+          </header>
+        </main>
+      );
+    }
     studentId = session?.user?.id;
   } else {
     // Fake ID for development
@@ -27,21 +45,7 @@ export default async function FreshmenHomepage() {
   }
 
   if (!studentId) {
-    return (
-      <main className="freshmen-container">
-        <LogoButton />
-        <LoginButton />
-        <header className="freshmen-header">
-          <h1 className="freshmen-title">Welcome!</h1>
-          <h3 className="check-registration">
-            We couldn&apos;t find your registration details.
-            <br /> To register <a>Click Here!</a> <br />
-            If this is an error, please contact support at
-            royalrumble@university.edu
-          </h3>
-        </header>
-      </main>
-    );
+    return null;
   }
 
   const freshmanDetails = await getFreshmanById(Number(studentId));

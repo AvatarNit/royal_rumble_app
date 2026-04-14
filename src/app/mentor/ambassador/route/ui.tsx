@@ -28,7 +28,7 @@ interface Schedule {
   schedule: ScheduleBlock[];
 }
 
-export default function GroupLeaderRouteUI({
+export default function AmbassadorRouteUI({
   schedule,
 }: {
   schedule: Schedule | null;
@@ -41,7 +41,7 @@ export default function GroupLeaderRouteUI({
         <header className="mentor-header">
           <h1 className="mentor-title">Route</h1>
         </header>
-        <BackButton href="/mentor/group_leader" />
+        <BackButton href="/mentor/ambassador" />
         <section className="mentor-info-box">
           <InfoBox headerText="No Route Assigned">
             <p
@@ -69,7 +69,7 @@ export default function GroupLeaderRouteUI({
         <h1 className="mentor-title">Your Route</h1>
       </header>
 
-      <BackButton href="/mentor/group_leader" />
+      <BackButton href="/mentor/ambassador" />
 
       {/* Group + Route summary */}
       <section className="mentor-info-box">

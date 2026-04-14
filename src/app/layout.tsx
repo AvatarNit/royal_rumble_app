@@ -29,7 +29,7 @@ export default function RootLayout({
                 <Link href="/">Home</Link> | <Link href="/about">About</Link> |{" "}
                 <Link href="/faq">FAQ</Link> |{" "}
                 <Link href="/freshmen/home">Freshmen</Link> |{" "}
-                <Link href="/mentor/group_leader">Group Leader</Link> |{" "}
+                <Link href="/mentor/ambassador">Ambassador</Link> |{" "}
                 <Link href="/mentor/hallway_host">Hallway Host</Link> |{" "}
                 <Link href="/mentor/utility_squad">Utility Squad</Link> |{" "}
                 <Link href="/mentor/spirit_session">Spirit Session</Link> |{" "}

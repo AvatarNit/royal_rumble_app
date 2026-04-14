@@ -1,22 +1,22 @@
-import { getMentorById, getGroupLeaderEvents } from "@/src/actions/mentor";
+import { getMentorById, getAmbassadorEvents } from "@/src/actions/mentor";
 import {
   getGroupByGroupId,
   getGroupIdByMentorId,
   getMentorsByGroupId,
   getFreshmenByGroupId,
 } from "@/src/actions/group";
-import GroupLeaderHomepageUI from "./ui";
+import AmbassadorHomepageUI from "./ui";
 import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
 const DEV_MODE = process.env.DEV_MODE === "true";
 
-export default async function GroupLeaderHomepage() {
+export default async function AmbassadorHomepage() {
   const session = await auth();
   const studentId = !DEV_MODE ? session?.user?.id : "100001";
 
   const mentorsData = await getMentorById(Number(studentId));
-  const groupLeaderEvents = await getGroupLeaderEvents();
+  const ambassadorEvents = await getAmbassadorEvents();
 
   const groupId = await getGroupIdByMentorId(Number(studentId));
   const groupDetails = await getGroupByGroupId(String(groupId));
@@ -30,9 +30,9 @@ export default async function GroupLeaderHomepage() {
   }));
 
   return (
-    <GroupLeaderHomepageUI
+    <AmbassadorHomepageUI
       mentorsData={mentorsData}
-      groupLeaderEvents={groupLeaderEvents}
+      ambassadorEvents={ambassadorEvents}
       groupDetails={groupDetails}
       groupMentors={groupMentors}
       groupFreshmen={groupFreshmen}

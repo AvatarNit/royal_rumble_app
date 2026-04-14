@@ -13,8 +13,8 @@ export default function LogoButton() {
     const handleLogoClick = () => {
     if (pathname.startsWith("/freshmen")) {
       router.push("/freshmen/home");  
-    } else if (pathname.startsWith("/mentor/group_leader")) {
-      router.push("/mentor/group_leader");
+    } else if (pathname.startsWith("/mentor/ambassador")) {
+      router.push("/mentor/ambassador");
 
     } else if (pathname.startsWith("/mentor/hallway_host")) {
       router.push("/mentor/hallway_host");

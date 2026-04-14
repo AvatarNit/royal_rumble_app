@@ -30,6 +30,8 @@ export default function AdminEditMentorUI({
   const [trainingDay, setTrainingDay] = useState("");
   const [tshirtSize, setTshirtSize] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
+  const [pastMentor, setPastMentor] = useState(false);
+  const [interestsInvolvement, setInterestsInvolvement] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -46,6 +48,8 @@ export default function AdminEditMentorUI({
       setLanguages(mentor.languages ?? "");
       setTrainingDay(mentor.trainingDay ?? "");
       setPhoneNum(mentor.phoneNum ?? "");
+      setPastMentor(mentor.pastMentor ?? false);
+      setInterestsInvolvement(mentor.interestsInvolvement ?? "");
     };
     loadMentor();
   }, [mentorId]);
@@ -90,6 +94,8 @@ export default function AdminEditMentorUI({
       languages: languages,
       training_day: trainingDay,
       phone_num: phoneNum,
+      past_mentor: pastMentor,
+      interests_involvement: interestsInvolvement,
     });
     showAlert(`Mentor ${fName} ${lName} updated successfully!`, "success");
     router.push("/admin/mentor");
@@ -216,7 +222,7 @@ export default function AdminEditMentorUI({
                     Select Job
                   </option>
                 ) : null}
-                <option value="GROUP LEADER">GROUP LEADER</option>
+                <option value="AMBASSADOR">AMBASSADOR</option>
                 <option value="HALLWAY HOST">HALLWAY HOST</option>
                 <option value="SPIRIT SESSION">SPIRIT SESSION</option>
                 <option value="UTILITY SQUAD">UTILITY SQUAD</option>
@@ -234,6 +240,25 @@ export default function AdminEditMentorUI({
               placeholder="Mentor T-Shirt Size"
               value={tshirtSize}
               onChange={(e) => setTshirtSize(e.target.value)}
+            />
+          </div>
+          <div className="form-row">
+            <label className="form-label">Past Mentor?</label>
+            <input
+              type="checkbox"
+              className="checkbox-input"
+              checked={pastMentor}
+              onChange={(e) => setPastMentor(e.target.checked)}
+            />
+          </div>
+          <div className="form-row">
+            <label className="form-label">Interests / Involvement:</label>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Interests / Involvement"
+              value={interestsInvolvement}
+              onChange={(e) => setInterestsInvolvement(e.target.value)}
             />
           </div>
         </div>

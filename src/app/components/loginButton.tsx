@@ -14,7 +14,7 @@ const JOB_ROUTES: Record<string, string> = {
   FRESHMAN: "/freshmen/home",
   UNREGISTERED: "/freshmen/home",
   ADMIN: "/admin",
-  "GROUP LEADER": "/mentor/group_leader",
+  AMBASSADOR: "/mentor/ambassador",
   "HALLWAY HOST": "/mentor/hallway_host",
   "UTILITY SQUAD": "/mentor/utility_squad",
   "SPIRIT SESSION": "/mentor/spirit_session",
@@ -23,7 +23,7 @@ const JOB_ROUTES: Record<string, string> = {
 const JOB_BASE_PATHS: Record<string, string> = {
   FRESHMAN: "/freshmen",
   ADMIN: "/admin",
-  "GROUP LEADER": "/mentor",
+  AMBASSADOR: "/mentor",
   "HALLWAY HOST": "/mentor",
   "UTILITY SQUAD": "/mentor",
   "SPIRIT SESSION": "/mentor",

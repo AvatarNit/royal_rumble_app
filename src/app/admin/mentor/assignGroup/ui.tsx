@@ -14,7 +14,7 @@ import {
 import { useAlert } from "@/app/context/AlertContext";
 
 interface MentorAssignGroupUIProps {
-  groupLeaderAssignments: {
+  ambassadorAssignments: {
     groupId: string | null;
     mentorId: number | null;
     fName: string | null;
@@ -31,23 +31,23 @@ interface MentorAssignGroupUIProps {
 }
 
 export default function MentorAssignGroupUI({
-  groupLeaderAssignments,
+  ambassadorAssignments,
   groupIds,
   hallwayHostAssignments,
   hallwayStops,
 }: MentorAssignGroupUIProps) {
   const { showAlert } = useAlert();
 
-  const [groupLeaders, setGroupLeaders] = useState(groupLeaderAssignments);
+  const [ambassadors, setAmbassadors] = useState(ambassadorAssignments);
   const [hallwayHosts, setHallwayHosts] = useState(hallwayHostAssignments);
 
   const [searchText, setSearchText] = useState("");
   const [showAssigned, setShowAssigned] = useState(true);
-  const [showGroupLeader, setShowGroupLeader] = useState(true);
+  const [showAmbassador, setShowAmbassador] = useState(true);
 
   const normalizedSearch = searchText.toLowerCase().trim();
 
-  const filteredGroupLeaders = groupLeaders
+  const filteredAmbassadors = ambassadors
     .filter((assignment) => (showAssigned ? true : assignment.groupId === null))
     .filter((assignment) => {
       if (!normalizedSearch) return true;
@@ -102,12 +102,12 @@ export default function MentorAssignGroupUI({
                 <input
                   type="radio"
                   name="groupType"
-                  value="freshmen"
+                  value="ambassador"
                   className="checkbox-input"
                   defaultChecked
-                  onChange={() => setShowGroupLeader(true)}
+                  onChange={() => setShowAmbassador(true)}
                 />
-                Group Leader
+                Ambassador
               </label>
               <label className="checkbox-label">
                 <input
@@ -115,7 +115,7 @@ export default function MentorAssignGroupUI({
                   name="groupType"
                   value="hallway"
                   className="checkbox-input"
-                  onChange={() => setShowGroupLeader(false)}
+                  onChange={() => setShowAmbassador(false)}
                 />
                 Hallway Host
               </label>
@@ -136,10 +136,10 @@ export default function MentorAssignGroupUI({
       </div>
 
       <div style={{ width: "85%", marginTop: "50px" }}>
-        {showGroupLeader ? (
+        {showAmbassador ? (
           <DropdownTable
             headers={["Group ID", "ID", "First Name", "Last Name"]}
-            data={filteredGroupLeaders.map((m) => [
+            data={filteredAmbassadors.map((m) => [
               m.groupId,
               m.mentorId,
               m.fName,
@@ -156,7 +156,7 @@ export default function MentorAssignGroupUI({
               );
 
               if (result.success) {
-                setGroupLeaders((prev) =>
+                setAmbassadors((prev) =>
                   prev.map((mentor) =>
                     mentor.mentorId === Number(mentorId)
                       ? {

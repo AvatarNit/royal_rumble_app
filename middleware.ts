@@ -40,7 +40,7 @@ function prodMiddleware(req: any) {
     }
 
     const allowedMentorJobs = [
-      "GROUP LEADER",
+      "AMBASSADOR",
       "HALLWAY HOST",
       "UTILITY SQUAD",
       "SPIRIT SESSION",

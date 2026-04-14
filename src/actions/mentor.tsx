@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import {
   eventsData,
-  groupLeaderData,
+  ambassadorData,
   hallwayHostData,
   hallwayStopData,
   mentorAttendanceData,
@@ -31,21 +31,21 @@ export const getMentors = async () => {
   return mentors;
 };
 
-export const getGroupLeaderAssignments = async () => {
+export const getAmbassadorAssignments = async () => {
   const groups = await db
     .select({
-      groupId: groupLeaderData.groupId,
-      mentorId: groupLeaderData.mentorId,
+      groupId: ambassadorData.groupId,
+      mentorId: ambassadorData.mentorId,
       fName: mentorData.fName,
       lName: mentorData.lName,
     })
-    .from(groupLeaderData)
-    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId))
-    .orderBy(sql`${groupLeaderData.groupId} ASC NULLS FIRST`);
+    .from(ambassadorData)
+    .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId))
+    .orderBy(sql`${ambassadorData.groupId} ASC NULLS FIRST`);
   return groups;
 };
 
-export const getGroupLeaderEvents = async () => {
+export const getAmbassadorEvents = async () => {
   const events = await db
     .select({
       eventId: eventsData.eventId,
@@ -56,7 +56,7 @@ export const getGroupLeaderEvents = async () => {
     })
     .from(eventsData)
     .orderBy(sql`${eventsData.date} ASC, ${eventsData.time} ASC`)
-    .where(or(eq(eventsData.job, "GROUP LEADER"), eq(eventsData.job, "ALL")));
+    .where(or(eq(eventsData.job, "AMBASSADOR"), eq(eventsData.job, "ALL")));
   return events;
 };
 
@@ -198,8 +198,8 @@ export const addMentor = async (data: {
     email: data.email,
     phoneNum: data.phone_number,
   });
-  if (data.job === "GROUP LEADER") {
-    await db.insert(groupLeaderData).values({
+  if (data.job === "AMBASSADOR") {
+    await db.insert(ambassadorData).values({
       mentorId: data.mentor_id,
       groupId: null,
     });
@@ -253,6 +253,8 @@ export const updateMentorByID = async (
     training_day: string;
     tshirt_size: string;
     phone_num: string;
+    past_mentor?: boolean;
+    interests_involvement?: string;
   },
 ) => {
   const currentJob = await db
@@ -261,10 +263,10 @@ export const updateMentorByID = async (
     .where(eq(mentorData.mentorId, mentorId))
     .limit(1);
   if (currentJob[0].job !== data.job) {
-    if (currentJob[0].job === "GROUP LEADER") {
+    if (currentJob[0].job === "AMBASSADOR") {
       await db
-        .delete(groupLeaderData)
-        .where(eq(groupLeaderData.mentorId, mentorId));
+        .delete(ambassadorData)
+        .where(eq(ambassadorData.mentorId, mentorId));
     } else if (currentJob[0].job === "HALLWAY HOST") {
       await db
         .delete(hallwayHostData)
@@ -275,8 +277,8 @@ export const updateMentorByID = async (
       .delete(mentorAttendanceData)
       .where(eq(mentorAttendanceData.mentorId, mentorId));
 
-    if (data.job === "GROUP LEADER") {
-      await db.insert(groupLeaderData).values({
+    if (data.job === "AMBASSADOR") {
+      await db.insert(ambassadorData).values({
         mentorId: mentorId,
         groupId: null,
       });
@@ -312,6 +314,8 @@ export const updateMentorByID = async (
       trainingDay: data.training_day,
       tshirtSize: data.tshirt_size,
       phoneNum: data.phone_num,
+      pastMentor: data.past_mentor,
+      interestsInvolvement: data.interests_involvement,
     })
     .where(eq(mentorData.mentorId, mentorId));
   return { success: true, id: mentorId };
@@ -325,11 +329,11 @@ export const reassignMentorGroup = async (
     newGroupId = null as any;
   }
   await db
-    .update(groupLeaderData)
+    .update(ambassadorData)
     .set({
       groupId: newGroupId,
     })
-    .where(eq(groupLeaderData.mentorId, mentorId));
+    .where(eq(ambassadorData.mentorId, mentorId));
   return { success: true, id: mentorId };
 };
 
@@ -362,10 +366,10 @@ export const reassignMentorHallway = async (
 export const deleteMentorById = async (mentorId: number) => {
   const mentor = await getMentorById(mentorId);
   console.log("Deleting mentor:", mentor);
-  if (mentor.job === "GROUP LEADER") {
+  if (mentor.job === "AMBASSADOR") {
     await db
-      .delete(groupLeaderData)
-      .where(eq(groupLeaderData.mentorId, mentorId));
+      .delete(ambassadorData)
+      .where(eq(ambassadorData.mentorId, mentorId));
   } else if (mentor.job === "HALLWAY HOST") {
     await db
       .delete(hallwayHostData)

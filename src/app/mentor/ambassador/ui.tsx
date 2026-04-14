@@ -3,9 +3,9 @@ import MentorButtons from "../../components/mentorButtons";
 import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
 
-export default function GroupLeaderUI({
+export default function AmbassadorUI({
   mentorsData,
-  groupLeaderEvents,
+  ambassadorEvents,
   groupDetails,
   groupMentors,
   groupFreshmen,
@@ -23,7 +23,7 @@ export default function GroupLeaderUI({
     trainingDay: string | null;
     pizzaType: string | null;
   };
-  groupLeaderEvents: Array<{
+  ambassadorEvents: Array<{
     eventId: number;
     name: string | null;
     date: string | null;
@@ -75,10 +75,10 @@ export default function GroupLeaderUI({
             className="mentor-info-box"
             style={{ flexDirection: "row", gap: "20px" }}
           >
-            <MentorButtons link="/mentor/group_leader/attendance">
+            <MentorButtons link="/mentor/ambassador/attendance">
               Attendance
             </MentorButtons>
-            <MentorButtons link="/mentor/group_leader/route">
+            <MentorButtons link="/mentor/ambassador/route">
               Route
             </MentorButtons>
           </div>
@@ -144,7 +144,7 @@ export default function GroupLeaderUI({
 
           <InfoTable
             headers={["Event", "Date", "Time", "Description"]}
-            data={groupLeaderEvents.map((event) => [
+            data={ambassadorEvents.map((event) => [
               event.name ?? "N/A",
               event.date ?? "N/A",
               event.time ?? "N/A",
@@ -155,7 +155,7 @@ export default function GroupLeaderUI({
       </section>
 
       <InfoBox headerText="Additional Instruction">
-        <EditableContent contentKey="group_leader_more_details" />
+        <EditableContent contentKey="ambassador_more_details" />
       </InfoBox>
     </>
   );

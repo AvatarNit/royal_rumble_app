@@ -8,7 +8,7 @@ import {
   mentorAttendanceData,
   mentorData,
   groupData,
-  groupLeaderData,
+  ambassadorData,
   faqContentData,
 } from "@/db/schema";
 import { eq, asc, and, sql } from "drizzle-orm";
@@ -287,18 +287,18 @@ export const getRoyalRumbleGroupAttendance = async () => {
   // 4️⃣ Fetch mentors and their attendance for the Royal Rumble
   const mentors = await db
     .select({
-      groupId: groupLeaderData.groupId,
+      groupId: ambassadorData.groupId,
       mentorId: mentorData.mentorId,
       fName: mentorData.fName,
       lName: mentorData.lName,
       status: mentorAttendanceData.status,
     })
-    .from(groupLeaderData)
-    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId))
+    .from(ambassadorData)
+    .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId))
     .leftJoin(
       mentorAttendanceData,
       and(
-        eq(groupLeaderData.mentorId, mentorAttendanceData.mentorId),
+        eq(ambassadorData.mentorId, mentorAttendanceData.mentorId),
         eq(mentorAttendanceData.eventId, royalRumbleEventId),
       ),
     );

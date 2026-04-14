@@ -301,8 +301,8 @@ export default function AdminEditContentPageUI({
             contentKey="hallway_host_more_details"
           />
           <EditableContentBox
-            title="Group Leader More Details Text"
-            contentKey="group_leader_more_details"
+            title="Ambassador More Details Text"
+            contentKey="ambassador_more_details"
           />
         </>
       )}

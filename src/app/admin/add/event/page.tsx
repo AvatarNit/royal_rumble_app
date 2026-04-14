@@ -188,11 +188,11 @@ export default function AdminAddEvent() {
                     <input
                       type="radio"
                       name="mentorType"
-                      value="groupLeader"
+                      value="ambassador"
                       className="checkbox-input"
-                      onChange={() => setJob("GROUP LEADER")}
+                      onChange={() => setJob("AMBASSADOR")}
                     />
-                    Group Leader
+                    Ambassador
                   </label>
                   <label className="checkbox-label">
                     <input

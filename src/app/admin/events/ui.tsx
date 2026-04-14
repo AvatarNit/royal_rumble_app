@@ -32,7 +32,7 @@ interface Events {
 
 interface AdminEventsUIProps {
   allEvents: Events;
-  groupLeaderEvents: Events;
+  ambassadorEvents: Events;
   hallwayHostEvents: Events;
   spiritEvents: Events;
   utilityEvents: Events;
@@ -40,7 +40,7 @@ interface AdminEventsUIProps {
 
 export default function AdminEventsUI({
   allEvents,
-  groupLeaderEvents,
+  ambassadorEvents,
   hallwayHostEvents,
   spiritEvents,
   utilityEvents,
@@ -93,11 +93,11 @@ export default function AdminEventsUI({
                 <input
                   type="radio"
                   name="groupType"
-                  value="groupLeader"
+                  value="ambassador"
                   className="checkbox-input"
-                  onClick={() => setEvents(groupLeaderEvents)}
+                  onClick={() => setEvents(ambassadorEvents)}
                 />
-                Group Leader
+                Ambassador
               </label>
 
               <label className="checkbox-label">

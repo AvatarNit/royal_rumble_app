@@ -39,7 +39,7 @@ export default function AdminSearch() {
   });
 
   const [mentorJobs, setMentorJobs] = useState({
-    "Group Leader": false,
+    "Ambassador": false,
     "Hallway Host": false,
     "Spirit / Utility": false,
   });
@@ -55,7 +55,7 @@ export default function AdminSearch() {
     if (!e.target.checked) {
 
       setMentorJobs({
-        "Group Leader": false,
+        "Ambassador": false,
         "Hallway Host": false,
         "Spirit / Utility": false,
       });
@@ -67,7 +67,7 @@ export default function AdminSearch() {
     if (e.target.checked) {
 
       setMentorJobs({
-        "Group Leader": false,
+        "Ambassador": false,
         "Hallway Host": false,
         "Spirit / Utility": false,
       });

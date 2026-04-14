@@ -187,7 +187,7 @@ export default function AdminEditEventsUI({
                   </option>
                 ) : null}
                 <option value="ALL">ALL</option>
-                <option value="GROUP LEADER">GROUP LEADER</option>
+                <option value="AMBASSADOR">AMBASSADOR</option>
                 <option value="HALLWAY HOST">HALLWAY HOST</option>
                 <option value="SPIRIT SESSION">SPIRIT SESSION</option>
                 <option value="UTILITY SQUAD">UTILITY SQUAD</option>

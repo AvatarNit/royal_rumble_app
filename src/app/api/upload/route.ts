@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import {
   mentorData,
-  groupLeaderData,
+  ambassadorData,
   hallwayHostData,
   mentorAttendanceData,
   eventsData,
@@ -65,10 +65,12 @@ async function insertData(table: string, rows: any[]) {
           tshirtSize: row["shirt_size"],
           phoneNum: row["phone_number"],
           email: row["email"]?.trim() || undefined,
+          pastMentor: row["past_mentor"] ?? null,
+          interestsInvolvement: row["interests_involvement"] ?? null,
         }).onConflictDoNothing();
 
-        if (row["job"] === "GROUP LEADER") {
-          await db.insert(groupLeaderData).values({ mentorId: row["mentor_id"], groupId: null }).onConflictDoNothing();
+        if (row["job"] === "AMBASSADOR") {
+          await db.insert(ambassadorData).values({ mentorId: row["mentor_id"], groupId: null }).onConflictDoNothing();
         } else if (row["job"] === "HALLWAY HOST") {
           await db.insert(hallwayHostData).values({ mentorId: row["mentor_id"], hallwayStopId: null }).onConflictDoNothing();
         }

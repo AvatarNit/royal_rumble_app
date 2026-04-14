@@ -70,7 +70,7 @@ export default function FreshmenAttendancePageUI({
         <h1 className="mentor-title">Freshmen Attendance</h1>
       </header>
 
-      <BackButton href="/mentor/group_leader" />
+      <BackButton href="/mentor/ambassador" />
 
       <section className="mentor-info-box">
         <InfoBox headerText="Present?">

@@ -5,7 +5,7 @@ import {
   seminarData,
   groupData,
   freshmenData,
-  groupLeaderData,
+  ambassadorData,
   mentorData,
   hallwayHostData,
   hallwayStopData,
@@ -72,13 +72,13 @@ export async function getAllGroups() {
     .from(freshmenData);
   const mentors = await db
     .select({
-      groupId: groupLeaderData.groupId,
+      groupId: ambassadorData.groupId,
       mentorId: mentorData.mentorId,
       fName: mentorData.fName,
       lName: mentorData.lName,
     })
-    .from(groupLeaderData)
-    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
+    .from(ambassadorData)
+    .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId));
   // Create Groups
   interface GroupDetail {
     group_id: string;
@@ -144,8 +144,8 @@ export async function getFreshmenByGroupId(groupId: string) {
 export async function getMentorsByGroupId(groupId: string) {
   const mentorsId = await db
     .select()
-    .from(groupLeaderData)
-    .where(eq(groupLeaderData.groupId, groupId));
+    .from(ambassadorData)
+    .where(eq(ambassadorData.groupId, groupId));
 
   const mentors = Array<{ mentor_id: number; fname: string; lname: string }>();
 
@@ -181,24 +181,24 @@ export async function getNullGroupFreshmen() {
 export async function getNullGroupMentors() {
   const groupLeaders = await db
     .select({
-      groupId: groupLeaderData.groupId,
+      groupId: ambassadorData.groupId,
       mentorId: mentorData.mentorId,
       fName: mentorData.fName,
       lName: mentorData.lName,
     })
-    .from(groupLeaderData)
-    .where(isNull(groupLeaderData.groupId))
-    .innerJoin(mentorData, eq(groupLeaderData.mentorId, mentorData.mentorId));
+    .from(ambassadorData)
+    .where(isNull(ambassadorData.groupId))
+    .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId));
   return groupLeaders;
 }
 
 export async function getGroupIdByMentorId(mentorId: number) {
   const groupLeader = await db
     .select({
-      groupId: groupLeaderData.groupId,
+      groupId: ambassadorData.groupId,
     })
-    .from(groupLeaderData)
-    .where(eq(groupLeaderData.mentorId, mentorId))
+    .from(ambassadorData)
+    .where(eq(ambassadorData.mentorId, mentorId))
     .limit(1);
   return groupLeader[0]?.groupId ?? null;
 }
@@ -619,9 +619,9 @@ export async function deleteGroupByGroupId(groupId: string) {
     .where(eq(freshmenData.groupId, groupId));
   // Change groupId of group leaders to null
   await db
-    .update(groupLeaderData)
+    .update(ambassadorData)
     .set({ groupId: null })
-    .where(eq(groupLeaderData.groupId, groupId));
+    .where(eq(ambassadorData.groupId, groupId));
   // Delete group
   const result = await db
     .delete(groupData)

@@ -64,25 +64,27 @@ export const freshmenData = pgTable("freshmen_data", {
   groupId:         text("group_id"),
 });
 
-// ---------------- group_leader_data ----------------
-export const groupLeaderData = pgTable("group_leader_data", {
+// ---------------- ambassador_data ----------------
+export const ambassadorData = pgTable("ambassador_data", {
   mentorId: integer("mentor_id"),
   groupId:  text("group_id"),
 });
 
 // ---------------- mentor_data ----------------
 export const mentorData = pgTable("mentor_data", {
-  mentorId:    integer("mentor_id").primaryKey(),
-  email:       text("email"),
-  fName:       text("f_name"),
-  lName:       text("l_name"),
-  gradYear:    integer("grad_year"),
-  job:         text("job"),
-  pizzaType:   text("pizza_type"),
-  languages:   text("languages"),
-  trainingDay: text("training_day"),
-  tshirtSize:  text("tshirt_size"),
-  phoneNum:    text("phone_num"),
+  mentorId:             integer("mentor_id").primaryKey(),
+  email:                text("email"),
+  fName:                text("f_name"),
+  lName:                text("l_name"),
+  gradYear:             integer("grad_year"),
+  job:                  text("job"),
+  pizzaType:            text("pizza_type"),
+  languages:            text("languages"),
+  trainingDay:          text("training_day"),
+  tshirtSize:           text("tshirt_size"),
+  phoneNum:             text("phone_num"),
+  pastMentor:           boolean("past_mentor"),
+  interestsInvolvement: text("interests_involvement"),
 });
 
 // ---------------- admin_data ----------------
@@ -170,11 +172,11 @@ export const groupRouteAttendance = pgTable(
 export const mentorRelations = relations(mentorData, ({ many }) => ({
   attendance:   many(mentorAttendanceData),
   hallwayHost:  many(hallwayHostData),
-  groupLeader:  many(groupLeaderData),
+  ambassador:   many(ambassadorData),
 }));
 
 export const groupRelations = relations(groupData, ({ many }) => ({
-  leaders:           many(groupLeaderData),
+  leaders:           many(ambassadorData),
   seminars:          many(seminarData),
   routeAttendance:   many(groupRouteAttendance),
 }));

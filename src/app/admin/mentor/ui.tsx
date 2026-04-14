@@ -25,6 +25,8 @@ export default function AdminMentors({
     phoneNum: string;
     trainingDay: string;
     pizzaType: string;
+    pastMentor: boolean | null;
+    interestsInvolvement: string | null;
   }>;
 }) {
   //   Column toggle states
@@ -39,6 +41,8 @@ export default function AdminMentors({
   const [phoneSelected, setPhoneSelected] = useState(false);
   const [trainingSelected, setTrainingSelected] = useState(false);
   const [pizzaSelected, setPizzaSelected] = useState(false);
+  const [pastMentorSelected, setPastMentorSelected] = useState(false);
+  const [interestsSelected, setInterestsSelected] = useState(false);
 
   // Search & filter state
   const [searchText, setSearchText] = useState("");
@@ -46,6 +50,8 @@ export default function AdminMentors({
   const [selectedLanguage, setSelectedLanguage] = useState("");
   const [selectedTrainingDay, setSelectedTrainingDay] = useState("");
   const [selectedGradYear, setSelectedGradYear] = useState("");
+  const [selectedPastMentor, setSelectedPastMentor] = useState("");
+  const [selectedInterests, setSelectedInterests] = useState("");
 
   // Table headers
   const ALL_HEADERS = [
@@ -60,6 +66,8 @@ export default function AdminMentors({
     "Phone #",
     "Training Day",
     "Pizza Type",
+    "Past Mentor",
+    "Interests / Involvement",
   ];
 
   // Convert data to the format EditTable expects
@@ -75,6 +83,8 @@ export default function AdminMentors({
     m.phoneNum,
     m.trainingDay,
     m.pizzaType,
+    m.pastMentor ? "Yes" : "No",
+    m.interestsInvolvement ?? "",
   ]);
 
   // Dynamic dropdown options derived from actual data
@@ -94,6 +104,9 @@ export default function AdminMentors({
   const gradYearOptions = [...new Set(mentorsData.map((m) => m.gradYear))]
     .filter(Boolean)
     .sort((a, b) => a - b);
+  const interestsOptions = [...new Set(mentorsData.map((m) => m.interestsInvolvement ?? ""))]
+    .filter(Boolean)
+    .sort();
 
   // --- SEARCH FILTER LOGIC ---
   const filteredData = tableData.filter((row) => {
@@ -124,6 +137,10 @@ export default function AdminMentors({
       return false;
     if (selectedGradYear !== "" && String(row[6]) !== selectedGradYear)
       return false;
+    if (selectedPastMentor !== "" && String(row[11]) !== selectedPastMentor)
+      return false;
+    if (selectedInterests !== "" && String(row[12]) !== selectedInterests)
+      return false;
 
     return true;
   });
@@ -141,6 +158,8 @@ export default function AdminMentors({
   if (phoneSelected) visibleColumns.push(8);
   if (trainingSelected) visibleColumns.push(9);
   if (pizzaSelected) visibleColumns.push(10);
+  if (pastMentorSelected) visibleColumns.push(11);
+  if (interestsSelected) visibleColumns.push(12);
 
   // If none selected → default to first + last name
   if (visibleColumns.length === 0) visibleColumns.push(1, 2);
@@ -257,6 +276,35 @@ export default function AdminMentors({
           </select>
         </div>
       </div>
+      <div className="search-container" style={{ marginLeft: "15%" }}>
+        <div className="search-row" style={{ width: "auto" }}>
+          <select
+            className="form-select"
+            style={{ width: "180px" }}
+            value={selectedPastMentor}
+            onChange={(e) => setSelectedPastMentor(e.target.value)}
+          >
+            <option value="">Past Mentor</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div className="search-row" style={{ width: "auto" }}>
+          <select
+            className="form-select"
+            style={{ width: "220px" }}
+            value={selectedInterests}
+            onChange={(e) => setSelectedInterests(e.target.value)}
+          >
+            <option value="">Interests</option>
+            {interestsOptions.map((interest) => (
+              <option key={interest} value={interest}>
+                {interest}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* --- CHECKBOXES FOR COLUMN VISIBILITY --- */}
       <div style={{ width: "85%", marginTop: "20px" }}>
@@ -365,6 +413,24 @@ export default function AdminMentors({
                   onChange={(e) => setPizzaSelected(e.target.checked)}
                 />
                 Pizza
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={pastMentorSelected}
+                  onChange={(e) => setPastMentorSelected(e.target.checked)}
+                />
+                Past Mentor
+              </label>
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={interestsSelected}
+                  onChange={(e) => setInterestsSelected(e.target.checked)}
+                />
+                Interests
               </label>
             </div>
           </form>

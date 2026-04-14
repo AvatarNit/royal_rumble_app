@@ -15,6 +15,8 @@ export default async function MentorPage() {
     phoneNum: mentor.phoneNum || "",
     trainingDay: mentor.trainingDay || "",
     pizzaType: mentor.pizzaType || "",
+    pastMentor: mentor.pastMentor ?? null,
+    interestsInvolvement: mentor.interestsInvolvement ?? null,
   }));
   return <AdminMentors mentorsData={transformedMentors} />;
 }

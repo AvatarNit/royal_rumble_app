@@ -21,7 +21,9 @@ export default function AdminUpload() {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [progress, setProgress] = useState<Record<string, number>>({});
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
-  const [groupActionLoading, setGroupActionLoading] = useState<Record<string, boolean>>({});
+  const [groupActionLoading, setGroupActionLoading] = useState<
+    Record<string, boolean>
+  >({});
 
   const { showAlert } = useAlert();
   const router = useRouter();
@@ -71,7 +73,11 @@ export default function AdminUpload() {
             [table]: "Indian sweets are being cooked",
           }));
         else if (currentProgress >= 99)
-          setFunnyText((prev) => ({ ...prev, [table]: "Almost done!" }));
+          setFunnyText((prev) => ({
+            ...prev,
+            [table]:
+              "This is a fake progress bar... but if you are seeing this, it is still working!",
+          }));
         else setFunnyText((prev) => ({ ...prev, [table]: "" }));
       }, 100);
 
@@ -243,13 +249,21 @@ export default function AdminUpload() {
                 }}
               >
                 <button
-                  style={{ ...buttonStyle, paddingLeft: "10px", paddingRight: "10px", width: "340px" }}
+                  style={{
+                    ...buttonStyle,
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
+                    width: "340px",
+                  }}
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
                   disabled={groupActionLoading["assignGroups"]}
                   onClick={async () => {
-                    setGroupActionLoading((prev) => ({ ...prev, assignGroups: true }));
+                    setGroupActionLoading((prev) => ({
+                      ...prev,
+                      assignGroups: true,
+                    }));
                     try {
                       const groupingReturn = await createSeminarGroups();
                       showAlert(
@@ -257,12 +271,19 @@ export default function AdminUpload() {
                         "success",
                       );
                     } finally {
-                      setGroupActionLoading((prev) => ({ ...prev, assignGroups: false }));
+                      setGroupActionLoading((prev) => ({
+                        ...prev,
+                        assignGroups: false,
+                      }));
                     }
                   }}
                 >
                   {groupActionLoading["assignGroups"] ? (
-                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
                   ) : (
                     "Assign Groups"
                   )}
@@ -282,7 +303,8 @@ export default function AdminUpload() {
                     className="info-value"
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
-                    Splits each seminar class in half and assigns each half a group number. Run this first after uploading seminar data.
+                    Splits each seminar class in half and assigns each half a
+                    group number. Run this first after uploading seminar data.
                   </div>
                 </div>
               </div>
@@ -302,7 +324,10 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["createGroups"]}
                   onClick={async () => {
-                    setGroupActionLoading((prev) => ({ ...prev, createGroups: true }));
+                    setGroupActionLoading((prev) => ({
+                      ...prev,
+                      createGroups: true,
+                    }));
                     try {
                       const groupTotal = await createGroupsFromDB();
                       showAlert(
@@ -310,12 +335,19 @@ export default function AdminUpload() {
                         "success",
                       );
                     } finally {
-                      setGroupActionLoading((prev) => ({ ...prev, createGroups: false }));
+                      setGroupActionLoading((prev) => ({
+                        ...prev,
+                        createGroups: false,
+                      }));
                     }
                   }}
                 >
                   {groupActionLoading["createGroups"] ? (
-                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
                   ) : (
                     "Create Groups"
                   )}
@@ -335,7 +367,8 @@ export default function AdminUpload() {
                     className="info-value"
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
-                    Builds the official groups in the system and automatically sets their tour routes and event schedules.
+                    Builds the official groups in the system and automatically
+                    sets their tour routes and event schedules.
                   </div>
                 </div>
               </div>
@@ -355,7 +388,10 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["syncGroups"]}
                   onClick={async () => {
-                    setGroupActionLoading((prev) => ({ ...prev, syncGroups: true }));
+                    setGroupActionLoading((prev) => ({
+                      ...prev,
+                      syncGroups: true,
+                    }));
                     try {
                       const syncResult = await syncGroups();
                       showAlert(
@@ -363,12 +399,19 @@ export default function AdminUpload() {
                         "success",
                       );
                     } finally {
-                      setGroupActionLoading((prev) => ({ ...prev, syncGroups: false }));
+                      setGroupActionLoading((prev) => ({
+                        ...prev,
+                        syncGroups: false,
+                      }));
                     }
                   }}
                 >
                   {groupActionLoading["syncGroups"] ? (
-                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    />
                   ) : (
                     "Sync Groups"
                   )}
@@ -388,7 +431,8 @@ export default function AdminUpload() {
                     className="info-value"
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
-                    Matches each freshman from GoFan to their seminar group by ID or name, and updates their group assignment.
+                    Matches each freshman from GoFan to their seminar group by
+                    ID or name, and updates their group assignment.
                   </div>
                 </div>
               </div>
@@ -417,7 +461,7 @@ export default function AdminUpload() {
                 label: "Mentor Data",
                 table: "mentor_data",
                 headers:
-                  "Mentor ID, First Name, Last Name, Graduation Year, Job, Pizza, Languages, Training Day, Shirt Size, Phone Number, Email",
+                  "Mentor ID, First Name, Last Name, Graduation Year, Job, Pizza, Languages, Training Day, Shirt Size, Phone Number, Email, Past Mentor, Interests Involvement",
               },
             ].map((item) => (
               <div

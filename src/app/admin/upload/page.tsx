@@ -21,6 +21,7 @@ export default function AdminUpload() {
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [progress, setProgress] = useState<Record<string, number>>({});
   const [funnyText, setFunnyText] = useState<Record<string, string>>({});
+  const [groupActionLoading, setGroupActionLoading] = useState<Record<string, boolean>>({});
 
   const { showAlert } = useAlert();
   const router = useRouter();
@@ -246,15 +247,25 @@ export default function AdminUpload() {
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  disabled={groupActionLoading["assignGroups"]}
                   onClick={async () => {
-                    const groupingReturn = await createSeminarGroups();
-                    showAlert(
-                      `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
-                      "success",
-                    );
+                    setGroupActionLoading((prev) => ({ ...prev, assignGroups: true }));
+                    try {
+                      const groupingReturn = await createSeminarGroups();
+                      showAlert(
+                        `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
+                        "success",
+                      );
+                    } finally {
+                      setGroupActionLoading((prev) => ({ ...prev, assignGroups: false }));
+                    }
                   }}
                 >
-                  Assign Groups
+                  {groupActionLoading["assignGroups"] ? (
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                  ) : (
+                    "Assign Groups"
+                  )}
                 </button>
                 <div className="info-pair">
                   <i
@@ -289,15 +300,25 @@ export default function AdminUpload() {
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  disabled={groupActionLoading["createGroups"]}
                   onClick={async () => {
-                    const groupTotal = await createGroupsFromDB();
-                    showAlert(
-                      `Created ${groupTotal} groups and seeded tour routes automatically.`,
-                      "success",
-                    );
+                    setGroupActionLoading((prev) => ({ ...prev, createGroups: true }));
+                    try {
+                      const groupTotal = await createGroupsFromDB();
+                      showAlert(
+                        `Created ${groupTotal} groups and seeded tour routes automatically.`,
+                        "success",
+                      );
+                    } finally {
+                      setGroupActionLoading((prev) => ({ ...prev, createGroups: false }));
+                    }
                   }}
                 >
-                  Create Groups
+                  {groupActionLoading["createGroups"] ? (
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                  ) : (
+                    "Create Groups"
+                  )}
                 </button>
                 <div className="info-pair">
                   <i
@@ -332,15 +353,25 @@ export default function AdminUpload() {
                   onMouseEnter={buttonHover}
                   onMouseLeave={buttonUnhover}
                   type="button"
+                  disabled={groupActionLoading["syncGroups"]}
                   onClick={async () => {
-                    const syncResult = await syncGroups();
-                    showAlert(
-                      `Groups synced: ${syncResult.success}\n${JSON.stringify(syncResult.unmatched)}`,
-                      "success",
-                    );
+                    setGroupActionLoading((prev) => ({ ...prev, syncGroups: true }));
+                    try {
+                      const syncResult = await syncGroups();
+                      showAlert(
+                        `Groups synced: ${syncResult.success}\n${JSON.stringify(syncResult.unmatched)}`,
+                        "success",
+                      );
+                    } finally {
+                      setGroupActionLoading((prev) => ({ ...prev, syncGroups: false }));
+                    }
                   }}
                 >
-                  Sync Groups
+                  {groupActionLoading["syncGroups"] ? (
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                  ) : (
+                    "Sync Groups"
+                  )}
                 </button>
                 <div className="info-pair">
                   <i

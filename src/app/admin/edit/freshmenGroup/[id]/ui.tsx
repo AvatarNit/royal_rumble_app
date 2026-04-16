@@ -21,19 +21,20 @@ import { updateGroupByGroupId, getGroupIds } from "@/actions/group";
 /* ---------------- TYPES ---------------- */
 
 interface GroupData {
-  groupId: string | number;
+  groupId: number | null;
+  name: string;
   routeNum: number | null;
   eventOrder: string | null;
 }
 
 interface MentorData {
-  mentor_id: string | number;
+  mentor_id: number;
   fname: string;
   lname: string;
 }
 
 interface FreshmanData {
-  freshmenId: string | number;
+  freshmenId: number;
   fName: string;
   lName: string;
 }
@@ -73,11 +74,11 @@ export default function EditFreshmenGroupUI({
   const { showAlert } = useAlert();
   const router = useRouter();
 
-  const [groupId, setGroupId] = useState("");
+  const [name, setName] = useState("");
   const [routeNum, setRouteNum] = useState<string>("");
   const [eventOrder, setEventOrder] = useState("");
   const [possibleGroups, setPossibleGroups] = useState<
-    Array<{ group_id: string; name?: string }>
+    Array<{ group_id: number; name: string }>
   >([]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -87,7 +88,7 @@ export default function EditFreshmenGroupUI({
   useEffect(() => {
     if (!groupData) return;
 
-    setGroupId(groupData.groupId.toString());
+    setName(groupData.name);
     setRouteNum(groupData.routeNum?.toString() || "");
     setEventOrder(normalizeEventOrder(groupData.eventOrder));
   }, [groupData]);
@@ -98,7 +99,7 @@ export default function EditFreshmenGroupUI({
     const fetchGroups = async () => {
       const groups = await getGroupIds();
       setPossibleGroups(
-        groups.map((g: any) => ({
+        groups.map((g) => ({
           group_id: g.groupId,
           name: g.name,
         })),
@@ -113,7 +114,7 @@ export default function EditFreshmenGroupUI({
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!groupId.trim()) newErrors.groupId = "Group ID is required.";
+    if (!name.trim()) newErrors.name = "Group name is required.";
     if (!routeNum.toString().trim()) {
       newErrors.routeNum = "Route number is required.";
     } else if (
@@ -131,22 +132,22 @@ export default function EditFreshmenGroupUI({
   /* ---------------- SAVE ---------------- */
 
   const handleSave = async () => {
-    if (!validate()) return;
+    if (!validate() || groupData.groupId === null) return;
 
     const result = await updateGroupByGroupId(
-      groupData.groupId.toString(),
-      groupId,
+      groupData.groupId,
+      name,
       eventOrder.split(","),
       Number(routeNum),
     );
 
     if (result.success) {
-      showAlert(`Group ${result.groupId} updated!`, "success");
+      showAlert(`Group "${result.name}" updated!`, "success");
     } else {
-      showAlert(`Failed to update group ${result.groupId}.`, "danger");
+      showAlert(`Failed to update group.`, "danger");
     }
 
-    router.push("/admin/edit/freshmenGroup/" + groupId);
+    router.push("/admin/edit/freshmenGroup/" + groupData.groupId);
   };
 
   /* ---------------- UI ---------------- */
@@ -165,31 +166,34 @@ export default function EditFreshmenGroupUI({
     overflow: "auto" as const,
   };
 
+  const isUnassigned = groupData.groupId === null;
+
   return (
     <main className="admin-container">
       <LogoButton />
       <LoginButton />
 
       <header className="admin-header">
-        <h1 className="admin-title">Edit Group - {groupId}</h1>
+        <h1 className="admin-title">Edit Group - {name}</h1>
       </header>
 
       <BackButton href="/admin/all_groups" />
 
       <div style={contentBoxStyle}>
         <div className="edit-user-form">
-          {/* GROUP ID */}
+          {/* GROUP NAME */}
           <div className="form-row">
-            <label className="form-label">Group ID:</label>
+            <label className="form-label">Group Name:</label>
             <div>
               <input
                 type="text"
-                className={`form-input${errors.groupId ? " is-invalid" : ""}`}
-                value={groupId}
-                onChange={(e) => setGroupId(e.target.value)}
+                className={`form-input${errors.name ? " is-invalid" : ""}`}
+                value={name}
+                disabled={isUnassigned}
+                onChange={(e) => setName(e.target.value)}
               />
-              {errors.groupId && (
-                <div className="invalid-feedback d-block">{errors.groupId}</div>
+              {errors.name && (
+                <div className="invalid-feedback d-block">{errors.name}</div>
               )}
             </div>
           </div>
@@ -202,6 +206,7 @@ export default function EditFreshmenGroupUI({
                 type="number"
                 className={`form-input${errors.routeNum ? " is-invalid" : ""}`}
                 value={routeNum}
+                disabled={isUnassigned}
                 onChange={(e) => setRouteNum(e.target.value)}
               />
               {errors.routeNum && (
@@ -219,6 +224,7 @@ export default function EditFreshmenGroupUI({
               <select
                 className={`form-input${errors.eventOrder ? " is-invalid" : ""}`}
                 value={eventOrder}
+                disabled={isUnassigned}
                 onChange={(e) => setEventOrder(e.target.value)}
               >
                 <option value="" disabled>
@@ -242,9 +248,11 @@ export default function EditFreshmenGroupUI({
           </div>
 
           {/* SAVE */}
-          <div className="d-flex justify-content-center">
-            <SaveButton onClick={handleSave}>Save</SaveButton>
-          </div>
+          {!isUnassigned && (
+            <div className="d-flex justify-content-center">
+              <SaveButton onClick={handleSave}>Save</SaveButton>
+            </div>
+          )}
 
           {/* MENTORS */}
           <div className="form-row">
@@ -260,13 +268,11 @@ export default function EditFreshmenGroupUI({
               return { success: result.success };
             }}
             reassignAction={async (id, newGroupId) => {
-              const result = await reassignMentorGroup(
-                Number(id),
-                newGroupId.toString(),
-              );
+              const parsed = newGroupId === "unassigned" ? null : Number(newGroupId);
+              const result = await reassignMentorGroup(Number(id), parsed);
               return { success: result.success };
             }}
-            currentGroupId={groupId}
+            currentGroupId={groupData.groupId ?? "unassigned"}
             possibleGroups={possibleGroups}
           />
 
@@ -277,20 +283,18 @@ export default function EditFreshmenGroupUI({
 
           <ReassignTable
             headers={["ID", "First Name", "Last Name"]}
-            data={f.map((f) => [f.freshmenId, f.fName, f.lName])}
+            data={f.map((freshman) => [freshman.freshmenId, freshman.fName, freshman.lName])}
             visibleColumns={[0, 1, 2]}
             deleteAction={async (id) => {
               const result = await deleteFreshmanById(Number(id));
               return { success: result.success };
             }}
             reassignAction={async (id, newGroupId) => {
-              const result = await reassignFreshmenGroup(
-                Number(id),
-                newGroupId.toString(),
-              );
+              const parsed = newGroupId === "unassigned" ? null : Number(newGroupId);
+              const result = await reassignFreshmenGroup(Number(id), parsed);
               return { success: result.success };
             }}
-            currentGroupId={groupId}
+            currentGroupId={groupData.groupId ?? "unassigned"}
             possibleGroups={possibleGroups}
           />
         </div>

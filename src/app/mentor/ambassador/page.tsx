@@ -19,9 +19,9 @@ export default async function AmbassadorHomepage() {
   const ambassadorEvents = await getAmbassadorEvents();
 
   const groupId = await getGroupIdByMentorId(Number(studentId));
-  const groupDetails = await getGroupByGroupId(String(groupId));
-  const groupMentorsData = await getMentorsByGroupId(String(groupId));
-  const groupFreshmen = await getFreshmenByGroupId(String(groupId));
+  const groupDetails = groupId != null ? await getGroupByGroupId(groupId) : null;
+  const groupMentorsData = groupId != null ? await getMentorsByGroupId(groupId) : [];
+  const groupFreshmen = groupId != null ? await getFreshmenByGroupId(groupId) : [];
 
   const groupMentors = groupMentorsData.map((mentor) => ({
     mentorId: mentor.mentor_id,

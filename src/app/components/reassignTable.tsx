@@ -17,8 +17,8 @@ interface ReassignTableProps {
     id: string | number,
     newGroupId: string | number,
   ) => Promise<{ success: boolean }>;
-  currentGroupId: string | number;
-  possibleGroups: Array<{ group_id: string; name?: string }>;
+  currentGroupId: number | string;
+  possibleGroups: Array<{ group_id: number; name: string }>;
 }
 export default function ReassignTable({
   headers,
@@ -319,7 +319,7 @@ export default function ReassignTable({
             <option value="unassigned">Unassigned</option>
             {possibleGroups.map((group) => (
               <option key={group.group_id} value={group.group_id}>
-                {group.name ? group.name : group.group_id}
+                {group.name}
               </option>
             ))}
           </select>

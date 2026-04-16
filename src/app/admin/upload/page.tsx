@@ -10,7 +10,7 @@ import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSeminarGroups, syncGroups } from "@/actions/group";
-import { createGroupsFromDB } from "@/actions/routes"; // ← only new import
+import { createGroupsFromDB, createEstimatedGroups } from "@/actions/routes";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
 
@@ -24,6 +24,7 @@ export default function AdminUpload() {
   const [groupActionLoading, setGroupActionLoading] = useState<
     Record<string, boolean>
   >({});
+  const [estimatedGroupCount, setEstimatedGroupCount] = useState<string>("");
 
   const { showAlert } = useAlert();
   const router = useRouter();
@@ -239,6 +240,109 @@ export default function AdminUpload() {
                 marginBottom: "50px",
               }}
             >
+              {/* ── ESTIMATED GROUPS ── */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "30px",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  <input
+                    type="number"
+                    min={1}
+                    className="form-input"
+                    placeholder="# of groups (e.g. 44)"
+                    value={estimatedGroupCount}
+                    onChange={(e) => setEstimatedGroupCount(e.target.value)}
+                    style={{ width: "340px", fontSize: "18px" }}
+                  />
+                  <button
+                    style={{
+                      ...buttonStyle,
+                      paddingLeft: "10px",
+                      paddingRight: "10px",
+                      width: "340px",
+                    }}
+                    onMouseEnter={buttonHover}
+                    onMouseLeave={buttonUnhover}
+                    type="button"
+                    disabled={
+                      groupActionLoading["estimatedGroups"] ||
+                      !estimatedGroupCount
+                    }
+                    onClick={async () => {
+                      const count = parseInt(estimatedGroupCount);
+                      if (!count || count <= 0) {
+                        showAlert(
+                          "Please enter a valid group count.",
+                          "danger",
+                        );
+                        return;
+                      }
+                      setGroupActionLoading((prev) => ({
+                        ...prev,
+                        estimatedGroups: true,
+                      }));
+                      try {
+                        const total = await createEstimatedGroups(count);
+                        showAlert(
+                          `Created ${total} estimated groups with routes assigned. You can now assign mentors and rename groups.`,
+                          "success",
+                        );
+                        setEstimatedGroupCount("");
+                      } finally {
+                        setGroupActionLoading((prev) => ({
+                          ...prev,
+                          estimatedGroups: false,
+                        }));
+                      }
+                    }}
+                  >
+                    {groupActionLoading["estimatedGroups"] ? (
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      "Create Estimated Groups"
+                    )}
+                  </button>
+                </div>
+                <div className="info-pair">
+                  <i
+                    className="bi bi-info-circle"
+                    style={{
+                      marginLeft: "30px",
+                      fontSize: "30px",
+                      marginBottom: "5px",
+                      color: "var(--primaryBlue)",
+                      fontWeight: "bold",
+                    }}
+                  ></i>
+                  <div
+                    className="info-value"
+                    style={{ fontSize: "18px", textAlign: "left" }}
+                  >
+                    Pre-create groups before seminar data is uploaded. Enter
+                    your estimated count and routes are distributed
+                    automatically. Assign mentors and rename groups right away.
+                    Run Assign Groups later to see if any extras are needed.
+                  </div>
+                </div>
+              </div>
+
+              {/* ── ASSIGN GROUPS ── */}
               <div
                 style={{
                   display: "flex",
@@ -266,9 +370,15 @@ export default function AdminUpload() {
                     }));
                     try {
                       const groupingReturn = await createSeminarGroups();
+                      const gapMsg =
+                        groupingReturn.groupsStillNeeded > 0
+                          ? ` ⚠️ ${groupingReturn.groupsStillNeeded} more group(s) still need to be created (seminar needs ${groupingReturn.finalGroupCount}, you have ${groupingReturn.existingGroupCount}).`
+                          : ` All ${groupingReturn.finalGroupCount} groups are accounted for.`;
                       showAlert(
-                        `Groups assigned! Final group count: ${groupingReturn.finalGroupCount}`,
-                        "success",
+                        `Seminar groups assigned!${gapMsg}`,
+                        groupingReturn.groupsStillNeeded > 0
+                          ? "warning"
+                          : "success",
                       );
                     } finally {
                       setGroupActionLoading((prev) => ({
@@ -304,10 +414,14 @@ export default function AdminUpload() {
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Splits each seminar class in half and assigns each half a
-                    group number. Run this first after uploading seminar data.
+                    group number. Run after uploading seminar data. Reports how
+                    many additional groups still need to be created if your
+                    estimate was off.
                   </div>
                 </div>
               </div>
+
+              {/* ── CREATE GROUPS (from seminar data) ── */}
               <div
                 style={{
                   display: "flex",
@@ -318,9 +432,9 @@ export default function AdminUpload() {
                 }}
               >
                 <button
-                  style={buttonStyle}
-                  onMouseEnter={buttonHover}
-                  onMouseLeave={buttonUnhover}
+                  style={buttonStyle2}
+                  onMouseEnter={buttonHover2}
+                  onMouseLeave={buttonUnhover2}
                   type="button"
                   disabled={groupActionLoading["createGroups"]}
                   onClick={async () => {
@@ -331,7 +445,7 @@ export default function AdminUpload() {
                     try {
                       const groupTotal = await createGroupsFromDB();
                       showAlert(
-                        `Created ${groupTotal} groups and seeded tour routes automatically.`,
+                        `Created ${groupTotal} groups from seminar data and seeded tour routes automatically.`,
                         "success",
                       );
                     } finally {
@@ -367,8 +481,8 @@ export default function AdminUpload() {
                     className="info-value"
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
-                    Builds the official groups in the system and automatically
-                    sets their tour routes and event schedules.
+                    Builds groups from seminar data (skips pre-planning). Only
+                    use this if you did NOT use Create Estimated Groups above.
                   </div>
                 </div>
               </div>

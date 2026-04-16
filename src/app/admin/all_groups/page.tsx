@@ -11,7 +11,9 @@ import { get } from "http";
 export default async function AdminPage() {
   const freshmenGroups = await getAllGroups(); // fetch from DB
   const transformedFreshmenGroups = freshmenGroups.map((group) => ({
-    ...group,
+    group_id: group.group_id,
+    name: group.name,
+    route_num: group.route_num,
     event_order: String(group.event_order),
     freshmen: group.freshmen.map((f) => ({
       freshman_id: f.freshman_id,
@@ -34,7 +36,8 @@ export default async function AdminPage() {
   ==================================== */
   }
   interface GroupDetail {
-    group_id: string;
+    group_id: number | "Unassigned";
+    name: string;
     route_num: number;
     event_order: string;
     freshmen: Array<{ freshman_id: string; name: string }>;
@@ -43,11 +46,10 @@ export default async function AdminPage() {
 
   const nullGroupFreshmen = await getNullGroupFreshmen();
   const nullGroupMentors = await getNullGroupMentors();
-  const groupMap = new Map<string, GroupDetail>();
 
-  // initialize group
-  groupMap.set("Unassigned", {
+  const unassignedGroup: GroupDetail[] = [{
     group_id: "Unassigned",
+    name: "Unassigned",
     route_num: 0,
     event_order: "",
     freshmen: nullGroupFreshmen.map((f) => ({
@@ -58,9 +60,7 @@ export default async function AdminPage() {
       mentor_id: m.mentorId.toString(),
       name: `${m.fName || ""} ${m.lName || ""}`.trim(),
     })),
-  });
-
-  const unassignedGroup = Array.from(groupMap.values());
+  }];
 
   {
     /* End of Unassigned Freshmen Group

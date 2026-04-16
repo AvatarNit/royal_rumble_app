@@ -31,10 +31,11 @@ export default function AmbassadorUI({
     description: string | null;
   }>;
   groupDetails: {
-    groupId: string;
+    groupId: number;
+    name: string;
     routeNum: number | null;
     eventOrder: string | null;
-  };
+  } | null;
   groupMentors: Array<{
     mentorId: number;
     fName: string | null;

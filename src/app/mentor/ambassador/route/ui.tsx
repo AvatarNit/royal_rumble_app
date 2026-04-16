@@ -23,7 +23,8 @@ interface ScheduleBlock {
 }
 
 interface Schedule {
-  groupId: string;
+  groupId: number;
+  groupName: string;
   routeNum: number | null;
   schedule: ScheduleBlock[];
 }
@@ -77,7 +78,7 @@ export default function AmbassadorRouteUI({
           <div className="info-pairs">
             <div className="info-pair">
               <div className="info-label">Group:</div>
-              <div className="info-value">{schedule.groupId}</div>
+              <div className="info-value">{schedule.groupName}</div>
             </div>
             <div className="info-pair">
               <div className="info-label">Route #:</div>

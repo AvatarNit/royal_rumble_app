@@ -24,7 +24,8 @@ interface Mentor {
 }
 
 interface Group {
-  group_id: string;
+  group_id: number;
+  name: string;
   route_num: number;
   event_order: string;
   freshmen: Freshman[];
@@ -49,7 +50,7 @@ export default function AdminAttendanceAllGroupsUI({
   };
 
   const handleFreshmanStatusChange = async (
-    groupId: string,
+    groupId: number,
     freshmanId: number,
     newStatus: boolean,
   ) => {
@@ -92,7 +93,7 @@ export default function AdminAttendanceAllGroupsUI({
   };
 
   const handleMentorStatusChange = async (
-    groupId: string,
+    groupId: number,
     mentorId: number,
     newStatus: boolean,
   ) => {
@@ -141,7 +142,7 @@ export default function AdminAttendanceAllGroupsUI({
   const filteredGroups =
     selectedGroupId === ""
       ? groups
-      : groups.filter((g) => g.group_id === selectedGroupId);
+      : groups.filter((g) => g.group_id.toString() === selectedGroupId);
 
   return (
     <main className="admin-container">
@@ -167,8 +168,8 @@ export default function AdminAttendanceAllGroupsUI({
             >
               <option value="">All Groups</option>
               {groups.map((group) => (
-                <option key={group.group_id} value={group.group_id}>
-                  {group.group_id}
+                <option key={group.group_id} value={group.group_id.toString()}>
+                  {group.name}
                 </option>
               ))}
             </select>
@@ -179,7 +180,7 @@ export default function AdminAttendanceAllGroupsUI({
       <ViewDropdown
         header="Groups"
         sections={filteredGroups.map((group) => ({
-          title: `Group: ${group.group_id} (${group.mentors.map((m) => m.name).join(", ") || ""})`,
+          title: `${group.name} (${group.mentors.map((m) => m.name).join(", ") || ""})`,
           sectionId: group.group_id,
           content: (
             <section>
@@ -197,7 +198,7 @@ export default function AdminAttendanceAllGroupsUI({
                   rowIds={group.mentors.map((m) => Number(m.mentor_id))}
                   onStatusChange={(mentorId, newStatus) =>
                     handleMentorStatusChange(
-                      group.group_id,
+                      group.group_id as number,
                       mentorId,
                       newStatus,
                     )
@@ -219,7 +220,7 @@ export default function AdminAttendanceAllGroupsUI({
                   rowIds={group.freshmen.map((f) => Number(f.freshman_id))}
                   onStatusChange={(freshmanId, newStatus) =>
                     handleFreshmanStatusChange(
-                      group.group_id,
+                      group.group_id as number,
                       freshmanId,
                       newStatus,
                     )

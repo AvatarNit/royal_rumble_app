@@ -21,9 +21,10 @@ export default async function HallwayHostAttendancePage() {
       hallwayStopId={Number(hallwayStopId)}
       hallwayLocation={hallwayData?.location ?? "Unknown Stop"}
       attendanceRows={attendanceRows.map((row) => ({
-        groupId:  row.groupId,
-        routeNum: row.routeNum ?? null,
-        present:  row.present,
+        groupId:   row.groupId,
+        groupName: row.groupName,
+        routeNum:  row.routeNum ?? null,
+        present:   row.present,
       }))}
     />
   );

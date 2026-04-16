@@ -12,7 +12,9 @@ export default async function FreshmenAttendancePage() {
   const session = await auth();
   const studentId = !DEV_MODE ? session?.user?.id : "100001";
   const groupId = await getGroupIdByMentorId(Number(studentId));
-  const attendanceData = await getFreshmenAttendanceByGroupId(String(groupId));
+  const attendanceData = groupId != null
+    ? await getFreshmenAttendanceByGroupId(groupId)
+    : [];
 
   return <FreshmenAttendancePageUI attendanceData={attendanceData} />;
 }

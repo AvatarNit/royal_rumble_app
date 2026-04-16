@@ -3,7 +3,8 @@ import { relations } from "drizzle-orm";
 
 // ---------------- group_data ----------------
 export const groupData = pgTable("group_data", {
-  groupId:    text("group_id").primaryKey(),
+  groupId:    serial("group_id").primaryKey(),
+  name:       text("name").notNull(),
   eventOrder: text("event_order"),
   routeNum:   integer("route_num"),
 });
@@ -47,7 +48,7 @@ export const seminarData = pgTable("seminar_data", {
   semester:        text("semester"),
   teacherFullName: text("teacher_full_name"),
   period:          text("period"),
-  groupId:         text("group_id"),
+  groupId:         integer("group_id"),
 });
 
 // ---------------- freshmen_data ----------------
@@ -61,13 +62,13 @@ export const freshmenData = pgTable("freshmen_data", {
   interests:       text("interests"),
   healthConcerns:  text("health_concerns"),
   present:         boolean("present"),
-  groupId:         text("group_id"),
+  groupId:         integer("group_id"),
 });
 
 // ---------------- ambassador_data ----------------
 export const ambassadorData = pgTable("ambassador_data", {
   mentorId: integer("mentor_id"),
-  groupId:  text("group_id"),
+  groupId:  integer("group_id"),
 });
 
 // ---------------- mentor_data ----------------
@@ -155,7 +156,7 @@ export const groupRouteAttendance = pgTable(
   "group_route_attendance",
   {
     attendanceId:  serial("attendance_id").primaryKey(),
-    groupId:       text("group_id").notNull().references(() => groupData.groupId, { onDelete: "cascade" }),
+    groupId:       integer("group_id").notNull().references(() => groupData.groupId, { onDelete: "cascade" }),
     hallwayStopId: integer("hallway_stop_id").notNull().references(() => hallwayStopData.hallwayStopId),
     present:       boolean("present").notNull().default(false),
     markedAt:      timestamp("marked_at"),

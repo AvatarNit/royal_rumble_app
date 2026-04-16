@@ -20,7 +20,8 @@ import { Button, Modal } from "react-bootstrap";
 import { useAlert } from "@/app/context/AlertContext";
 
 interface FreshmenGroup {
-  group_id: string;
+  group_id: number | "Unassigned";
+  name: string;
   route_num: number;
   event_order: string;
   freshmen: Array<{ freshman_id: string; name: string }>;
@@ -43,7 +44,7 @@ export default function AdminAllGroups({
   const { showAlert } = useAlert();
 
   const [displayFreshmenGroup, setDisplayFreshmenGroup] = useState(true);
-  const [selectedGroupId, setSelectedGroupId] = useState("");
+  const [selectedGroupId, setSelectedGroupId] = useState<string>("");
   const [newHallway, setNewHallway] = useState("");
   const [showHallwayModal, setShowHallwayModal] = useState(false);
 
@@ -68,10 +69,10 @@ export default function AdminAllGroups({
     ? freshmenGroups
         .filter(
           (group) =>
-            selectedGroupId === "" || group.group_id === selectedGroupId,
+            selectedGroupId === "" || group.group_id.toString() === selectedGroupId,
         )
         .map((group) => [
-          group.group_id,
+          group.name,
           group.route_num,
           group.event_order,
           formatPeople(group.freshmen),
@@ -113,8 +114,8 @@ export default function AdminAllGroups({
 
               {displayFreshmenGroup &&
                 freshmenGroups.map((group) => (
-                  <option key={group.group_id} value={group.group_id}>
-                    {group.group_id}
+                  <option key={group.group_id} value={group.group_id.toString()}>
+                    {group.name}
                   </option>
                 ))}
 
@@ -261,10 +262,10 @@ export default function AdminAllGroups({
           sections={freshmenGroups
             .filter(
               (group) =>
-                selectedGroupId === "" || group.group_id === selectedGroupId,
+                selectedGroupId === "" || group.group_id.toString() === selectedGroupId,
             )
             .map((group) => ({
-              title: `Group: ${group.group_id}${group.group_id !== "Unassigned" && group.mentors.length > 0 ? ` (${group.mentors.map((m) => m.name).join(", ")})` : ""}`,
+              title: `${group.name}${group.group_id !== "Unassigned" && group.mentors.length > 0 ? ` (${group.mentors.map((m) => m.name).join(", ")})` : ""}`,
               content: (
                 <section>
                   <div className="info-pairs">
@@ -298,7 +299,8 @@ export default function AdminAllGroups({
               sectionId: group.group_id,
             }))}
           deleteAction={async (id) => {
-            const result = await deleteGroupByGroupId(id.toString());
+            if (id === "Unassigned") return { success: false };
+            const result = await deleteGroupByGroupId(Number(id));
             return { success: result.success };
           }}
         />

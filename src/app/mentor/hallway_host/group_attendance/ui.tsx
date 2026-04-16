@@ -13,7 +13,8 @@ import "../../../css/logo+login.css";
 import { markGroupPresent } from "@/actions/routes";
 
 interface AttendanceRow {
-  groupId: string;
+  groupId: number;
+  groupName: string;
   routeNum: number | null;
   present: boolean;
 }
@@ -95,7 +96,7 @@ export default function HallwayHostAttendanceUI({
         <InfoBox headerText={hallwayLocation}>
           <CheckBoxTable
             headers={["Group"]}
-            data={rows.map((row) => [row.groupId])}
+            data={rows.map((row) => [row.groupName])}
             status={rows.map((row) => row.present)}
             rowIds={rows.map((_, i) => i)}
             onStatusChange={(rowIndex, newStatus) =>

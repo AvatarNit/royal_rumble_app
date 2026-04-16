@@ -223,10 +223,12 @@ export async function addTourRouteStop(
 
     // 5. Seed attendance rows for each group at this new stop
     for (const group of groups) {
-      await db
-        .insert(groupRouteAttendance)
-        .values({ groupId: group.groupId, hallwayStopId, present: false })
-        .onConflictDoNothing();
+      if (group.groupId !== null) {
+        await db
+          .insert(groupRouteAttendance)
+          .values({ groupId: group.groupId, hallwayStopId, present: false })
+          .onConflictDoNothing();
+      }
     }
   }
 
@@ -268,7 +270,7 @@ export async function deleteTourRouteStop(routeStopId: number) {
 // ============================================================
 
 export async function seedGroupRouteAttendance(
-  groupId: string,
+  groupId: number,
   routeNum: number,
 ) {
   const route = await db
@@ -299,6 +301,7 @@ export async function getAttendanceByStop(hallwayStopId: number) {
     .select({
       attendanceId: groupRouteAttendance.attendanceId,
       groupId:      groupRouteAttendance.groupId,
+      groupName:    groupData.name,
       present:      groupRouteAttendance.present,
       markedAt:     groupRouteAttendance.markedAt,
       routeNum:     groupData.routeNum,
@@ -306,16 +309,10 @@ export async function getAttendanceByStop(hallwayStopId: number) {
     .from(groupRouteAttendance)
     .innerJoin(groupData, eq(groupRouteAttendance.groupId, groupData.groupId))
     .where(eq(groupRouteAttendance.hallwayStopId, hallwayStopId))
-    .orderBy(
-      sql`
-        CASE WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0 END,
-        CASE WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int ELSE NULL END,
-        LOWER(${groupData.groupId})
-      `,
-    );
+    .orderBy(asc(groupData.groupId));
 }
 
-export async function getAttendanceByGroup(groupId: string) {
+export async function getAttendanceByGroup(groupId: number) {
   return db
     .select({
       attendanceId:  groupRouteAttendance.attendanceId,
@@ -333,7 +330,7 @@ export async function getAttendanceByGroup(groupId: string) {
 }
 
 export async function markGroupPresent(
-  groupId: string,
+  groupId: number,
   hallwayStopId: number,
   present: boolean,
 ) {
@@ -385,30 +382,23 @@ export async function createGroupsFromDB() {
 
   const orders = patternRows.map((p) => JSON.parse(p.blockOrder) as string[]);
 
-  // 2. Get group IDs from seminar data, ordered numerically then alphabetically.
-  //    selectDistinct can't ORDER BY expressions not in the select list in Postgres,
-  //    so we select all rows ordered correctly and deduplicate in JS.
+  // 2. Get distinct group IDs from seminar data (now integers), ordered ascending
   const groupRows = await db
     .select({ id: seminarData.groupId })
     .from(seminarData)
-    .orderBy(
-      sql`
-        CASE WHEN ${seminarData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0 END,
-        CASE WHEN ${seminarData.groupId} ~ '^[0-9]+$' THEN ${seminarData.groupId}::int ELSE NULL END,
-        LOWER(${seminarData.groupId})
-      `,
-    );
+    .orderBy(asc(seminarData.groupId));
 
   // Deduplicate while preserving order
-  const seen = new Set<string>();
-  const groupIds = groupRows
+  const seen = new Set<number>();
+  const seminarGroupIds = groupRows
     .map((g) => g.id)
-    .filter((id): id is string => {
-      if (!id || seen.has(id)) return false;
+    .filter((id): id is number => {
+      if (id === null || seen.has(id)) return false;
       seen.add(id);
       return true;
     });
-  const groupCount = groupIds.length;
+
+  const groupCount = seminarGroupIds.length;
   const orderCount = orders.length;
 
   // 3. Distribute groups evenly across patterns
@@ -420,16 +410,10 @@ export async function createGroupsFromDB() {
     count: index < remainder ? countPerOrder + 1 : countPerOrder,
   }));
 
-  // 4. Assign groups to patterns and track which Tour slot each group belongs to.
-  //    tourSlotCounters tracks how many groups have been assigned per Tour slot,
-  //    so we can give each group a unique routeNum within its slot.
-  //
-  //    Tour slot = index of "Tour" in the event order (case-insensitive).
-  //    If there is no Tour block, routeNum defaults to null.
-
-  const tourSlotCounters = new Map<number, number>(); // slot → next routeNum
+  // 4. Build insert rows — name defaults to "Group {seminarGroupId}"
+  const tourSlotCounters = new Map<number, number>();
   const insertRows: {
-    groupId:    string;
+    name:       string;
     eventOrder: string;
     routeNum:   number | null;
   }[] = [];
@@ -437,38 +421,118 @@ export async function createGroupsFromDB() {
   let groupIndex = 0;
 
   for (const dist of distribution) {
-    // Find which slot Tour occupies for this pattern
     const tourSlot = dist.order.findIndex(
       (b) => b.toLowerCase() === "tour",
     );
 
     for (let i = 0; i < dist.count; i++) {
-      const groupId = groupIds[groupIndex++];
-      if (!groupId) continue;
+      const seminarGid = seminarGroupIds[groupIndex++];
+      if (seminarGid === undefined) continue;
 
       let routeNum: number | null = null;
 
       if (tourSlot !== -1) {
-        // Get (or initialise) the counter for this Tour slot
         const current = tourSlotCounters.get(tourSlot) ?? 0;
         routeNum = current + 1;
         tourSlotCounters.set(tourSlot, routeNum);
       }
 
       insertRows.push({
-        groupId,
+        name: `Group ${seminarGid}`,
         eventOrder: JSON.stringify(dist.order),
         routeNum,
       });
     }
   }
 
-  // 5. Insert all groups
+  // 5. Insert all groups (groupId auto-generated by serial)
   const result = await db.insert(groupData).values(insertRows).returning();
 
-  // 6. Seed one tourRoute row per unique routeNum.
-  //    Because slots share the same routeNums (1…N), this produces
-  //    only as many routes as the largest single Tour slot needs.
+  // 6. Seed tourRoute rows per unique routeNum
+  const uniqueRouteNums = [
+    ...new Set(
+      insertRows
+        .map((r) => r.routeNum)
+        .filter((n): n is number => n !== null),
+    ),
+  ].sort((a, b) => a - b);
+
+  for (const routeNum of uniqueRouteNums) {
+    await db
+      .insert(tourRoute)
+      .values({ routeNum })
+      .onConflictDoNothing();
+  }
+
+  return result.length;
+}
+
+// ============================================================
+//  CREATE ESTIMATED GROUPS
+//
+//  Pre-creates a given number of groups (with auto-generated
+//  serial IDs) before seminar data is uploaded. Uses the same
+//  route distribution logic as createGroupsFromDB but takes a
+//  user-supplied count instead of reading from seminar_data.
+// ============================================================
+
+export async function createEstimatedGroups(count: number) {
+  const patternRows = await db
+    .select()
+    .from(eventOrderPattern)
+    .orderBy(asc(eventOrderPattern.patternNum));
+
+  if (patternRows.length === 0) {
+    throw new Error(
+      "No event order patterns found. Please configure event order patterns first.",
+    );
+  }
+
+  const orders = patternRows.map((p) => JSON.parse(p.blockOrder) as string[]);
+  const orderCount = orders.length;
+
+  const countPerOrder = Math.floor(count / orderCount);
+  const remainder = count % orderCount;
+
+  const distribution = orders.map((order, index) => ({
+    order,
+    count: index < remainder ? countPerOrder + 1 : countPerOrder,
+  }));
+
+  const tourSlotCounters = new Map<number, number>();
+  const insertRows: {
+    name:       string;
+    eventOrder: string;
+    routeNum:   number | null;
+  }[] = [];
+
+  let groupNumber = 1;
+
+  for (const dist of distribution) {
+    const tourSlot = dist.order.findIndex(
+      (b) => b.toLowerCase() === "tour",
+    );
+
+    for (let i = 0; i < dist.count; i++) {
+      let routeNum: number | null = null;
+
+      if (tourSlot !== -1) {
+        const current = tourSlotCounters.get(tourSlot) ?? 0;
+        routeNum = current + 1;
+        tourSlotCounters.set(tourSlot, routeNum);
+      }
+
+      insertRows.push({
+        name: `Group ${groupNumber}`,
+        eventOrder: JSON.stringify(dist.order),
+        routeNum,
+      });
+      groupNumber++;
+    }
+  }
+
+  const result = await db.insert(groupData).values(insertRows).returning();
+
   const uniqueRouteNums = [
     ...new Set(
       insertRows
@@ -491,9 +555,9 @@ export async function createGroupsFromDB() {
 //  COMPUTED ARRIVAL TIMES  (group leader route page)
 // ============================================================
 
-export async function getGroupSchedule(groupId: string) {
+export async function getGroupSchedule(groupId: number) {
   const group = await db
-    .select({ eventOrder: groupData.eventOrder, routeNum: groupData.routeNum })
+    .select({ name: groupData.name, eventOrder: groupData.eventOrder, routeNum: groupData.routeNum })
     .from(groupData)
     .where(eq(groupData.groupId, groupId))
     .limit(1);
@@ -567,5 +631,5 @@ export async function getGroupSchedule(groupId: string) {
     };
   });
 
-  return { groupId, routeNum, schedule };
+  return { groupId, groupName: group[0].name, routeNum, schedule };
 }

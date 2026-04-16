@@ -49,7 +49,7 @@ export default function AdminAddFreshmenGroupPage(props: {
       eventOrder.split(", "),
       parseInt(routeNumber),
     );
-    showAlert(`Group ${result[0].groupId} added successfully!`, "success");
+    showAlert(`Group "${result[0].name}" added successfully!`, "success");
     router.push("/admin/all_groups");
   };
 

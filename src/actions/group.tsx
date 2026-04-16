@@ -23,20 +23,10 @@ export async function getGroupIds() {
   const groups = await db
     .select({
       groupId: groupData.groupId,
+      name: groupData.name,
     })
     .from(groupData)
-    .orderBy(
-      sql`
-              CASE
-                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
-              END,
-              CASE
-                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
-                ELSE NULL
-              END,
-              LOWER(${groupData.groupId})
-            `,
-    );
+    .orderBy(asc(groupData.groupId));
 
   return groups;
 }
@@ -45,22 +35,12 @@ export async function getAllGroups() {
   const groups = await db
     .select({
       groupId: groupData.groupId,
+      name: groupData.name,
       routeNum: groupData.routeNum,
       eventOrder: groupData.eventOrder,
     })
     .from(groupData)
-    .orderBy(
-      sql`
-              CASE
-                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
-              END,
-              CASE
-                WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
-                ELSE NULL
-              END,
-              LOWER(${groupData.groupId})
-            `,
-    );
+    .orderBy(asc(groupData.groupId));
 
   const freshmen = await db
     .select({
@@ -79,21 +59,22 @@ export async function getAllGroups() {
     })
     .from(ambassadorData)
     .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId));
-  // Create Groups
+
   interface GroupDetail {
-    group_id: string;
+    group_id: number;
+    name: string;
     route_num: number;
-    event_order: number;
+    event_order: string;
     freshmen: Array<{ freshman_id: string; name: string }>;
     mentors: Array<{ mentor_id: string; name: string }>;
   }
 
-  const groupMap = new Map<string, GroupDetail>();
+  const groupMap = new Map<number, GroupDetail>();
 
-  // initialize groups
   for (const g of groups) {
     groupMap.set(g.groupId, {
       group_id: g.groupId,
+      name: g.name,
       route_num: g.routeNum ?? 0,
       event_order: g.eventOrder ? JSON.parse(g.eventOrder).join(", ") : "",
       freshmen: [],
@@ -101,7 +82,6 @@ export async function getAllGroups() {
     });
   }
 
-  // attach freshmen
   for (const f of freshmen) {
     if (!f.groupId) continue;
     groupMap.get(f.groupId)?.freshmen.push({
@@ -110,7 +90,6 @@ export async function getAllGroups() {
     });
   }
 
-  // attach mentors
   for (const m of mentors) {
     if (!m.groupId) continue;
     groupMap.get(m.groupId)?.mentors.push({
@@ -119,12 +98,10 @@ export async function getAllGroups() {
     });
   }
 
-  const result = Array.from(groupMap.values());
-
-  return result;
+  return Array.from(groupMap.values());
 }
 
-export async function getGroupByGroupId(groupId: string) {
+export async function getGroupByGroupId(groupId: number) {
   const group = await db
     .select()
     .from(groupData)
@@ -133,7 +110,7 @@ export async function getGroupByGroupId(groupId: string) {
   return group[0];
 }
 
-export async function getFreshmenByGroupId(groupId: string) {
+export async function getFreshmenByGroupId(groupId: number) {
   const freshmen = await db
     .select()
     .from(freshmenData)
@@ -141,7 +118,7 @@ export async function getFreshmenByGroupId(groupId: string) {
   return freshmen;
 }
 
-export async function getMentorsByGroupId(groupId: string) {
+export async function getMentorsByGroupId(groupId: number) {
   const mentorsId = await db
     .select()
     .from(ambassadorData)
@@ -203,7 +180,7 @@ export async function getGroupIdByMentorId(mentorId: number) {
   return groupLeader[0]?.groupId ?? null;
 }
 
-export async function getFreshmenAttendanceByGroupId(groupId: string) {
+export async function getFreshmenAttendanceByGroupId(groupId: number) {
   const attendance = await db
     .select({
       freshmenId: freshmenData.freshmenId,
@@ -317,16 +294,14 @@ export async function createGroups() {
     (p) => JSON.parse(p.blockOrder) as string[],
   );
 
-  // get IDs
   const groupRows = await db
     .selectDistinct({ id: seminarData.groupId })
     .from(seminarData)
     .orderBy(seminarData.groupId);
 
-  const groupIds = groupRows.map((g) => g.id);
+  const groupIds = groupRows.map((g) => g.id).filter((id): id is number => id !== null);
   const groupCount = groupIds.length;
 
-  // divide evenly across all patterns
   const patternCount = orders.length;
   const countPerOrder = Math.floor(groupCount / patternCount);
   const remainder = groupCount % patternCount;
@@ -336,10 +311,8 @@ export async function createGroups() {
     count: index < remainder ? countPerOrder + 1 : countPerOrder,
   }));
 
-  // Build insert list
-
   interface InsertRow {
-    groupId: string;
+    name: string;
     eventOrder: string;
     routeNum: number;
   }
@@ -351,18 +324,17 @@ export async function createGroups() {
     const { order, count } = dist;
 
     for (let i = 0; i < count; i++) {
-      const groupId = groupIds[currentIndex++];
+      const gId = groupIds[currentIndex++];
       const routeNum = i + 1;
 
       insertRows.push({
-        groupId: groupId ? groupId.toString() : "",
+        name: gId !== undefined ? `Group ${gId}` : "",
         eventOrder: JSON.stringify(order),
         routeNum,
       });
     }
   });
 
-  // insert
   const result = await db.insert(groupData).values(insertRows).returning();
   return result.length;
 }
@@ -372,18 +344,17 @@ export async function addCustomGroup(
   groupName: string,
   eventOrder: string[],
   routeNumber: number,
-): Promise<{ groupId: string; eventOrder: string; routeNum: number }[]> {
-  console.log("Event Order", eventOrder);
+): Promise<{ groupId: number; name: string; eventOrder: string; routeNum: number }[]> {
   const result = await db
     .insert(groupData)
     .values({
-      groupId: groupName,
+      name: groupName,
       eventOrder: JSON.stringify(eventOrder),
       routeNum: routeNumber,
     })
     .returning();
 
-  return result as { groupId: string; eventOrder: string; routeNum: number }[];
+  return result as { groupId: number; name: string; eventOrder: string; routeNum: number }[];
 }
 
 {
@@ -395,7 +366,6 @@ export async function addCustomGroup(
 export async function addHallway(
   hallwayName: string,
 ): Promise<{ success: boolean; hallwayName: string }> {
-  // Insert hallway stops
   await db.insert(hallwayStopData).values({
     location: hallwayName,
   });
@@ -430,11 +400,14 @@ export async function createSeminarGroups() {
     groups.get(key)!.push(student);
   }
 
+  // Get existing group_data count to calculate the gap
+  const existingGroups = await db.select({ groupId: groupData.groupId }).from(groupData);
+  const existingCount = existingGroups.length;
+
   let currentGroupA = 1;
   let currentGroupB = 2;
   let finalGroup = 2;
 
-  // Process each class group
   for (const [, students] of groups.entries()) {
     const total = students.length;
     const half = Math.floor(total / 2);
@@ -442,7 +415,6 @@ export async function createSeminarGroups() {
     const groupAStudents = students.slice(0, half);
     const groupBStudents = students.slice(half);
 
-    // ✅ Filter out null IDs (fixes your TypeScript error)
     const groupAIds = groupAStudents
       .map((s) => s.freshmenId)
       .filter((id): id is number => id !== null);
@@ -451,38 +423,38 @@ export async function createSeminarGroups() {
       .map((s) => s.freshmenId)
       .filter((id): id is number => id !== null);
 
-    // ✅ Bulk update Group A
     if (groupAIds.length > 0) {
       await db
         .update(seminarData)
-        .set({ groupId: currentGroupA.toString() })
+        .set({ groupId: currentGroupA })
         .where(inArray(seminarData.freshmenId, groupAIds));
     }
 
-    // ✅ Bulk update Group B
     if (groupBIds.length > 0) {
       await db
         .update(seminarData)
-        .set({ groupId: currentGroupB.toString() })
+        .set({ groupId: currentGroupB })
         .where(inArray(seminarData.freshmenId, groupBIds));
     }
 
     finalGroup = currentGroupB;
-
     currentGroupA += 2;
     currentGroupB += 2;
   }
 
-  console.log("Final group count:", finalGroup);
+  const seminarGroupCount = finalGroup;
+  const gap = seminarGroupCount - existingCount;
 
   return {
     success: true,
-    finalGroupCount: finalGroup,
+    finalGroupCount: seminarGroupCount,
+    existingGroupCount: existingCount,
+    groupsStillNeeded: gap > 0 ? gap : 0,
   };
 }
 
 export async function syncGroups() {
-  // get seminar data
+  // get seminar data — groupId is now an integer matching groupData.groupId
   const seminarRows = await db
     .select({
       freshmenId: seminarData.freshmenId,
@@ -492,12 +464,13 @@ export async function syncGroups() {
     })
     .from(seminarData);
 
-  const seminarById = new Map<string, (typeof seminarRows)[0]>();
+  // Build lookup maps
+  const seminarById = new Map<number, (typeof seminarRows)[0]>();
   const seminarByName = new Map<string, typeof seminarRows>();
 
   for (const row of seminarRows) {
     if (row.freshmenId) {
-      seminarById.set(row.freshmenId.toString(), row);
+      seminarById.set(row.freshmenId, row);
     }
 
     if (row.fName && row.lName) {
@@ -508,18 +481,19 @@ export async function syncGroups() {
     }
   }
 
-  // get freshmen data
+  // Get all groups so we can map seminar groupId → groupData.groupId
+  // With the new schema, seminarData.groupId IS groupData.groupId (both int),
+  // so we assign directly.
   const freshmenRows = await db.select().from(freshmenData);
 
-  // track unmatched
   const unmatched: { freshmenId: string; fName: string; lName: string }[] = [];
 
   for (const student of freshmenRows) {
     let matched = false;
 
     // Attempt 1: match by ID
-    if (student.freshmenId && seminarById.has(student.freshmenId.toString())) {
-      const match = seminarById.get(student.freshmenId.toString())!;
+    if (student.freshmenId && seminarById.has(student.freshmenId)) {
+      const match = seminarById.get(student.freshmenId)!;
       await db
         .update(freshmenData)
         .set({ groupId: match.groupId })
@@ -531,13 +505,12 @@ export async function syncGroups() {
       const possible = seminarByName.get(nameKey);
 
       if (possible && possible.length === 1) {
-        // check if there are duplicate names
         const match = possible[0];
         if (match.freshmenId != null) {
           await db
             .update(freshmenData)
             .set({
-              freshmenId: match.freshmenId, // Fix the data entered from goFan using the seminar data from the school
+              freshmenId: match.freshmenId,
               groupId: match.groupId,
             })
             .where(eq(freshmenData.freshmenId, student.freshmenId));
@@ -547,7 +520,6 @@ export async function syncGroups() {
     }
 
     if (!matched) {
-      // no ID or name match
       unmatched.push({
         freshmenId: student.freshmenId.toString(),
         fName: student.fName ?? "",
@@ -558,26 +530,25 @@ export async function syncGroups() {
 
   return {
     success: true,
-    unmatched, // list of students that were not assigned
+    unmatched,
   };
 }
 
 export async function updateGroupByGroupId(
-  currentGroupId: string,
-  groupId: string,
+  groupId: number,
+  name: string,
   event_order: string[],
   route_num: number,
 ) {
-  console.log("Event Order", event_order);
   await db
     .update(groupData)
     .set({
-      groupId: groupId,
+      name,
       eventOrder: JSON.stringify(event_order),
       routeNum: route_num,
     })
-    .where(eq(groupData.groupId, currentGroupId));
-  return { success: true, groupId };
+    .where(eq(groupData.groupId, groupId));
+  return { success: true, groupId, name };
 }
 
 {
@@ -610,19 +581,15 @@ export async function updateHallwayByID(hallwayId: number, location: string) {
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
-export async function deleteGroupByGroupId(groupId: string) {
-  console.log("Deleting group:", groupId);
-  // Change groupId of freshmen to null
+export async function deleteGroupByGroupId(groupId: number) {
   await db
     .update(freshmenData)
     .set({ groupId: null })
     .where(eq(freshmenData.groupId, groupId));
-  // Change groupId of group leaders to null
   await db
     .update(ambassadorData)
     .set({ groupId: null })
     .where(eq(ambassadorData.groupId, groupId));
-  // Delete group
   const result = await db
     .delete(groupData)
     .where(eq(groupData.groupId, groupId))
@@ -637,12 +604,10 @@ export async function deleteGroupByGroupId(groupId: string) {
 }
 
 export async function deleteHallwayByStopId(stopId: number) {
-  // Reassign mentors
   await db
     .update(hallwayHostData)
     .set({ hallwayStopId: null })
     .where(eq(hallwayHostData.hallwayStopId, stopId));
-  // Delete hallway
   const result = await db
     .delete(hallwayStopData)
     .where(eq(hallwayStopData.hallwayStopId, stopId))

@@ -17,13 +17,13 @@ export default async function EditFreshmenGroupPage({
 }) {
   const { id } = await params;
 
-  // Pull patterns from DB instead of importing event_orders.json
   const rawPatterns = await getEventOrderPatterns();
   const orders = rawPatterns.map((p) => p.blockOrder);
 
   if (id.toLowerCase() === "unassigned") {
     const groupData = {
-      groupId: "Unassigned",
+      groupId: null as number | null,
+      name: "Unassigned",
       routeNum: null,
       eventOrder: null,
     };
@@ -38,9 +38,9 @@ export default async function EditFreshmenGroupPage({
 
     const sanitizedMentorData = mentorData.map((mentor) => ({
       ...mentor,
-      mentor_id: mentor.mentorId ?? mentor.mentorId ?? 0,
-      fname: mentor.fName ?? mentor.fName ?? "",
-      lname: mentor.lName ?? mentor.lName ?? "",
+      mentor_id: mentor.mentorId ?? 0,
+      fname: mentor.fName ?? "",
+      lname: mentor.lName ?? "",
     }));
 
     return (
@@ -53,9 +53,10 @@ export default async function EditFreshmenGroupPage({
     );
   }
 
-  const groupData = await getGroupByGroupId(id);
-  const freshmenData = await getFreshmenByGroupId(id);
-  const mentorData = await getMentorsByGroupId(id);
+  const numericId = Number(id);
+  const groupData = await getGroupByGroupId(numericId);
+  const freshmenData = await getFreshmenByGroupId(numericId);
+  const mentorData = await getMentorsByGroupId(numericId);
 
   const sanitizedFreshmenData = freshmenData.map((freshman) => ({
     ...freshman,

@@ -7,7 +7,7 @@ import {
   getFreshmanById,
   getFreshmanByIdFromSchoolData,
 } from "../../../../src/actions/freshmen";
-import { getMentorsByGroupId } from "@/src/actions/group";
+import { getMentorsByGroupId, getGroupByGroupId } from "@/src/actions/group";
 import EditableContent from "../../components/EditableContent";
 import { auth } from "@/auth";
 
@@ -49,9 +49,12 @@ export default async function FreshmenHomepage() {
   }
 
   const freshmanDetails = await getFreshmanById(Number(studentId));
-  const groupMentors = freshmanDetails
-    ? await getMentorsByGroupId(String(freshmanDetails.groupId))
+  const groupMentors = freshmanDetails?.groupId != null
+    ? await getMentorsByGroupId(freshmanDetails.groupId)
     : [];
+  const groupInfo = freshmanDetails?.groupId != null
+    ? await getGroupByGroupId(freshmanDetails.groupId)
+    : null;
 
   if (!freshmanDetails) {
     const freshmenDetailsFromSchoolData = await getFreshmanByIdFromSchoolData(
@@ -104,11 +107,9 @@ export default async function FreshmenHomepage() {
               gap: "10px",
             }}
           >
-            <div>Group #:</div>
+            <div>Group:</div>
             <div style={{ color: "var(--textBlack)", fontWeight: "normal" }}>
-              {freshmanDetails?.groupId === null
-                ? "Unassigned"
-                : freshmanDetails?.groupId}
+              {groupInfo ? groupInfo.name : "Unassigned"}
             </div>
           </div>
           <div

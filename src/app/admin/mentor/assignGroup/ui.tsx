@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
@@ -15,12 +16,13 @@ import { useAlert } from "@/app/context/AlertContext";
 
 interface MentorAssignGroupUIProps {
   ambassadorAssignments: {
-    groupId: string | null;
+    groupId: number | null;
+    groupName: string | null;
     mentorId: number | null;
     fName: string | null;
     lName: string | null;
   }[];
-  groupIds: string[];
+  groupIds: { groupId: number; name: string }[];
   hallwayHostAssignments: {
     hallwayStopId: number | null;
     mentorId: number | null;
@@ -37,6 +39,7 @@ export default function MentorAssignGroupUI({
   hallwayStops,
 }: MentorAssignGroupUIProps) {
   const { showAlert } = useAlert();
+  const router = useRouter();
 
   const [ambassadors, setAmbassadors] = useState(ambassadorAssignments);
   const [hallwayHosts, setHallwayHosts] = useState(hallwayHostAssignments);
@@ -138,7 +141,7 @@ export default function MentorAssignGroupUI({
       <div style={{ width: "85%", marginTop: "50px" }}>
         {showAmbassador ? (
           <DropdownTable
-            headers={["Group ID", "ID", "First Name", "Last Name"]}
+            headers={["Group", "ID", "First Name", "Last Name"]}
             data={filteredAmbassadors.map((m) => [
               m.groupId,
               m.mentorId,
@@ -147,13 +150,12 @@ export default function MentorAssignGroupUI({
             ])}
             visibleColumns={[1, 2, 3]}
             idIndex={1}
-            dropdownValues={groupIds}
+            dropdownValues={groupIds.map((g) => String(g.groupId))}
+            dropdownDisplayTexts={groupIds.map((g) => g.name)}
             currentDropdownColumnIndex={0}
             reassignAction={async (mentorId, newGroupId) => {
-              const result = await reassignMentorGroup(
-                Number(mentorId),
-                String(newGroupId),
-              );
+              const parsed = newGroupId === "unassigned" ? null : Number(newGroupId);
+              const result = await reassignMentorGroup(Number(mentorId), parsed);
 
               if (result.success) {
                 setAmbassadors((prev) =>
@@ -161,15 +163,15 @@ export default function MentorAssignGroupUI({
                     mentor.mentorId === Number(mentorId)
                       ? {
                           ...mentor,
-                          groupId:
-                            newGroupId === "unassigned"
-                              ? null
-                              : String(newGroupId),
+                          groupId: parsed,
+                          groupName: parsed !== null
+                            ? (groupIds.find((g) => g.groupId === parsed)?.name ?? null)
+                            : null,
                         }
                       : mentor,
                   ),
                 );
-
+                router.refresh();
                 showAlert(
                   `Successfully reassigned mentor ${mentorId}`,
                   "success",
@@ -215,7 +217,7 @@ export default function MentorAssignGroupUI({
                       : mentor,
                   ),
                 );
-
+                router.refresh();
                 showAlert(
                   `Successfully reassigned mentor ${mentorId}`,
                   "success",

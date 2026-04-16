@@ -236,33 +236,24 @@ export const getRoyalRumbleGroupAttendance = async () => {
   }
 
   interface GroupDetail {
-    group_id: string;
+    group_id: number;
+    name: string;
     route_num: number;
     event_order: string;
     freshmen: Freshman[];
     mentors: Mentor[];
   }
 
-  // 1️⃣ Fetch all groups (ordered numerically then alphabetically)
+  // 1️⃣ Fetch all groups ordered by integer groupId
   const groups = await db
     .select({
       groupId: groupData.groupId,
+      name: groupData.name,
       routeNum: groupData.routeNum,
       eventOrder: groupData.eventOrder,
     })
     .from(groupData)
-    .orderBy(
-      sql`
-        CASE
-          WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN 1 ELSE 0
-        END,
-        CASE
-          WHEN ${groupData.groupId} ~ '^[0-9]+$' THEN ${groupData.groupId}::int
-          ELSE NULL
-        END,
-        LOWER(${groupData.groupId})
-      `,
-    );
+    .orderBy(sql`${groupData.groupId} ASC`);
 
   // 2️⃣ Fetch all freshmen
   const freshmen = await db
@@ -304,11 +295,12 @@ export const getRoyalRumbleGroupAttendance = async () => {
     );
 
   // 5️⃣ Build group map
-  const groupMap = new Map<string, GroupDetail>();
+  const groupMap = new Map<number, GroupDetail>();
 
   for (const g of groups) {
     groupMap.set(g.groupId, {
       group_id: g.groupId,
+      name: g.name,
       route_num: g.routeNum ?? 0,
       event_order: g.eventOrder ? JSON.parse(g.eventOrder).join(", ") : "",
       freshmen: [],
@@ -318,7 +310,7 @@ export const getRoyalRumbleGroupAttendance = async () => {
 
   // 6️⃣ Attach freshmen to their groups
   for (const f of freshmen) {
-    if (!f.groupId) continue;
+    if (f.groupId === null) continue;
     const group = groupMap.get(f.groupId);
     if (group) {
       group.freshmen.push({
@@ -331,7 +323,7 @@ export const getRoyalRumbleGroupAttendance = async () => {
 
   // 7️⃣ Attach mentors to their groups
   for (const m of mentors) {
-    if (!m.groupId) continue;
+    if (m.groupId === null) continue;
     const group = groupMap.get(m.groupId);
     if (group) {
       group.mentors.push({

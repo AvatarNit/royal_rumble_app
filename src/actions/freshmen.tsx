@@ -117,11 +117,8 @@ export const updateFreshmanByID = async (
 
 export const reassignFreshmenGroup = async (
   freshmenId: number,
-  newGroupId: string,
+  newGroupId: number | null,
 ) => {
-  if (newGroupId.toLowerCase() === "unassigned") {
-    newGroupId = null as any;
-  }
   await db
     .update(freshmenData)
     .set({

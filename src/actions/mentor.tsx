@@ -8,6 +8,7 @@ import {
   hallwayStopData,
   mentorAttendanceData,
   mentorData,
+  groupData,
 } from "@/db/schema";
 import { eq, sql, or } from "drizzle-orm";
 
@@ -35,12 +36,14 @@ export const getAmbassadorAssignments = async () => {
   const groups = await db
     .select({
       groupId: ambassadorData.groupId,
+      groupName: groupData.name,
       mentorId: ambassadorData.mentorId,
       fName: mentorData.fName,
       lName: mentorData.lName,
     })
     .from(ambassadorData)
     .innerJoin(mentorData, eq(ambassadorData.mentorId, mentorData.mentorId))
+    .leftJoin(groupData, eq(ambassadorData.groupId, groupData.groupId))
     .orderBy(sql`${ambassadorData.groupId} ASC NULLS FIRST`);
   return groups;
 };
@@ -323,11 +326,8 @@ export const updateMentorByID = async (
 
 export const reassignMentorGroup = async (
   mentorId: number,
-  newGroupId: string,
+  newGroupId: number | null,
 ) => {
-  if (newGroupId.toLowerCase() === "unassigned") {
-    newGroupId = null as any;
-  }
   await db
     .update(ambassadorData)
     .set({

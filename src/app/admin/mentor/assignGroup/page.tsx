@@ -12,11 +12,10 @@ async function MentorAssignGroupPage() {
   const hallwayHostAssignments = await getHallwayHostAssignments();
   const hallwayStops = await getAllHallways();
 
-  console.log("Ambassador Assignments:", ambassadorAssignments);
   return (
     <MentorAssignGroupUI
       ambassadorAssignments={ambassadorAssignments}
-      groupIds={groupIds.map((g: { groupId: string }) => String(g.groupId))}
+      groupIds={groupIds.map((g) => ({ groupId: g.groupId, name: g.name }))}
       hallwayHostAssignments={hallwayHostAssignments}
       hallwayStops={hallwayStops}
     />

@@ -13,7 +13,7 @@ export default async function AmbassadorRoutePage() {
   const studentId = !DEV_MODE ? session?.user?.id : "100001";
 
   const groupId = await getGroupIdByMentorId(Number(studentId));
-  const schedule = await getGroupSchedule(String(groupId));
+  const schedule = groupId != null ? await getGroupSchedule(groupId) : null;
 
   return <AmbassadorRouteUI schedule={schedule} />;
 }

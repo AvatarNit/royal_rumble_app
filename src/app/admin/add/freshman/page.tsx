@@ -5,10 +5,17 @@ import { useRouter } from "next/navigation";
 import LogoButton from "../../../components/logoButton";
 import LoginButton from "../../../components/loginButton";
 import AddButton from "../../../components/addButton";
+import ContentModal from "../../../components/ContentModal";
 import { addFreshman } from "../../../../actions/freshmen";
 import "../../../css/admin.css";
 import "../../../css/logo+login.css";
 import { useAlert } from "@/app/context/AlertContext";
+
+interface AddedFreshmanInfo {
+  name: string;
+  teacher: string | null;
+  groupName: string | null;
+}
 
 export default function AdminAddFreshman() {
   const router = useRouter();
@@ -18,9 +25,9 @@ export default function AdminAddFreshman() {
   const [l_name, setl_name] = useState("");
   const [freshmenId, setFreshmenId] = useState("");
   const [email, setEmail] = useState("");
-  const [primaryLanguage, setPrimaryLanguage] = useState("");
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [addedInfo, setAddedInfo] = useState<AddedFreshmanInfo | null>(null);
 
   const handleLogoClick = () => {
     router.push("/admin/freshmen");
@@ -41,9 +48,6 @@ export default function AdminAddFreshman() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = "Enter a valid email address.";
     }
-    if (!primaryLanguage.trim())
-      newErrors.primaryLanguage = "Primary language is required.";
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -57,21 +61,19 @@ export default function AdminAddFreshman() {
         l_name: l_name,
         freshmen_id: Number(freshmenId),
         email,
-        primary_language: primaryLanguage,
       });
       if (!freshmen_return.success) {
         throw new Error("Failed to add freshman");
       }
-      showAlert(
-        `Freshman ${freshmen_return.f_name} ${freshmen_return.l_name} added successfully!`,
-        "success",
-      );
-      router.push("/admin/add/freshman");
+      setAddedInfo({
+        name: `${freshmen_return.f_name} ${freshmen_return.l_name}`,
+        teacher: freshmen_return.teacher,
+        groupName: freshmen_return.groupName,
+      });
     } catch (error) {
       console.error(error);
       showAlert(`Failed to add freshman: ${f_name} ${l_name}`, "danger");
     }
-    router.push("/admin/freshmen");
   };
 
   return (
@@ -147,22 +149,6 @@ export default function AdminAddFreshman() {
               )}
             </div>
           </div>
-          <div className="form-row">
-            <label className="form-label">Primary Language:</label>
-            <div>
-              <input
-                type="text"
-                className={`form-input${errors.primaryLanguage ? " is-invalid" : ""}`}
-                value={primaryLanguage}
-                onChange={(e) => setPrimaryLanguage(e.target.value)}
-              />
-              {errors.primaryLanguage && (
-                <div className="invalid-feedback d-block">
-                  {errors.primaryLanguage}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </section>
       <div className="add-button-align">
@@ -174,6 +160,21 @@ export default function AdminAddFreshman() {
           ></i>
         </AddButton>
       </div>
+
+      <ContentModal
+        title="Freshman Added"
+        icon="bi bi-check-circle"
+        show={!!addedInfo}
+        onClose={() => router.push("/admin/freshmen")}
+      >
+        {addedInfo && (
+          <div style={{ fontSize: "18px", lineHeight: "2" }}>
+            <div><strong>Name:</strong> {addedInfo.name}</div>
+            <div><strong>Teacher:</strong> {addedInfo.teacher ?? "Not found in seminar data"}</div>
+            <div><strong>Group:</strong> {addedInfo.groupName ?? "No group assigned"}</div>
+          </div>
+        )}
+      </ContentModal>
     </main>
   );
 }

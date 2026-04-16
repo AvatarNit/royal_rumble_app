@@ -11,14 +11,21 @@ export default function ModalStyle({
   btnText = "",
   saveAction = undefined,
   icon = "bi bi-question-circle",
+  show,
+  onClose,
 }: {
   children: React.ReactNode;
   title?: string;
   btnText?: string;
   saveAction?: () => void;
   icon?: string;
+  show?: boolean;
+  onClose?: () => void;
 }) {
-  const [showModal, setShowModal] = useState(false);
+  const [internalShow, setInternalShow] = useState(false);
+  const isControlled = show !== undefined;
+  const showModal = isControlled ? show : internalShow;
+  const setShowModal = isControlled ? (onClose ? () => onClose() : () => {}) : setInternalShow;
 
   const greyButtonStyle = {
     display: "inline-flex",
@@ -53,13 +60,15 @@ export default function ModalStyle({
 
   return (
     <>
-      <AddButton
-        onClick={() => setShowModal(true)}
-        style={{ fontSize: "21px", justifyContent: "flex-end", width: "265px" }}
-      >
-        {title || ""}
-        <i className={icon} style={{ marginLeft: "30px", fontSize: "30px" }} />
-      </AddButton>
+      {!isControlled && (
+        <AddButton
+          onClick={() => setInternalShow(true)}
+          style={{ fontSize: "21px", justifyContent: "flex-end", width: "265px" }}
+        >
+          {title || ""}
+          <i className={icon} style={{ marginLeft: "30px", fontSize: "30px" }} />
+        </AddButton>
+      )}
       {showModal && (
         <div
           style={{

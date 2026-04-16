@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { freshmenData, seminarData } from "@/db/schema";
+import { freshmenData, seminarData, groupData } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
 
 //--------------------------------------------------------------------------------------//
@@ -62,22 +62,45 @@ export const addFreshman = async (data: {
   l_name: string;
   freshmen_id: number;
   email: string;
-  primary_language: string;
+  primary_language?: string;
 }) => {
+  // Check seminar data for this freshman
+  const seminarRecord = await db
+    .select()
+    .from(seminarData)
+    .where(eq(seminarData.freshmenId, data.freshmen_id))
+    .limit(1);
+
+  const seminar = seminarRecord[0] ?? null;
+  const groupId = seminar?.groupId ?? null;
+
   await db.insert(freshmenData).values({
     fName: data.f_name,
     lName: data.l_name,
     freshmenId: data.freshmen_id,
     email: data.email,
     primaryLanguage: data.primary_language,
-    groupId: null,
+    groupId,
   });
-  // return to display confirmation
+
+  // If a group was found, fetch the group name
+  let groupName: string | null = null;
+  if (groupId !== null) {
+    const groupRecord = await db
+      .select({ name: groupData.name })
+      .from(groupData)
+      .where(eq(groupData.groupId, groupId))
+      .limit(1);
+    groupName = groupRecord[0]?.name ?? null;
+  }
+
   return {
     success: true,
     f_name: data.f_name,
     l_name: data.l_name,
     freshmen_id: data.freshmen_id,
+    teacher: seminar?.teacherFullName ?? null,
+    groupName,
   };
 };
 //--------------------------------------------------------------------------------------//

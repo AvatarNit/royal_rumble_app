@@ -131,8 +131,8 @@ export default function EditHallwayGroupUI({
               }}
               currentGroupId={hallwayData.hallwayStopId}
               possibleGroups={possibleHallways.map((hallway) => ({
-                group_id: hallway.hallwayStopId.toString(),
-                name: hallway.location ?? undefined,
+                group_id: Number(hallway.hallwayStopId),
+                name: hallway.location ?? "Unnamed Hallway",
               }))}
             />
           </div>

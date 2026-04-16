@@ -9,7 +9,7 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createSeminarGroups, syncGroups } from "@/actions/group";
+import { createSeminarGroups, syncGroups, hasSeminarData, hasFreshmenData } from "@/actions/group";
 import { createGroupsFromDB, createEstimatedGroups } from "@/actions/routes";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
@@ -364,6 +364,11 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["assignGroups"]}
                   onClick={async () => {
+                    const seminarExists = await hasSeminarData();
+                    if (!seminarExists) {
+                      showAlert("Seminar data has not been uploaded yet. Please upload seminar data before assigning groups.", "danger");
+                      return;
+                    }
                     setGroupActionLoading((prev) => ({
                       ...prev,
                       assignGroups: true,
@@ -502,6 +507,16 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["syncGroups"]}
                   onClick={async () => {
+                    const freshmenExists = await hasFreshmenData();
+                    if (!freshmenExists) {
+                      showAlert("Freshmen data has not been uploaded yet. Please upload freshmen data before syncing groups.", "danger");
+                      return;
+                    }
+                    const seminarExists = await hasSeminarData();
+                    if (!seminarExists) {
+                      showAlert("Seminar data has not been uploaded yet. Please upload seminar data before syncing groups.", "danger");
+                      return;
+                    }
                     setGroupActionLoading((prev) => ({
                       ...prev,
                       syncGroups: true,
@@ -560,6 +575,12 @@ export default function AdminUpload() {
           <div className="upload-form">
             {[
               {
+                label: "Mentor Data",
+                table: "mentor_data",
+                headers:
+                  "Mentor ID, First Name, Last Name, Graduation Year, Job, Pizza, Languages, Training Day, Shirt Size, Phone Number, Email, Past Mentor, Interests Involvement",
+              },
+              {
                 label: "GoFan → Freshmen Data",
                 table: "freshmen_data",
                 headers:
@@ -570,12 +591,6 @@ export default function AdminUpload() {
                 table: "seminar_data",
                 headers:
                   "Last Name, First Name, Freshmen ID, Semester, Teacher Full Name, Period",
-              },
-              {
-                label: "Mentor Data",
-                table: "mentor_data",
-                headers:
-                  "Mentor ID, First Name, Last Name, Graduation Year, Job, Pizza, Languages, Training Day, Shirt Size, Phone Number, Email, Past Mentor, Interests Involvement",
               },
             ].map((item) => (
               <div

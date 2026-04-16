@@ -386,6 +386,16 @@ export async function addHallway(
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
+export async function hasSeminarData(): Promise<boolean> {
+  const rows = await db.select({ freshmenId: seminarData.freshmenId }).from(seminarData).limit(1);
+  return rows.length > 0;
+}
+
+export async function hasFreshmenData(): Promise<boolean> {
+  const rows = await db.select({ freshmenId: freshmenData.freshmenId }).from(freshmenData).limit(2);
+  return rows.length > 1;
+}
+
 export async function createSeminarGroups() {
   const allStudents = await db.select().from(seminarData);
 

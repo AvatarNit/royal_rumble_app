@@ -370,19 +370,19 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["assignGroups"]}
                   onClick={async () => {
-                    const seminarExists = await hasSeminarData();
-                    if (!seminarExists) {
-                      showAlert(
-                        "Seminar data has not been uploaded yet. Please upload seminar data before assigning groups.",
-                        "danger",
-                      );
-                      return;
-                    }
                     setGroupActionLoading((prev) => ({
                       ...prev,
                       assignGroups: true,
                     }));
                     try {
+                      const seminarExists = await hasSeminarData();
+                      if (!seminarExists) {
+                        showAlert(
+                          "Seminar data has not been uploaded yet. Please upload seminar data before assigning groups.",
+                          "danger",
+                        );
+                        return;
+                      }
                       const groupingReturn = await createSeminarGroups();
                       const gapMsg =
                         groupingReturn.groupsStillNeeded > 0
@@ -394,6 +394,8 @@ export default function AdminUpload() {
                           ? "warning"
                           : "success",
                       );
+                    } catch {
+                      showAlert("Failed to assign groups. Please try again.", "danger");
                     } finally {
                       setGroupActionLoading((prev) => ({
                         ...prev,
@@ -516,32 +518,37 @@ export default function AdminUpload() {
                   type="button"
                   disabled={groupActionLoading["syncGroups"]}
                   onClick={async () => {
-                    const freshmenExists = await hasFreshmenData();
-                    if (!freshmenExists) {
-                      showAlert(
-                        "Freshmen data has not been uploaded yet. Please upload freshmen data before syncing groups.",
-                        "danger",
-                      );
-                      return;
-                    }
-                    const seminarExists = await hasSeminarData();
-                    if (!seminarExists) {
-                      showAlert(
-                        "Seminar data has not been uploaded yet. Please upload seminar data before syncing groups.",
-                        "danger",
-                      );
-                      return;
-                    }
                     setGroupActionLoading((prev) => ({
                       ...prev,
                       syncGroups: true,
                     }));
                     try {
+                      const freshmenExists = await hasFreshmenData();
+                      if (!freshmenExists) {
+                        showAlert(
+                          "Freshmen data has not been uploaded yet. Please upload freshmen data before syncing groups.",
+                          "danger",
+                        );
+                        return;
+                      }
+                      const seminarExists = await hasSeminarData();
+                      if (!seminarExists) {
+                        showAlert(
+                          "Seminar data has not been uploaded yet. Please upload seminar data before syncing groups.",
+                          "danger",
+                        );
+                        return;
+                      }
                       const syncResult = await syncGroups();
+                      const unmatchedCount = syncResult.unmatched.length;
                       showAlert(
-                        `Groups synced: ${syncResult.success}\n${JSON.stringify(syncResult.unmatched)}`,
-                        "success",
+                        unmatchedCount > 0
+                          ? `Groups synced! ${unmatchedCount} freshman could not be matched.`
+                          : "Groups synced successfully! All freshmen matched.",
+                        unmatchedCount > 0 ? "warning" : "success",
                       );
+                    } catch {
+                      showAlert("Failed to sync groups. Please try again.", "danger");
                     } finally {
                       setGroupActionLoading((prev) => ({
                         ...prev,

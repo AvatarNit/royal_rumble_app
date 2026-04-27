@@ -59,13 +59,72 @@
 .home-ticket-button {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 4rem;
+  margin-bottom: 4rem;
 }
 
 .home-bottom-buttons {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* about section  */
+
+.rumble-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.rumble-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin-top: 1rem;
+}
+
+.rumble-text {
+  color: var(--primaryBlue);
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.rumble-text p {
+  margin: 0;
+}
+
+.rumble-image {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.rumble-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Footer text */
+.rumble-footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--primaryBlue);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .rumble-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rumble-image {
+    height: 250px;
+  }
 }

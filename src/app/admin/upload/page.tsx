@@ -9,7 +9,12 @@ import "../../css/admin.css";
 import "../../css/logo+login.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createSeminarGroups, syncGroups, hasSeminarData, hasFreshmenData } from "@/actions/group";
+import {
+  createSeminarGroups,
+  syncGroups,
+  hasSeminarData,
+  hasFreshmenData,
+} from "@/actions/group";
 import { createGroupsFromDB, createEstimatedGroups } from "@/actions/routes";
 import { Popover, OverlayTrigger } from "react-bootstrap";
 import { useAlert } from "../../context/AlertContext";
@@ -336,9 +341,10 @@ export default function AdminUpload() {
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Pre-create groups before seminar data is uploaded. Enter
-                    your estimated # of groups to distribute groups. Assign 
-                    mentors and rename groups right away. Run Assign Groups later
-                    to see if any extras are needed.
+                    your estimated count and routes will be distributed
+                    automatically. Run Assign Groups later to see if any extras
+                    are needed. Get Freshmen Prep Class count from counselors
+                    and double it for the estimate.
                   </div>
                 </div>
               </div>
@@ -367,7 +373,10 @@ export default function AdminUpload() {
                   onClick={async () => {
                     const seminarExists = await hasSeminarData();
                     if (!seminarExists) {
-                      showAlert("Seminar data has not been uploaded yet. Please upload seminar data before assigning groups.", "danger");
+                      showAlert(
+                        "Seminar data has not been uploaded yet. Please upload seminar data before assigning groups.",
+                        "danger",
+                      );
                       return;
                     }
                     setGroupActionLoading((prev) => ({
@@ -510,12 +519,18 @@ export default function AdminUpload() {
                   onClick={async () => {
                     const freshmenExists = await hasFreshmenData();
                     if (!freshmenExists) {
-                      showAlert("Freshmen data has not been uploaded yet. Please upload freshmen data before syncing groups.", "danger");
+                      showAlert(
+                        "Freshmen data has not been uploaded yet. Please upload freshmen data before syncing groups.",
+                        "danger",
+                      );
                       return;
                     }
                     const seminarExists = await hasSeminarData();
                     if (!seminarExists) {
-                      showAlert("Seminar data has not been uploaded yet. Please upload seminar data before syncing groups.", "danger");
+                      showAlert(
+                        "Seminar data has not been uploaded yet. Please upload seminar data before syncing groups.",
+                        "danger",
+                      );
                       return;
                     }
                     setGroupActionLoading((prev) => ({

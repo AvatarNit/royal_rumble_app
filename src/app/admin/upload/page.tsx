@@ -269,14 +269,15 @@ export default function AdminUpload() {
                     placeholder="# of groups (e.g. 44)"
                     value={estimatedGroupCount}
                     onChange={(e) => setEstimatedGroupCount(e.target.value)}
-                    style={{ width: "340px", fontSize: "18px" }}
+                    style={{ width: "220px", fontSize: "18px" }}
                   />
                   <button
                     style={{
                       ...buttonStyle,
                       paddingLeft: "10px",
                       paddingRight: "10px",
-                      width: "340px",
+                      width: "220px",
+                      marginTop: "15px"
                     }}
                     onMouseEnter={buttonHover}
                     onMouseLeave={buttonUnhover}
@@ -340,7 +341,7 @@ export default function AdminUpload() {
                     style={{ fontSize: "18px", textAlign: "left" }}
                   >
                     Pre-create groups before seminar data is uploaded. Enter
-                    your estimated count and routes are distributed
+                    your estimated count and routes will be distributed
                     automatically. Run Assign Groups later to see if any extras
                     are needed. Get Freshmen Prep Class count from counselors
                     and double it for the estimate.

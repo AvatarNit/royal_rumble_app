@@ -11,21 +11,20 @@ export default function GeneralButtons({
 
   const containerStyle = {
     backgroundColor: "white",
-    border: "10px solid var(--primaryBlue)",
+    border: "8px solid var(--primaryBlue)",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
     color: "var(--primaryBlue)",
     fontFamily: "Poppins, sans-serif",
     fontWeight: "bold",
-    fontSize: "70px",
-    padding: "40px 20px",
-    width: "500px",
-    height: "300px",
+    fontSize: "40px",
+    width: "900px",
+    height: "150px",
     position: "relative" as const,
     textAlign: "center" as const,
     textDecoration: "none",
-    margin: "10px",
+    marginTop: "100px",
   };
 
   const redLineStyle = {

@@ -2,6 +2,7 @@ import InfoBox from "../../components/infoBox";
 import MentorButtons from "../../components/mentorButtons";
 import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
+import "../../css/mentor.css";
 
 export default function HallwayHostUI({
   mentorsData,
@@ -64,7 +65,8 @@ export default function HallwayHostUI({
           Attendance
         </MentorButtons>
       </div>
-      <section className="mentor-info-box">
+
+      <section className="mentor-info-box" style={{display: "flex", flexDirection: "column",}}>
         <InfoBox headerText="Group Details">
           <section>
             <label className="info-label">Mentors:</label>

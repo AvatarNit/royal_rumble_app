@@ -36,6 +36,8 @@
   font-weight: 700;
   font-size: 2rem;
   text-align: center;
+  justify-content: center;
+  align-items: center;
   margin: 10px 20px;
 }
 
@@ -43,7 +45,9 @@
   color: var(--primaryRed);
   font-weight: normal;
   font-size: 2rem;
+  justify-content: center;
   text-align: center;
+  align-items: center;
   margin: 10px 0;
 }
 
@@ -73,6 +77,8 @@
   color: var(--textBlack);
   font-weight: normal;
   font-size: 30px;
+  align-items: center;
+  justify-content: center;
 }
 
 .freshmen-label {

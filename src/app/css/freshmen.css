@@ -29,3 +29,16 @@
   text-align: center;
   margin: 20px 0;
 }
+
+.info-label {
+  color: var(--primaryBlue);
+  font-weight: bold;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.info-value {
+  color: var(--textBlack);
+  font-weight: normal;
+  font-size: 30px;
+}

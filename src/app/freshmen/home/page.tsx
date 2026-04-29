@@ -105,6 +105,7 @@ export default async function FreshmenHomepage() {
               fontWeight: "bold",
               fontSize: "30px",
               gap: "10px",
+              marginBottom: "20px",
             }}
           >
             <div>Group:</div>
@@ -119,6 +120,7 @@ export default async function FreshmenHomepage() {
               fontWeight: "bold",
               fontSize: "30px",
               gap: "10px",
+              marginBottom: "20px",
             }}
           >
             <div className="info-pair">

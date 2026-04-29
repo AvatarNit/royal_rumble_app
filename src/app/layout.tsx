@@ -30,7 +30,7 @@ export default function RootLayout({
           <AlertProvider>
             {DEV_MODE && (
               <nav style={{ textAlign: "center", padding: "30px" }}>
-                <Link href="/">Home</Link> | <Link href="/about">About</Link> |{" "}
+                <Link href="/">Home</Link> |{" "}
                 <Link href="/faq">FAQ</Link> |{" "}
                 <Link href="/freshmen/home">Freshmen</Link> |{" "}
                 <Link href="/mentor/ambassador">Ambassador</Link> |{" "}

@@ -2,6 +2,7 @@ import InfoBox from "../../components/infoBox";
 import MentorButtons from "../../components/mentorButtons";
 import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
+import "../../css/mentor.css";
 
 export default function AmbassadorUI({
   mentorsData,
@@ -100,7 +101,7 @@ export default function AmbassadorUI({
                   </div>
                 </div>
                 <div className="info-pairs">
-                  <div className="info-pair">
+                  {/* <div className="info-pair"> */}
                     <div className="info-label">Mentors:</div>
                     <div className="info-value">
                       <ol className="list-group list-group-numbered list-group-horizontal">
@@ -110,7 +111,7 @@ export default function AmbassadorUI({
                           </li>
                         ))}
                       </ol>
-                    </div>
+                    {/* </div> */}
                   </div>
                   <div className="info-pairs">
                     <div className="info-label">Freshmen:</div>

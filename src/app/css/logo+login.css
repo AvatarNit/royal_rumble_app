@@ -4,20 +4,13 @@
   left: 20px;
   background: none;
   border: none;
-  cursor: pointer;
   font-size: 3.7rem;
-  transition: transform 0.2s ease;
   z-index: 100;
 }
 
 .logo {
   width: 100px;
   height: auto;
-  transition: transform 0.2s ease;
-}
-
-.home-logo-button:hover .logo{
-  transform: scale(1.1);
 }
 
 .profile-icon-button {
@@ -35,4 +28,13 @@
 
 .profile-icon-button:hover {
   transform: scale(1.2);
+}
+
+.nav-buttons{
+  position: fixed;
+  top: 40px;
+  left: 73%;
+  background: none;
+  border: none;
+  z-index: 100;
 }

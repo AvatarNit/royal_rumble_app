@@ -1,6 +1,7 @@
 import LogoButton from "../../components/logoButton";
 import LoginButton from "../../components/loginButton";
 import InfoBox from "../../components/infoBox";
+import NavButton from "../../components/addButton";
 import "../../css/freshmen.css";
 import "../../css/logo+login.css";
 import {
@@ -64,6 +65,18 @@ export default async function FreshmenHomepage() {
     return (
       <main className="freshmen-container">
         <LogoButton />
+         <div className= "nav-buttons">
+          <NavButton href="/"
+          style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Home
+          </NavButton>
+          <NavButton href="/freshmen/home"
+          style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Dashboard
+          </NavButton>
+        </div>
         <LoginButton />
 
         <header className="freshmen-header">
@@ -85,6 +98,18 @@ export default async function FreshmenHomepage() {
   return (
     <main className="freshmen-container">
       <LogoButton />
+      <div className= "nav-buttons">
+        <NavButton href="/"
+        style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Home
+        </NavButton>
+        <NavButton href="/freshmen/home"
+        style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Dashboard
+        </NavButton>
+        </div>
       <LoginButton />
 
       <header className="freshmen-header">

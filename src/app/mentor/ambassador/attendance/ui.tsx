@@ -5,6 +5,7 @@ import LoginButton from "../../../components/loginButton";
 import InfoBox from "../../../components/infoBox";
 import CheckBoxTable from "../../../components/checkBoxTable";
 import BackButton from "../../../components/backButton";
+import NavButton from "../../../components/addButton";
 import { updateFreshmanAttendanceById } from "../../../../actions/freshmen";
 import "../../../css/mentor.css";
 import "../../../css/logo+login.css";
@@ -64,6 +65,18 @@ export default function FreshmenAttendancePageUI({
   return (
     <main className="mentor-container">
       <LogoButton />
+       <div className= "nav-buttons">
+        <NavButton href="/"
+        style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Home
+        </NavButton>
+        <NavButton href="/mentor/ambassador"
+        style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Dashboard
+        </NavButton>
+      </div>
       <LoginButton />
 
       <header className="mentor-header">

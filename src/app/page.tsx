@@ -3,6 +3,7 @@ import LoginButton from "./components/loginButton";
 import FAQButton from "./components/faqButton";
 import TicketButton from "./components/ticketButton";
 import SubmitButton from "./components/addButton";
+import NavButton from "./components/addButton";
 import homepagePhoto1 from "./assets/homepagePhoto1.jpg";
 import homepagePhoto2 from "./assets/homepagePhoto2.jpg";
 import homepagePhoto3 from "./assets/homepagePhoto3.jpg";
@@ -26,13 +27,60 @@ import "./css/homepage.css";
 import "./css/logo+login.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { getRoyalRumbleTicketLink } from "../actions/other";
+import { auth } from "@/auth";
 
 export default async function Home() {
   const ticketLink = await getRoyalRumbleTicketLink();
+  const session = await auth();
+
+  const dashboardRoutes: Record<string, string> = {
+    ADMIN: "/admin",
+    AMBASSADOR: "/mentor/ambassador",
+    "HALLWAY HOST": "/mentor/hallway_host",
+    "UTILITY SQUAD": "/mentor/utility_squad",
+    "SPIRIT SESSION": "/mentor/spirit_session",
+    FRESHMAN: "/freshmen/home"
+  };
+
+const userJob = session?.user?.job;
+
+const dashboardLink =
+  userJob && userJob in dashboardRoutes
+    ? dashboardRoutes[userJob as keyof typeof dashboardRoutes]
+    : "/";
 
   return (
     <main className="home-container">
-      {/* <header style={{ backgroundColor: "red", color: "white" }}>
+      {session && (
+        <div className="nav-buttons">
+          <NavButton
+            href="/"
+            style={{
+              width: "90px",
+              height: "40px",
+              padding: "5px 0px",
+              fontSize: "15px",
+            }}
+          >
+            Home
+          </NavButton>
+
+          <NavButton
+            href={dashboardLink}
+            style={{
+              width: "140px",
+              height: "40px",
+              padding: "5px 0px",
+              fontSize: "15px",
+            }}
+          >
+            Dashboard
+          </NavButton>
+
+        </div>
+      )}
+
+      <header style={{ backgroundColor: "red", color: "white" }}>
         THE IS A DEVOLPMENT SITE. FOR THE OFFICIAL ROYAL RUMBLE WEBSITE{" "}
         <a href="https://www.hseroyalrumble.com">CLICK HERE</a>
       </header> */}
@@ -104,7 +152,7 @@ export default async function Home() {
           </div>
 
           {/* Row 2 */}
-          <div className="rumble-image" style={{height: "575px"}}>
+          <div className="rumble-image rumble-image-top" style={{height: "575px"}}>
             <Image src={about1} alt="Student with crown" />
           </div>
 
@@ -148,7 +196,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <header className="home-header" style={{ marginTop: "5rem" }}>
+      <header className="home-header" style={{ marginTop: "2rem" }}>
         <h1 className="home-title">Meet the Planning Committee</h1>
       </header>
 
@@ -273,7 +321,7 @@ export default async function Home() {
 
         />
 
-        <SubmitButton href="/admin/add/admin"
+        <SubmitButton href=""
           style={{ fontSize: "30px", alignSelf: "center", marginTop: "1rem" }}
         >
           Submit

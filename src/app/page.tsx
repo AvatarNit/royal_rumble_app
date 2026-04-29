@@ -20,6 +20,7 @@ import roberts from "./assets/roberts.png";
 import guenin from "./assets/guenin.jpg";
 import vinson from "./assets/vinson.png";
 
+
 import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
 import "./css/logo+login.css";
@@ -119,6 +120,7 @@ export default async function Home() {
               and an official start to student life at as a Royal!
             </p>
           </div>
+          
 
           <div className="rumble-text">
             <p>

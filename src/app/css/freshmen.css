@@ -9,9 +9,9 @@
 .freshmen-title {
   color: var(--primaryBlue);
   font-weight: 700;
-  font-size: 4rem;
+  font-size: 3.7rem;
+  margin-top: 70px;
   text-align: center;
-  margin-top: 60px;
 }
 
 .freshmen-info-box {

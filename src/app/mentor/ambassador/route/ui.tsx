@@ -5,6 +5,7 @@ import LoginButton from "../../../components/loginButton";
 import InfoBox from "../../../components/infoBox";
 import InfoTable from "../../../components/infoTable";
 import BackButton from "../../../components/backButton";
+import NavButton from "../../../components/addButton";
 import "../../../css/mentor.css";
 import "../../../css/logo+login.css";
 
@@ -38,12 +39,28 @@ export default function AmbassadorRouteUI({
     return (
       <main className="mentor-container">
         <LogoButton />
+         <div className= "nav-buttons">
+          <NavButton href="/"
+          style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Home
+          </NavButton>
+          <NavButton href="/mentor/ambassador"
+          style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Dashboard
+          </NavButton>
+        </div>
         <LoginButton />
+
         <header className="mentor-header">
           <h1 className="mentor-title">Route</h1>
         </header>
+
         <BackButton href="/mentor/ambassador" />
+
         <section className="mentor-info-box">
+
           <InfoBox headerText="No Route Assigned">
             <p
               style={{
@@ -64,6 +81,18 @@ export default function AmbassadorRouteUI({
   return (
     <main className="mentor-container">
       <LogoButton />
+      <div className= "nav-buttons">
+          <NavButton href="/"
+          style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Home
+          </NavButton>
+          <NavButton href="/mentor/ambassador"
+          style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Dashboard
+          </NavButton>
+      </div>
       <LoginButton />
 
       <header className="mentor-header">

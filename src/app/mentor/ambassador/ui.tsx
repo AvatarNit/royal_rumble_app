@@ -1,8 +1,10 @@
 import InfoBox from "../../components/infoBox";
 import MentorButtons from "../../components/mentorButtons";
+import NavButton from "../../components/addButton";
 import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
 import "../../css/mentor.css";
+import "../../css/logo+login.css";
 
 export default function AmbassadorUI({
   mentorsData,
@@ -52,6 +54,18 @@ export default function AmbassadorUI({
 }) {
   return (
     <>
+     <div className= "nav-buttons">
+        <NavButton href="/"
+        style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Home
+        </NavButton>
+        <NavButton href="/mentor/ambassador"
+        style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Dashboard
+        </NavButton>
+      </div>
       <header className="mentor-header">
         <h1 className="mentor-title">
           Welcome, {mentorsData.fName} {mentorsData.lName}!

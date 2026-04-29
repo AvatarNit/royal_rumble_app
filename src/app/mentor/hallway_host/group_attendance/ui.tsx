@@ -8,6 +8,7 @@ import LoginButton from "../../../components/loginButton";
 import InfoBox from "../../../components/infoBox";
 import CheckBoxTable from "../../../components/checkBoxTable";
 import BackButton from "../../../components/backButton";
+import NavButton from "../../../components/addButton";
 import "../../../css/mentor.css";
 import "../../../css/logo+login.css";
 import { markGroupPresent } from "@/actions/routes";
@@ -58,6 +59,18 @@ export default function HallwayHostAttendanceUI({
     return (
       <main className="mentor-container">
         <LogoButton />
+        <div className= "nav-buttons">
+          <NavButton href="/"
+          style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Home
+          </NavButton>
+          <NavButton href="/mentor/hallway_host"
+          style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+          >
+            Dashboard
+          </NavButton>
+        </div>
         <LoginButton />
         <header className="mentor-header">
           <h1 className="mentor-title">Group Attendance</h1>
@@ -84,6 +97,18 @@ export default function HallwayHostAttendanceUI({
   return (
     <main className="mentor-container">
       <LogoButton />
+      <div className= "nav-buttons">
+        <NavButton href="/"
+        style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Home
+        </NavButton>
+        <NavButton href="/mentor/hallway_host"
+        style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Dashboard
+        </NavButton>
+      </div>
       <LoginButton />
 
       <header className="mentor-header">

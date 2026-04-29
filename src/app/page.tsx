@@ -104,7 +104,7 @@ export default async function Home() {
           </div>
 
           {/* Row 2 */}
-          <div className="rumble-image" style={{height: "575px"}}>
+          <div className="rumble-image rumble-image-top" style={{height: "575px"}}>
             <Image src={about1} alt="Student with crown" />
           </div>
 
@@ -148,7 +148,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <header className="home-header" style={{ marginTop: "5rem" }}>
+      <header className="home-header" style={{ marginTop: "2rem" }}>
         <h1 className="home-title">Meet the Planning Committee</h1>
       </header>
 
@@ -273,7 +273,7 @@ export default async function Home() {
 
         />
 
-        <SubmitButton href="/admin/add/admin"
+        <SubmitButton href=""
           style={{ fontSize: "30px", alignSelf: "center", marginTop: "1rem" }}
         >
           Submit

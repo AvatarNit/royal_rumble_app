@@ -360,7 +360,15 @@
 
   .rumble-image {
     height: 250px !important;
+    background-position: top;
+    object-fit: cover;
   }
+
+  .rumble-image-top img {
+    object-position: top;
+    object-position: 60% 10%;
+  }
+
 
   /* ===== PEOPLE SECTION ===== */
 

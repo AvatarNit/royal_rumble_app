@@ -1,6 +1,7 @@
 import InfoBox from "../../components/infoBox";
 import InfoTable from "../../components/infoTable";
 import EditableContent from "../../components/EditableContent";
+import NavButton from "../../components/addButton";
 
 export default function UtilitySquadUI({
   mentorsData,
@@ -29,6 +30,18 @@ export default function UtilitySquadUI({
 }) {
   return (
     <>
+      <div className= "nav-buttons">
+        <NavButton href="/"
+        style = {{ width: "90px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Home
+        </NavButton>
+        <NavButton href="/mentor/utility_squad"
+        style = {{ width: "140px", height: "40px", padding: "5px 0px", fontSize: "15px"}}
+        >
+          Dashboard
+        </NavButton>
+      </div>
       <header className="mentor-header">
         <h1 className="mentor-title">
           Welcome, {mentorsData.fName} {mentorsData.lName}!

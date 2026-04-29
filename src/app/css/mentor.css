@@ -18,9 +18,9 @@
 .mentor-title {
   color: var(--primaryBlue);
   font-weight: 700;
-  font-size: 4rem;
+  font-size: 3.8rem;
   text-align: center;
-  margin-top: 60px;
+  /* margin-top: 60px; */
 }
 
 .mentor-info-box {

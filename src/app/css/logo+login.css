@@ -38,3 +38,15 @@
   border: none;
   z-index: 100;
 }
+
+@media (max-width: 1024px) {
+  .nav-buttons{
+    position: fixed;
+    top: 40px;
+    left: 63%;
+    background: none;
+    border: none;
+    z-index: 100;
+  }
+
+}

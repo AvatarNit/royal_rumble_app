@@ -21,7 +21,6 @@ import roberts from "./assets/roberts.png";
 import guenin from "./assets/guenin.jpg";
 import vinson from "./assets/vinson.png";
 
-
 import royalRumbleLogo from "./assets/logo.png";
 import "./css/homepage.css";
 import "./css/logo+login.css";
@@ -39,15 +38,15 @@ export default async function Home() {
     "HALLWAY HOST": "/mentor/hallway_host",
     "UTILITY SQUAD": "/mentor/utility_squad",
     "SPIRIT SESSION": "/mentor/spirit_session",
-    FRESHMAN: "/freshmen/home"
+    FRESHMAN: "/freshmen/home",
   };
 
-const userJob = session?.user?.job;
+  const userJob = session?.user?.job;
 
-const dashboardLink =
-  userJob && userJob in dashboardRoutes
-    ? dashboardRoutes[userJob as keyof typeof dashboardRoutes]
-    : "/";
+  const dashboardLink =
+    userJob && userJob in dashboardRoutes
+      ? dashboardRoutes[userJob as keyof typeof dashboardRoutes]
+      : "/";
 
   return (
     <main className="home-container">
@@ -76,14 +75,13 @@ const dashboardLink =
           >
             Dashboard
           </NavButton>
-
         </div>
       )}
 
-      <header style={{ backgroundColor: "red", color: "white" }}>
+      {/* <header style={{ backgroundColor: "red", color: "white" }}>
         THE IS A DEVOLPMENT SITE. FOR THE OFFICIAL ROYAL RUMBLE WEBSITE{" "}
         <a href="https://www.hseroyalrumble.com">CLICK HERE</a>
-      </header>
+      </header> */}
       <LoginButton />
 
       <header className="home-header">
@@ -134,16 +132,15 @@ const dashboardLink =
 
       <section className="rumble-section">
         <div className="rumble-grid">
-
           <div className="rumble-text">
             <p>
               Since 2015 the Royal Rumble gives incoming students a chance to
               learn the ins and outs of HSE by socializing with spirited
-              upperclassman to whom they can turn to throughout the year; meeting
-              new classmates from all walks of life; talking to members of
-              student clubs; taking home their first official HSE class t-shirt;
-              and shaking hands with school mascot Roary, the principal, and the rest of the
-              faculty team!
+              upperclassman to whom they can turn to throughout the year;
+              meeting new classmates from all walks of life; talking to members
+              of student clubs; taking home their first official HSE class
+              t-shirt; and shaking hands with school mascot Roary, the
+              principal, and the rest of the faculty team!
             </p>
           </div>
 
@@ -152,46 +149,49 @@ const dashboardLink =
           </div>
 
           {/* Row 2 */}
-          <div className="rumble-image rumble-image-top" style={{height: "575px"}}>
+          <div
+            className="rumble-image rumble-image-top"
+            style={{ height: "575px" }}
+          >
             <Image src={about1} alt="Student with crown" />
           </div>
 
           <div className="rumble-text">
             <p>
-              Led by upperclassman mentors, incoming students get behind-the-scenes
-              building tours complete with tips and tricks on navigating life as
-              an HSE student. Want to know the best place to sit for lunch? Or
-              where to go when you've lost your student ID? We've got you covered.
-              Three activities include an introduction to school spirit with the pep band,
-              Blue Crew, and cheerleaders; practice the school song and cheers; a
-              welcome to HSE from the building principal and upperclassmen mentors;
-              and an official start to student life at as a Royal!
+              Led by upperclassman mentors, incoming students get
+              behind-the-scenes building tours complete with tips and tricks on
+              navigating life as an HSE student. Want to know the best place to
+              sit for lunch? Or where to go when you've lost your student ID?
+              We've got you covered. Three activities include an introduction to
+              school spirit with the pep band, Blue Crew, and cheerleaders;
+              practice the school song and cheers; a welcome to HSE from the
+              building principal and upperclassmen mentors; and an official
+              start to student life at as a Royal!
             </p>
           </div>
-          
 
           <div className="rumble-text">
             <p>
               There will also be resources for getting involved in clubs and
               activities, a chance to ask questions and get answers from
               upperclassmen and teachers, and a database of contacts within the
-              building. The signature feature of the event is a pep rally, building
-              excitement entering the new school year as Royals rally around each
-              other under a common blue banner.
+              building. The signature feature of the event is a pep rally,
+              building excitement entering the new school year as Royals rally
+              around each other under a common blue banner.
             </p>
           </div>
 
-          <div className="rumble-image" style={{height: "450px"}}>
+          <div className="rumble-image" style={{ height: "450px" }}>
             <Image src={about3} alt="Students sitting" />
           </div>
-
         </div>
 
         <div className="rumble-footer">
           <p>
             While the event takes place in person during the week before school
             starts, some elements of the Royal Rumble are virtual. Students can
-            access this part of the program through their "Class of" Canvas page.
+            access this part of the program through their "Class of" Canvas
+            page.
           </p>
         </div>
       </section>
@@ -201,9 +201,7 @@ const dashboardLink =
       </header>
 
       <section className="people-section">
-
         <div className="people-grid-three">
-
           <div className="person">
             <Image src={habig} alt="Person 1" />
             <h3>Ms. Kelsey Habig</h3>
@@ -257,7 +255,6 @@ const dashboardLink =
             <h3>Ms. Paige Vinson</h3>
             <p>pgvinson@hse.k12.in.us</p>
           </div>
-
         </div>
 
         <header className="home-header" style={{ marginTop: "5rem" }}>
@@ -265,7 +262,6 @@ const dashboardLink =
         </header>
 
         <div className="people-grid-two">
-
           <div className="person">
             <Image src={nico} alt="Person 1" />
             <h3>Nico Suriano</h3>
@@ -277,12 +273,10 @@ const dashboardLink =
             <h3>Nithik Sajja</h3>
             <p>Lead Developer</p>
           </div>
-
         </div>
       </section>
 
       <section className="contact-form">
-
         <header className="home-header">
           <h1 className="home-title">Contact</h1>
         </header>
@@ -294,41 +288,25 @@ const dashboardLink =
 
         <div className="contact-row">
           <label>Name</label>
-          <input
-            type="text"
-            placeholder="First Name"
-
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-
-          />
+          <input type="text" placeholder="First Name" />
+          <input type="text" placeholder="Last Name" />
         </div>
 
         <div className="contact-row" style={{ marginBottom: "2rem" }}>
           <label>Email</label>
-          <input
-            type="email"
-            placeholder="name@example.com"
-
-          />
+          <input type="email" placeholder="name@example.com" />
         </div>
 
         <label>Comment</label>
-        <textarea
-          placeholder="Your comment here..."
+        <textarea placeholder="Your comment here..." />
 
-        />
-
-        <SubmitButton href=""
+        <SubmitButton
+          href=""
           style={{ fontSize: "30px", alignSelf: "center", marginTop: "1rem" }}
         >
           Submit
         </SubmitButton>
-
       </section>
-
     </main>
   );
 }

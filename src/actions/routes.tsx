@@ -201,7 +201,18 @@ export async function addTourRouteStop(
 
   const nextOrder = existing.length > 0 ? existing[0].stopOrder + 1 : 1;
 
-  // 2. Insert the stop
+  // 2. Check for duplicate stop on this route
+  const duplicate = await db
+    .select({ routeStopId: tourRouteStop.routeStopId })
+    .from(tourRouteStop)
+    .where(and(eq(tourRouteStop.routeId, routeId), eq(tourRouteStop.hallwayStopId, hallwayStopId)))
+    .limit(1);
+
+  if (duplicate.length > 0) {
+    throw new Error("This stop is already part of this route.");
+  }
+
+  // 3. Insert the stop
   const result = await db
     .insert(tourRouteStop)
     .values({ routeId, hallwayStopId, stopOrder: nextOrder, durationMinutes })

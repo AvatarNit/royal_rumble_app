@@ -11,6 +11,7 @@ import {
   groupData,
 } from "@/db/schema";
 import { eq, sql, or } from "drizzle-orm";
+import { encrypt, decrypt } from "@/lib/crypto";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -24,12 +25,20 @@ export const getMentorById = async (mentorId: number) => {
     .from(mentorData)
     .where(eq(mentorData.mentorId, mentorId))
     .limit(1);
-  return mentor[0];
+  const row = mentor[0];
+  if (!row) return row;
+  return {
+    ...row,
+    phoneNum: row.phoneNum ? decrypt(row.phoneNum) : row.phoneNum,
+  };
 };
 
 export const getMentors = async () => {
   const mentors = await db.select().from(mentorData);
-  return mentors;
+  return mentors.map((row) => ({
+    ...row,
+    phoneNum: row.phoneNum ? decrypt(row.phoneNum) : row.phoneNum,
+  }));
 };
 
 export const getAmbassadorAssignments = async () => {
@@ -199,7 +208,7 @@ export const addMentor = async (data: {
     gradYear: data.graduation_year,
     job: data.job,
     email: data.email,
-    phoneNum: data.phone_number,
+    phoneNum: data.phone_number ? encrypt(data.phone_number) : data.phone_number,
   });
   if (data.job === "AMBASSADOR") {
     await db.insert(ambassadorData).values({
@@ -316,7 +325,7 @@ export const updateMentorByID = async (
       languages: data.languages,
       trainingDay: data.training_day,
       tshirtSize: data.tshirt_size,
-      phoneNum: data.phone_num,
+      phoneNum: data.phone_num ? encrypt(data.phone_num) : data.phone_num,
       pastMentor: data.past_mentor,
       interestsInvolvement: data.interests_involvement,
     })

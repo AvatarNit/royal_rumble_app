@@ -263,7 +263,13 @@ export default function AdminRoutesUI({
       showAlert("Please select a stop and enter a valid duration.", "danger");
       return;
     }
-    const result = await addTourRouteStop(routeId, hallwayId, duration);
+    let result;
+    try {
+      result = await addTourRouteStop(routeId, hallwayId, duration);
+    } catch (err) {
+      showAlert(err instanceof Error ? err.message : "Failed to add stop.", "danger");
+      return;
+    }
     const hallway = hallways.find((h) => h.hallwayStopId === hallwayId);
     setRoutesState((prev) =>
       prev.map((r) =>

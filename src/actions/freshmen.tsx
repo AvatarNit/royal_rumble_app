@@ -3,6 +3,7 @@
 import { db } from "@/db";
 import { freshmenData, seminarData, groupData } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
+import { encrypt, decrypt } from "@/lib/crypto";
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -16,12 +17,20 @@ export const getFreshmanById = async (freshmenId: number) => {
     .from(freshmenData)
     .where(eq(freshmenData.freshmenId, freshmenId))
     .limit(1);
-  return freshman[0];
+  const row = freshman[0];
+  if (!row) return row;
+  return {
+    ...row,
+    healthConcerns: row.healthConcerns ? decrypt(row.healthConcerns) : row.healthConcerns,
+  };
 };
 
 export const getFreshmen = async () => {
   const freshmen = await db.select().from(freshmenData);
-  return freshmen;
+  return freshmen.map((row) => ({
+    ...row,
+    healthConcerns: row.healthConcerns ? decrypt(row.healthConcerns) : row.healthConcerns,
+  }));
 };
 
 export const getFreshmenAttendance = async () => {
@@ -132,7 +141,7 @@ export const updateFreshmanByID = async (
       email: data.email,
       primaryLanguage: data.primary_language,
       interests: data.interests,
-      healthConcerns: data.health_concerns,
+      healthConcerns: data.health_concerns ? encrypt(data.health_concerns) : data.health_concerns,
     })
     .where(eq(freshmenData.freshmenId, freshmenId));
   return { success: true, id: freshmenId };

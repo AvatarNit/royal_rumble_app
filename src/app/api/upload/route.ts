@@ -13,6 +13,7 @@ import {
 } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
 import * as XLSX from "xlsx";
+import { encrypt } from "@/lib/crypto";
 
 const requiredColumns: Record<string, string[]> = {
   mentor_data: ["mentor_id", "first_name", "last_name", "job"],
@@ -63,7 +64,7 @@ async function insertData(table: string, rows: any[]) {
           languages: row["languages"],
           trainingDay: row["training_day"],
           tshirtSize: row["shirt_size"],
-          phoneNum: row["phone_number"],
+          phoneNum: row["phone_number"] ? encrypt(row["phone_number"]) : row["phone_number"],
           email: row["email"]?.trim() || undefined,
           pastMentor: row["past_mentor"] ?? null,
           interestsInvolvement: row["interests_involvement"] ?? null,
@@ -94,7 +95,7 @@ async function insertData(table: string, rows: any[]) {
           email: row["email"],
           primaryLanguage: row["primary_language"] || "English",
           interests: row["interests"],
-          healthConcerns: row["health_concerns"],
+          healthConcerns: row["health_concerns"] ? encrypt(row["health_concerns"]) : row["health_concerns"],
           present: false,
         }).onConflictDoUpdate({
           target: freshmenData.freshmenId,
@@ -105,7 +106,7 @@ async function insertData(table: string, rows: any[]) {
             email: row["email"],
             primaryLanguage: row["primary_language"] || "English",
             interests: row["interests"],
-            healthConcerns: row["health_concerns"],
+            healthConcerns: row["health_concerns"] ? encrypt(row["health_concerns"]) : row["health_concerns"],
           },
         });
       }

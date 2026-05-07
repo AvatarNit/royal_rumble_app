@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.hseroyalrumble.com" }],
+      "destination": "https://hseroyalrumble.com/:path*",
+      "permanent": true
+    }
+  ]
+}
